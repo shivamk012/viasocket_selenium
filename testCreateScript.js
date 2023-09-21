@@ -46,7 +46,7 @@ async function testCreateProject(){
 
         const scriptInputParentDiv = await driver.findElement(By.xpath('//label[text() = "Script title"]/..'));
         const scriptInput = await scriptInputParentDiv.findElement(By.xpath('.//div/input'));
-        await scriptInput.sendKeys('test script' , Key.RETURN);
+        await scriptInput.sendKeys('test script1' , Key.RETURN);
         //verify by checking text of h2 with id long-button
 
     }

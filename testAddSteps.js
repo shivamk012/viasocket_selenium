@@ -1,9 +1,7 @@
 const {Builder , By , Capabilities , until, Key} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome')
-const fs = require('fs');
-
-const jquery = require('jquery');
-
+const testFunctionStep = require('./testFunctionStep');
+const testIfStep = require('./testIfStep');
 const testData = ['test1@test1.com' , '12345678'];
 
 async function testCreateProject(){
@@ -37,6 +35,7 @@ async function testCreateProject(){
         const scripBlocks = await scriptSlider.findElements(By.xpath('.//div[contains(@class , "scriptBlock")]'));
         await scripBlocks[0].click();
         
+        //TODO
         //check if url of site contains a script id , project id and workflows
         
         await driver.wait(until.elementLocated(By.xpath('//input[contains(@placeholder , "Steps")]')) , 10000);
@@ -46,18 +45,11 @@ async function testCreateProject(){
         // const sourceCode = await driver.getPageSource();
         // fs.writeFileSync('./sourceCode.txt' , sourceCode);
 
-        
-        // await driver.wait(until.elementLocated(By.className('MuiAutocomplete-popper css-1bi1t5b-MuiPopper-root-MuiAutocomplete-popper MuiPopper-root')) , 10000);
-        // const listComponent = await driver.findElement(By.className('MuiAutocomplete-popper css-1bi1t5b-MuiPopper-root-MuiAutocomplete-popper MuiPopper-root'));
-        // const listElements = await listComponent.findElements(By.tagName('li'));
-        // await listElements[0].click();
-
-        const bodyHtml = await driver.executeScript('return document.body.innerHTML');
-        const $ = jquery(bodyHtml);
-        const childElements = $('body > *');
-
-        console.log(childElements);
-
+        const divElementsInBody = await driver.findElements(By.xpath('//body/div'));
+        const [listComponent] = divElementsInBody.slice(-1);
+        const listElements = await listComponent.findElements(By.tagName('li'));
+        // await testFunctionStep(driver , listElements);
+        await testIfStep(driver , listElements);
 
         
         //verify by checking text of h2 with id long-button

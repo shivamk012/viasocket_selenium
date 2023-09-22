@@ -18,6 +18,11 @@ async function testFunctionStep(driver , listElements){
         const saveButton = await panelContent.findElement(By.xpath('.//button[text() = "Save"]'));
         await driver.actions().click(saveButton).perform();
 
+        const crossButtonDiv = await driver.findElement(By.xpath('//div[contains(@class , "blockslider")]'));
+        const fullScreen_crossButton = await crossButtonDiv.findElements(By.xpath('.//button'));
+
+        await fullScreen_crossButton[1].click();
+
 
 
     }catch(err){

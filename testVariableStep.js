@@ -2,10 +2,10 @@ let constants = require('./constants');
 const {until , By} = require('selenium-webdriver');
 async function testIfStep(driver , listElements){
     try{
-        await listElements[2].click();
-        await driver.wait(until.elementLocated(By.id(`${constants.step_panel_id}`)) , 10000);
-        const ifAccordion = await driver.findElement(By.id(`${constants.step_panel_id}`));
-        await ifAccordion.click();
+        await listElements[3].click();
+        await driver.wait(until.elementLocated(By.xpath('//p[text() = "Create Variable"]')) , 10000);
+        const variableAccordion = await driver.findElement(By.xpath('//p[text() = "Create Variable"]'));
+        await variableAccordion.click();
         const if_input = await driver.findElement(By.id(`${constants.if_block_field_id}`));
         await if_input.sendKeys('true');
 

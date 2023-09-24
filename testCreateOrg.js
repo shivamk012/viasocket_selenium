@@ -1,5 +1,6 @@
 const {Builder , By , Capabilities , until, Key} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome')
+const constants = require('./constants');
 
 const orgName = ['new org'];
 const testData = ['test1@test1.com' , '12345678'];
@@ -14,7 +15,12 @@ async function testCreateOrg(){
 
     const driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
     try{
-        await driver.get('http://localhost:3000');
+        await driver.get(`${constants.app_link}`);
+        await driver.wait(async() => {
+          return driver.executeScript('return document.readyState').then(function(readyState) {
+            return readyState === 'complete';
+          });
+        });
         const emailInput = await driver.findElement(By.id('email'));
         const passwordInput = await driver.findElement(By.id('password'));
 
@@ -24,12 +30,12 @@ async function testCreateOrg(){
         const submitbtn = await driver.findElement(By.xpath('//button[@type = "submit"]'));
 
         await driver.actions().click(submitbtn).perform();
-        await driver.wait(until.urlIs('http://localhost:3000/projects'), 10000);
+        await driver.wait(until.urlIs(`${constants.app_link}/projects`), 10000);
 
         // Find the button with text "Create New Org" using XPath
-        const createOrgButton = await driver.findElement(
-        By.xpath('//button[text()= "Create New Org"]'));
-        await createOrgButton.click();
+        // const createOrgButton = await driver.findElement(
+        // By.xpath('//button[text()= "Create New Org"]'));
+        // await createOrgButton.click();
         await driver.wait(until.elementLocated(By.id('orgtitle')), 10000);
         // await driver.wait(until.elementIsVisible(By.id('orgtitle')), 10000);
         const orgTitleInput = await driver.findElement(By.id('orgtitle'));

@@ -1,5 +1,6 @@
 const {Builder , By , Capabilities , until, Key} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome')
+const constants = require('./constants');
 
 const testData = ['test1@test1.com' , '12345678'];
 
@@ -7,13 +8,18 @@ async function testCreateProject(){
     const chromeOptions = new chrome.Options().windowSize({ width: 1920, height: 1080 });
   const caps = new Capabilities();
   caps.set('goog:chromeOptions', {
-    debuggerAddress: 'http://localhost:3000', // Address to connect to Chrome DevTools Protocol
+    debuggerAddress: `${constants.app_link}`, // Address to connect to Chrome DevTools Protocol
   });
   chromeOptions.set('chromeOptions', caps);
 
     const driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
     try{
-        await driver.get('http://localhost:3000');
+        await driver.get(`${constants.app_link}`);
+        await driver.wait(async() => {
+          return driver.executeScript('return document.readyState').then(function(readyState) {
+            return readyState === 'complete';
+          });
+        });
         const emailInput = await driver.findElement(By.id('email'));
         const passwordInput = await driver.findElement(By.id('password'));
 
@@ -23,7 +29,7 @@ async function testCreateProject(){
         const submitbtn = await driver.findElement(By.xpath('//button[@type = "submit"]'));
 
         await driver.actions().click(submitbtn).perform();
-        await driver.wait(until.urlIs('http://localhost:3000/projects'), 10000);
+        await driver.wait(until.urlIs(`${constants.app_link}/projects`), 10000);
 
         // // Find the button with text "Create New Org" using XPath
         // const createProjectButton = await driver.findElement(By.tagName('button'));

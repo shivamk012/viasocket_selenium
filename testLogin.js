@@ -19,7 +19,7 @@ async function testLogin(){
 
     const driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
     try{
-        await driver.get('http://localhost:3000');
+        await driver.get(`${constants.app_link}`);
 
         await driver.wait(until.elementLocated(By.tagName('h4')) , 10000);
 

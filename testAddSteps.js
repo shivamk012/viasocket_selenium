@@ -8,13 +8,14 @@ async function testCreateProject(){
     const chromeOptions = new chrome.Options().windowSize({ width: 1920, height: 1080 });
   const caps = new Capabilities();
   caps.set('goog:chromeOptions', {
-    debuggerAddress: 'http://localhost:3000', // Address to connect to Chrome DevTools Protocol
+    debuggerAddress: 'https://dev-flow.viasocket.com', // Address to connect to Chrome DevTools Protocol
   });
   chromeOptions.set('chromeOptions', caps);
 
     const driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
     try{
-        await driver.get('http://localhost:3000');
+        await driver.get('https://dev-flow.viasocket.com');
+        await driver.wait(until.elementLocated(By.id('email')) , 10000);
         const emailInput = await driver.findElement(By.id('email'));
         const passwordInput = await driver.findElement(By.id('password'));
 
@@ -24,7 +25,7 @@ async function testCreateProject(){
         const submitbtn = await driver.findElement(By.xpath('//button[@type = "submit"]'));
 
         await driver.actions().click(submitbtn).perform();
-        await driver.wait(until.urlIs('http://localhost:3000/projects'), 10000);
+        await driver.wait(until.urlIs('https://dev-flow.viasocket.com/projects'), 10000);
 
 
         await driver.wait(until.elementLocated(By.xpath('//div[contains(@class, "project_title")]')) , 10000);

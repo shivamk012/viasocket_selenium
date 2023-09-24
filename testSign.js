@@ -24,7 +24,7 @@ describe('Login' , () => {
   it('should log in successfully', async () => {
     return new Promise(async(resolve , reject) => {
       try{
-        await driver.get('http://localhost:3000');
+        await driver.get(`${constants.app_link}`);
         const emailInput = await driver.findElement(By.id('email'));
         const passwordInput = await driver.findElement(By.id('password'));
 
@@ -35,11 +35,11 @@ describe('Login' , () => {
 
         await driver.actions().click(submitbtn).perform();
 
-        await driver.wait(until.urlIs('http://localhost:3000/projects'), 10000);
+        await driver.wait(until.urlIs('app_link/projects'), 10000);
 
         const currentUrl = await driver.getCurrentUrl();
 
-        assert.strictEqual(currentUrl, 'http://localhost:3000/projects');
+        assert.strictEqual(currentUrl, 'app_link/projects');
         resolve();
       }catch(err){
       reject(err)

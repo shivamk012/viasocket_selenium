@@ -2,6 +2,7 @@ const {Builder , By , Capabilities , until, Key} = require('selenium-webdriver')
 const chrome = require('selenium-webdriver/chrome')
 const testFunctionStep = require('./testFunctionStep');
 const testIfStep = require('./testIfStep');
+const testApiGetStep = require('./testApiGetStep');
 const testData = ['test1@test1.com' , '12345678'];
 
 async function testCreateProject(){
@@ -52,8 +53,9 @@ async function testCreateProject(){
         const divElementsInBody = await driver.findElements(By.xpath('//body/div'));
         const [listComponent] = divElementsInBody.slice(-1);
         const listElements = await listComponent.findElements(By.tagName('li'));
-        await testFunctionStep(driver , listElements);
-        await testIfStep(driver , listElements);
+        // await testFunctionStep(driver , listElements);
+        // await testIfStep(driver , listElements);
+        await testApiGetStep(driver,listElements);
 
         
         //verify by checking text of h2 with id long-button

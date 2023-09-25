@@ -2,7 +2,7 @@ const {Builder , By , Capabilities , until} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome')
 const { Command } = require('selenium-webdriver/lib/command');
 const assert = require('assert');
-
+const constants = require('./constants');
 
 const testData = ['test1@test1.com' , '12345678'];
 const firstName = "Jfdsjdfh";
@@ -25,6 +25,11 @@ describe('Login' , () => {
     return new Promise(async(resolve , reject) => {
       try{
         await driver.get(`${constants.app_link}`);
+        await driver.wait(async() => {
+          return driver.executeScript('return document.readyState').then(function(readyState) {
+            return readyState === 'complete';
+          });
+        });
         const emailInput = await driver.findElement(By.id('email'));
         const passwordInput = await driver.findElement(By.id('password'));
 
@@ -35,11 +40,11 @@ describe('Login' , () => {
 
         await driver.actions().click(submitbtn).perform();
 
-        await driver.wait(until.urlIs('app_link/projects'), 10000);
+        await driver.wait(until.urlIs(`${constants.app_link}/projects`), 10000);
 
         const currentUrl = await driver.getCurrentUrl();
 
-        assert.strictEqual(currentUrl, 'app_link/projects');
+        assert.strictEqual(currentUrl, `${constants.app_link}/projects`);
         resolve();
       }catch(err){
       reject(err)

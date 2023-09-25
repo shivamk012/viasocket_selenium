@@ -3,6 +3,9 @@ const chrome = require('selenium-webdriver/chrome')
 const testFunctionStep = require('./testFunctionStep');
 const testIfStep = require('./testIfStep');
 const testApiGetStep = require('./testApiGetStep');
+const dotenv = require('dotenv');
+
+dotenv.config();
 const testData = ['test1@test1.com' , '12345678'];
 
 async function testCreateProject(){
@@ -16,6 +19,11 @@ async function testCreateProject(){
     const driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
     try{
         await driver.get('https://dev-flow.viasocket.com');
+        await driver.wait(async() => {
+          return driver.executeScript('return document.readyState').then(function(readyState) {
+            return readyState === 'complete';
+          });
+        });
         await driver.wait(until.elementLocated(By.id('email')) , 10000);
         const emailInput = await driver.findElement(By.id('email'));
         const passwordInput = await driver.findElement(By.id('password'));
@@ -34,10 +42,8 @@ async function testCreateProject(){
         await allProjects[0].click();
         const scriptSlider = await driver.findElement(By.xpath('//div[contains(@class , "script-slider")]'));
         await driver.wait(until.elementIsVisible(scriptSlider) , 10000);
-        console.log(scriptSlider)
         await driver.wait(until.elementLocated(By.xpath('.//div[contains(@class , "scriptBlock")]')) , 10000);
         const scripBlocks = await scriptSlider.findElements(By.xpath('.//div[contains(@class , "scriptBlock")]'));
-        console.log(scripBlocks)
         await scripBlocks[0].click();
         
         //TODO

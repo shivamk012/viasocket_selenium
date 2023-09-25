@@ -1,3 +1,3 @@
 const dotenv = require('dotenv');
 
-dotenv();
+dotenv.config();

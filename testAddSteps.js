@@ -33,7 +33,10 @@ async function testCreateProject(){
         await allProjects[0].click();
         const scriptSlider = await driver.findElement(By.xpath('//div[contains(@class , "script-slider")]'));
         await driver.wait(until.elementIsVisible(scriptSlider) , 10000);
+        console.log(scriptSlider)
+        await driver.wait(until.elementLocated(By.xpath('.//div[contains(@class , "scriptBlock")]')) , 10000);
         const scripBlocks = await scriptSlider.findElements(By.xpath('.//div[contains(@class , "scriptBlock")]'));
+        console.log(scripBlocks)
         await scripBlocks[0].click();
         
         //TODO

@@ -1,5 +1,6 @@
 const {until , By} = require('selenium-webdriver');
 const getButtonHavingText = require('./getButtonHavingText');
+const closeSlider = require('./closeSlider');
 
 async function apiRequest(driver , listElements , requestMethodIndex , stepName , requestUrl){
     try{
@@ -44,6 +45,7 @@ async function apiRequest(driver , listElements , requestMethodIndex , stepName 
         await dryRunButton.click();
         await saveButton.click();
 
+        await closeSlider(driver , "SliderMain");
     }catch(err){
         console.log(err);
     }

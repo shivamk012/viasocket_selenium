@@ -15,7 +15,7 @@ async function testCreateOrg(){
 
     const driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
     try{
-        await driver.get(`${constants.app_link}`);
+        await driver.get(`${process.env.APP_LINK}`);
         await driver.wait(async() => {
           return driver.executeScript('return document.readyState').then(function(readyState) {
             return readyState === 'complete';

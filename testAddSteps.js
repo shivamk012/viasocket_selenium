@@ -62,9 +62,10 @@ async function testCreateProject(){
         // await testFunctionStep(driver , listElements);
         // await testIfStep(driver , listElements);
         // await testApiStepGetRequest(driver , listElements);
-        await testApiStepPostRequest(driver , listElements);
+        // await testApiStepPostRequest(driver , listElements);
         // await testApiStepPatchRequest(driver , listElements);
-        // await testApiStepDeleteRequest(driver , listElements);
+        await testApiStepDeleteRequest(driver , listElements);
+        // await testApiStepPutRequest(driver , listElements);
 
         
         //verify by checking text of h2 with id long-button

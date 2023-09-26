@@ -31,13 +31,12 @@ async function apiRequest(driver , listElements , requestMethodIndex , stepName 
     
         await urlInput.sendKeys(requestUrl);
 
-        //send data in body if request is post , put or patch
         if(requestMethodIndex === 1 || requestMethodIndex === 2 || requestMethodIndex === 4){
             const textEditorDiv = await apiPanelContent.findElement(By.id('jsonEditor'));
             const textEditor = await textEditorDiv.findElement(By.css('textarea'));
-            if(requestMethodIndex === 1) await textEditor.sendKeys(JSON.parse(process.env.POST_REQUEST_BODY));
-            else await textEditor.sendKeys(process.env.PUT_REQUEST_BODY);
-        }
+            if(requestMethodIndex === 1) await textEditor.sendKeys(process.env.POST_REQUEST_BODY);
+            else await textEditor.sendKeys(process.env.PUT_REQUEST_BODY)
+        } 
         
         const buttons = await apiPanelContent.findElements(By.css('button'));
         const dryRunButton = await getButtonHavingText(buttons , process.env.DRY_RUN_BUTTON_TEXT);

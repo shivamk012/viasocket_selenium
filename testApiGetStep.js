@@ -1,16 +1,16 @@
 const {until , By} = require('selenium-webdriver');
 
-async function getButtonHavingText(buttons , text){
-    return new Promise((resolve , reject) => {
-        buttons.filter(button => {
-            button.getText().then(btntext => {
-                console.log(text , btntext , text === btntext , text == btntext);
-                if(text === btntext) resolve(button);
-            }); 
-        })
-        reject('no element found');
-    })
-}
+// async function getButtonHavingText(buttons , text){
+//     return new Promise((resolve , reject) => {
+//         buttons.filter(button => {
+//             button.getText().then(btntext => {
+//                 console.log(text , btntext , text === btntext , text == btntext);
+//                 if(text === btntext) resolve(button);
+//             }); 
+//         })
+//         reject('no element found');
+    
+// })}
 
 async function testApiGetStep(driver , listElements){
     try{

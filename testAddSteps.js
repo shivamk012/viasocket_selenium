@@ -3,6 +3,9 @@ const chrome = require('selenium-webdriver/chrome')
 const testFunctionStep = require('./testFunctionStep');
 const testIfStep = require('./testIfStep');
 const testApiGetStep = require('./testApiGetStep');
+const testVariableStep= require('./testVariableStep');
+const testComment=require('./testComment');
+const testResponse=require('./testResponse')
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -47,31 +50,26 @@ async function testCreateProject(){
         await scripBlocks[0].click();
         
         //TODO
-        //check if url of site contains a script id , project id and workflows
-        
+        //check if url of site contains a script id , project id and workflows       
         await driver.wait(until.elementLocated(By.xpath('//input[contains(@placeholder , "Steps")]')) , 10000);
         const addStepInput = await driver.findElement(By.xpath('//input[contains(@placeholder , "Steps")]'));
         await addStepInput.click();
-        
         // const sourceCode = await driver.getPageSource();
         // fs.writeFileSync('./sourceCode.txt' , sourceCode);
-
         const divElementsInBody = await driver.findElements(By.xpath('//body/div'));
         const [listComponent] = divElementsInBody.slice(-1);
         const listElements = await listComponent.findElements(By.tagName('li'));
         // await testFunctionStep(driver , listElements);
         // await testIfStep(driver , listElements);
-        await testApiGetStep(driver,listElements);
-
-        
+        // await testApiGetStep(driver,listElements);  
+        //await testVariableStep(driver,listElements);
         //verify by checking text of h2 with id long-button
-
+        //await testComment(driver,listElements);  
+        await testResponse(driver,listElements);
     }
     catch(err){
         console.log(err);
-    }finally{
-        // driver.quit();
     }
-}
+};
 
 testCreateProject();

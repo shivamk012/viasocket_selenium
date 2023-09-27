@@ -2,12 +2,11 @@ const {Builder , By , Capabilities , until, Key} = require('selenium-webdriver')
 const chrome = require('selenium-webdriver/chrome')
 const testFunctionStep = require('./testFunctionStep');
 const testIfStep = require('./testIfStep');
-<<<<<<< HEAD
+
 const testApiGetStep = require('./testApiGetStep');
 const testVariableStep= require('./testVariableStep');
 const testComment=require('./testComment');
 const testResponse=require('./testResponse')
-=======
 const {
   testApiStepGetRequest,
   testApiStepPostRequest,
@@ -15,7 +14,6 @@ const {
   testApiStepDeleteRequest,
   testApiStepPatchRequest
 } = require('./testApiStep');
->>>>>>> 2140eda3d34244cf4ea83e3c2991ee9a32a65cac
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -65,10 +63,8 @@ async function testCreateProject(){
         const listElements = await listComponent.findElements(By.tagName('li'));
         // await testFunctionStep(driver , listElements);
         // await testIfStep(driver , listElements);
-<<<<<<< HEAD
         // await testApiGetStep(driver,listElements);  
         //await testVariableStep(driver,listElements);
-=======
         // await testApiStepGetRequest(driver , listElements);
         // await testApiStepPostRequest(driver , listElements);
         // await testApiStepPatchRequest(driver , listElements);
@@ -76,7 +72,6 @@ async function testCreateProject(){
         // await testApiStepPutRequest(driver , listElements);
 
         
->>>>>>> 2140eda3d34244cf4ea83e3c2991ee9a32a65cac
         //verify by checking text of h2 with id long-button
         //await testComment(driver,listElements);  
         await testResponse(driver,listElements);

@@ -2,6 +2,12 @@ const {Builder , By , Capabilities , until, Key} = require('selenium-webdriver')
 const chrome = require('selenium-webdriver/chrome')
 const testFunctionStep = require('./testFunctionStep');
 const testIfStep = require('./testIfStep');
+<<<<<<< HEAD
+const testApiGetStep = require('./testApiGetStep');
+const testVariableStep= require('./testVariableStep');
+const testComment=require('./testComment');
+const testResponse=require('./testResponse')
+=======
 const {
   testApiStepGetRequest,
   testApiStepPostRequest,
@@ -9,6 +15,7 @@ const {
   testApiStepDeleteRequest,
   testApiStepPatchRequest
 } = require('./testApiStep');
+>>>>>>> 2140eda3d34244cf4ea83e3c2991ee9a32a65cac
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -47,20 +54,21 @@ async function testCreateProject(){
         await scripBlocks[0].click();
         
         //TODO
-        //check if url of site contains a script id , project id and workflows
-        
+        //check if url of site contains a script id , project id and workflows       
         await driver.wait(until.elementLocated(By.xpath('//input[contains(@placeholder , "Steps")]')) , 10000);
         const addStepInput = await driver.findElement(By.xpath('//input[contains(@placeholder , "Steps")]'));
         await addStepInput.click();
-        
         // const sourceCode = await driver.getPageSource();
         // fs.writeFileSync('./sourceCode.txt' , sourceCode);
-
         const divElementsInBody = await driver.findElements(By.xpath('//body/div'));
         const [listComponent] = divElementsInBody.slice(-1);
         const listElements = await listComponent.findElements(By.tagName('li'));
         // await testFunctionStep(driver , listElements);
         // await testIfStep(driver , listElements);
+<<<<<<< HEAD
+        // await testApiGetStep(driver,listElements);  
+        //await testVariableStep(driver,listElements);
+=======
         // await testApiStepGetRequest(driver , listElements);
         // await testApiStepPostRequest(driver , listElements);
         // await testApiStepPatchRequest(driver , listElements);
@@ -68,14 +76,14 @@ async function testCreateProject(){
         // await testApiStepPutRequest(driver , listElements);
 
         
+>>>>>>> 2140eda3d34244cf4ea83e3c2991ee9a32a65cac
         //verify by checking text of h2 with id long-button
-
+        //await testComment(driver,listElements);  
+        await testResponse(driver,listElements);
     }
     catch(err){
         console.log(err);
-    }finally{
-        // driver.quit();
     }
-}
+};
 
 testCreateProject();

@@ -44,7 +44,7 @@ async function apiRequest(driver , listElements , requestMethodIndex , stepName 
         const saveButton = await getButtonHavingText(buttons , process.env.SAVE_BUTTON_TEXT);
         await dryRunButton.click();
         await saveButton.click();
-
+        await driver.sleep(5000);
         await closeSlider(driver , "SliderMain");
     }catch(err){
         console.log(err);

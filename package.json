@@ -9,11 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@percy/cli": "^1.27.2",
-    "@percy/selenium-webdriver": "^2.0.0",
     "dotenv": "^16.3.1",
     "jquery": "^3.7.1",
     "mocha": "^10.2.0",
+    "node-resemble-js": "^0.2.0",
+    "resemblejs": "^5.0.0",
     "selenium-webdriver": "^4.13.0"
   }
 }

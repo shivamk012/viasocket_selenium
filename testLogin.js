@@ -3,10 +3,21 @@ const chrome = require('selenium-webdriver/chrome')
 const { Command } = require('selenium-webdriver/lib/command');
 const assert = require('assert');
 const constants = require('./constants');
-const percySnapshot = require('@percy/selenium-webdriver');
+const resemble = require('resemblejs');
+const fs = require('fs');
 
 const testData = ['test1@test1.com' , '12345678'];
 const firstName = "Jfdsjdfh";
+
+async function compareImages(imagePath1, imagePath2) {
+  return new Promise((resolve, reject) => {
+    resemble(imagePath1)
+      .compareTo(imagePath2)
+      .onComplete(data => resolve(data))
+      .ignoreLess()
+      .onComplete(data => resolve(data));
+  });
+}
 
 describe('Login' , () => {
   let driver;
@@ -33,17 +44,26 @@ describe('Login' , () => {
         });
         const emailInput = await driver.findElement(By.id('email'));
         const passwordInput = await driver.findElement(By.id('password'));
-
+        
         await emailInput.sendKeys(testData[0]);
         await passwordInput.sendKeys(testData[1]);
-
+        
         const submitbtn = await driver.findElement(By.xpath('//button[@type = "submit"]'));
-
+        
         await driver.actions().click(submitbtn).perform();
-
+        
         await driver.wait(until.urlIs(`${constants.app_link}/projects`), 10000);
+        await driver.sleep(5000);
+        // const screenshot1 = await driver.takeScreenshot();
 
-        await percySnapshot(driver, 'Viasocket-Homepage');
+        // fs.writeFileSync('screenshot1.png' , screenshot1 , 'base64');
+        const screenshot2 = await driver.takeScreenshot();
+        fs.writeFileSync('screenshot2.png' , screenshot2   , 'base64');
+        
+        const comparisonResult = await compareImages('./screenshot1.png', './screenshot2.png');
+        fs.writeFileSync('comparison.png', comparisonResult.getBuffer());
+        
+        console.log('Image comparison result:', comparisonResult);
         resolve();
       }catch(err){
       reject(err)

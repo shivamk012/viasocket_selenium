@@ -3,8 +3,10 @@ const {until , By} = require('selenium-webdriver');
 async function testFunctionStep(driver , listElements){
     try{
         await listElements[0].click();
-        await driver.wait(until.elementLocated(By.id(`${constants.step_name_id}`)) , 10000);
-        const step_name_input = await driver.findElement(By.id(`${constants.step_name_id}`));
+        await driver.wait(until.elementLocated(By.id(`${process.env.STEP_PANEL_ID}`)) , 10000);
+        const functionAccordions = await driver.findElement(By.id(`${process.env.STEP_PANEL_ID}`));
+        const step_name_input = await functionAccordions.findElement(By.css('input'));
+        await step_name_input.click();
         await step_name_input.sendKeys('abcd');
 
         const textAreaDiv = await driver.findElement(By.id(`${constants.step_editor_id}`));

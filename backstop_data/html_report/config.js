@@ -4,7 +4,7 @@ report({
     {
       "pair": {
         "reference": "..\\bitmaps_reference\\my_project_Login_0_document_0_desktop.png",
-        "test": "..\\bitmaps_test\\20230928-153037\\my_project_Login_0_document_0_desktop.png",
+        "test": "..\\bitmaps_test\\20230929-114704\\my_project_Login_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_Login_0_document_0_desktop.png",
         "label": "Login",
@@ -18,7 +18,9 @@ report({
             "width": 0,
             "height": 0
           },
-          "misMatchPercentage": "0.00"
+          "rawMisMatchPercentage": 0,
+          "misMatchPercentage": "0.00",
+          "analysisTime": 26
         }
       },
       "status": "pass"
@@ -26,7 +28,7 @@ report({
     {
       "pair": {
         "reference": "..\\bitmaps_reference\\my_project_Create_Org_0_document_0_desktop.png",
-        "test": "..\\bitmaps_test\\20230928-153037\\my_project_Create_Org_0_document_0_desktop.png",
+        "test": "..\\bitmaps_test\\20230929-114704\\my_project_Create_Org_0_document_0_desktop.png",
         "selector": "document",
         "fileName": "my_project_Create_Org_0_document_0_desktop.png",
         "label": "Create Org",
@@ -40,12 +42,13 @@ report({
             "width": 0,
             "height": 0
           },
-          "rawMisMatchPercentage": 0.004195601851851851,
-          "misMatchPercentage": "0.00",
-          "analysisTime": 38
-        }
+          "rawMisMatchPercentage": 0.14429012345679013,
+          "misMatchPercentage": "0.14",
+          "analysisTime": 44
+        },
+        "diffImage": "..\\bitmaps_test\\20230929-114704\\failed_diff_my_project_Create_Org_0_document_0_desktop.png"
       },
-      "status": "pass"
+      "status": "fail"
     }
   ],
   "id": "my_project"

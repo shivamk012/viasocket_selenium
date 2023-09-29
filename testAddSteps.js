@@ -59,9 +59,9 @@ async function testCreateProject(){
         const divElementsInBody = await driver.findElements(By.xpath('//body/div'));
         const [listComponent] = divElementsInBody.slice(-1);
         const listElements = await listComponent.findElements(By.tagName('li'));
-        // await testFunctionStep(driver , listElements);
+        await testFunctionStep(driver , listElements);
         // await testIfStep(driver , listElements);
-        await testApiStepGetRequest(driver , listElements);
+        // await testApiStepGetRequest(driver , listElements);
         // await testApiStepPostRequest(driver , listElements);
         // await testApiStepPatchRequest(driver , listElements);
         // await testApiStepDeleteRequest(driver , listElements);

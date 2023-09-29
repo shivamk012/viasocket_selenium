@@ -1,6 +1,6 @@
 const {Builder , By , Capabilities , until, Key} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome')
-const { Command } = require('selenium-webdriver/lib/command');
+const percySnapshot = require('@percy/selenium-webdriver');
 
 const testData = ['shivam' , 'koolwal' , 'test1@test1.com' , '123456778' , '123456778'];
 
@@ -12,9 +12,7 @@ async function checkSignUp(btn){
 async function testSign(){
     const chromeOptions = new chrome.Options().windowSize({ width: 1920, height: 1080 });
   const caps = new Capabilities();
-  caps.set('goog:chromeOptions', {
-    debuggerAddress: 'https://dev-flow.viasocket.com/', // Address to connect to Chrome DevTools Protocol
-  });
+  
   chromeOptions.set('chromeOptions', caps);
 
     const driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
@@ -37,7 +35,7 @@ async function testSign(){
         await inputElements[3].sendKeys(testData[3]);
         await inputElements[4].sendKeys(testData[4]);
 
-        
+        await percySnapshot(driver, 'Browserstack-Homepage');
 
         // const buttonsInCreateAccount = await driver.findElement(By.xpath('//button[@type = "submit"]'));
 

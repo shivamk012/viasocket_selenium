@@ -3,6 +3,7 @@ const chrome = require('selenium-webdriver/chrome')
 const { Command } = require('selenium-webdriver/lib/command');
 const assert = require('assert');
 const constants = require('./constants');
+const percySnapshot = require('@percy/selenium-webdriver');
 
 const testData = ['test1@test1.com' , '12345678'];
 const firstName = "Jfdsjdfh";
@@ -42,9 +43,7 @@ describe('Login' , () => {
 
         await driver.wait(until.urlIs(`${constants.app_link}/projects`), 10000);
 
-        const currentUrl = await driver.getCurrentUrl();
-
-        assert.strictEqual(currentUrl, `${constants.app_link}/projects`);
+        await percySnapshot(driver, 'Viasocket-Homepage');
         resolve();
       }catch(err){
       reject(err)

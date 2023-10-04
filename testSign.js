@@ -1,7 +1,20 @@
 const {Builder , By , Capabilities , until, Key} = require('selenium-webdriver');
-const chrome = require('selenium-webdriver/chrome')
+const chrome = require('selenium-webdriver/chrome');
+const fs = require('fs');
+const resemble = require('resemblejs');
 
-const testData = ['shivam' , 'koolwal' , 'test1@test1.com' , '123456778' , '123456778'];
+
+const testData = ['shivamji' , 'koolwalji' , 'test1@test1ji.com' , '1234567788' , '1234567788'];
+
+async function compareImages(imagePath1, imagePath2) {
+    return new Promise((resolve, reject) => {
+      resemble(imagePath1)
+        .compareTo(imagePath2)
+        .onComplete(data => resolve(data))
+        .ignoreLess()
+        .onComplete(data => resolve(data));
+    });
+  }
 
 async function testSign(){
     const chromeOptions = new chrome.Options().windowSize({ width: 1920, height: 1080 });
@@ -39,9 +52,22 @@ async function testSign(){
         const signUpButton = await accountDetailsForm.findElement(By.css('button'));
 
         await driver.actions().move({origin : signUpButton}).click().perform();
+
+        const SignUpRefrenceScreenshot = await driver.takeScreenshot();
+        fs.writeFileSync('./refrenceImage/SignUpRefrenceScreenshot.png' , SignUpRefrenceScreenshot , 'base64');
+        const SignUpTestScreenshot = await driver.takeScreenshot();
+        fs.writeFileSync('./specs/SignUpTestScreenshot.png' , SignUpTestScreenshot   , 'base64');
+        
+        const comparisonResult = await compareImages('./refrenceImage/SignUpRefrenceScreenshot.png', './specs/SignUpTestScreenshot.png');
+        fs.writeFileSync('./comparisonImage/comparisonSignUp.png', comparisonResult.getBuffer());
+        
+        console.log('Image comparison result:', comparisonResult);
+        resolve();
+        
     }
     catch(err){
         console.log(err);
+        reject(err); // Reject the Promise in case of an error
     }finally{
         // driver.quit();
     }

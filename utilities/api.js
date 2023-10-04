@@ -2,9 +2,22 @@ const {until , By} = require('selenium-webdriver');
 const getButtonHavingText = require('./getButtonHavingText');
 const closeSlider = require('./closeSlider');
 
+const fs = require('fs');
+const resemble = require('resemblejs');
+
+async function compareImages(imagePath1, imagePath2) {
+    return new Promise((resolve, reject) => {
+      resemble(imagePath1)
+        .compareTo(imagePath2)
+        .onComplete(data => resolve(data))
+        .ignoreLess()
+        .onComplete(data => resolve(data));
+    });
+  }
+
 async function apiRequest(driver , listElements , requestMethodIndex , stepName , requestUrl){
     try{
-        await listElements[1].click();
+        await listElements[0].click();
         await driver.wait(until.elementLocated(By.id(`${process.env.STEP_PANEL_ID}`)) , 10000);
         const ApiAccordions = await driver.findElements(By.id(`${process.env.STEP_PANEL_ID}`));
         const [apiAccordion , responseAccordion] = ApiAccordions;
@@ -45,7 +58,20 @@ async function apiRequest(driver , listElements , requestMethodIndex , stepName 
         await dryRunButton.click();
         await saveButton.click();
         await driver.sleep(5000);
-        await closeSlider(driver , "SliderMain");
+        // await closeSlider(driver , "SliderMain");
+        
+        const apiRefrenceScreenshot = await driver.takeScreenshot();
+        fs.writeFileSync('./refrenceImage/apiRefrenceScreenshot.png' , apiRefrenceScreenshot , 'base64');
+
+        const apiTestScreenshot = await driver.takeScreenshot();
+        fs.writeFileSync('./specs/apiTestScreenshot.png' , apiTestScreenshot   , 'base64');
+        
+        const comparisonResult = await compareImages('./refrenceImage/apiRefrenceScreenshot.png', './specs/apiTestScreenshot.png');
+        fs.writeFileSync('./comparisonImage/comparisonapi.png', comparisonResult.getBuffer());
+        
+        console.log('Image comparison result:', comparisonResult);
+        resolve();
+
     }catch(err){
         console.log(err);
     }

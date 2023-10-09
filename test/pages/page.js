@@ -11,4 +11,18 @@ module.exports = class Page {
     get Driver(){
         return this.driver;
     }
+
+    async waitForPageToOpen(){
+        await this.driver.get(process.env.APP_LINK);
+        await this.driver.wait(async() => {
+          return this.driver.executeScript('return document.readyState').then(function(readyState) {
+            return readyState === 'complete';
+          });
+        });
+    }
+    //to go to a URL 
+    async open(endpoint){ 
+        await this.driver.get(process.env.APP_LINK + endpoint);
+        await this.waitForPageToOpen(); 
+    }
 }

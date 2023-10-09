@@ -8,20 +8,6 @@ module.exports = class SignUp extends Page {
         this.signUpButton = '';
     }
 
-    async waitForPageToOpen(){
-        await this.driver.get(process.env.APP_LINK);
-        await this.driver.wait(async() => {
-          return this.driver.executeScript('return document.readyState').then(function(readyState) {
-            return readyState === 'complete';
-          });
-        });
-    }
-    //to go to a URL 
-    async open(endpoint){ 
-        await this.driver.get(process.env.APP_LINK + endpoint);
-        await this.waitForPageToOpen(); 
-    }
-
     async clickOnCreateAccountButton(){
         await this.driver.wait(until.elementLocated(By.css('h4')) , 10000);
 

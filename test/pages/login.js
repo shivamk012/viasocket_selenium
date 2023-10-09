@@ -7,22 +7,6 @@ module.exports = class Login extends Page {
         this.driver = super.Driver;
     }
 
-    async waitForPageToOpen(){
-        await this.driver.get(process.env.APP_LINK);
-        await this.driver.wait(async() => {
-          return this.driver.executeScript('return document.readyState').then(function(readyState) {
-            return readyState === 'complete';
-          });
-        });
-    }
-    //to go to a URL 
-    async open(endpoint){ 
-        console.log(process.env.APP_LINK + endpoint)
-        console.log()
-        await this.driver.get(process.env.APP_LINK + endpoint);
-        await this.waitForPageToOpen(); 
-    }
-
     async getEmailInput(){
         const emailInput = await this.driver.findElement(By.id('email'));
         return emailInput;

@@ -8,7 +8,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const orgName = ['new org'];
-const testData = ['test1@test1.com' , '12345678'];
+const testData = JSON.parse(process.env.USER_DETAILS_LOGIN);;
 
 async function compareImages(imagePath1, imagePath2) {
   return new Promise((resolve, reject) => {

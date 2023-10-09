@@ -4,7 +4,7 @@ const fs = require('fs');
 const resemble = require('resemblejs');
 
 
-const testData = ['shivamji' , 'koolwalji' , 'test1@test1ji.com' , '1234567788' , '1234567788'];
+const testData = process.env.USER_DETAIL_SIGNUP;
 
 async function compareImages(imagePath1, imagePath2) {
     return new Promise((resolve, reject) => {

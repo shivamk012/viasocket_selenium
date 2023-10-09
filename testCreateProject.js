@@ -5,7 +5,7 @@ const chrome = require('selenium-webdriver/chrome')
 const constants = require('./constants');
 
 const projectName = ['new test project2'];
-const testData = ['test1@test1.com' , '12345678'];
+const testData = JSON.parse(process.env.USER_DETAILS_LOGIN);
 const fs = require('fs');
 const resemble = require('resemblejs');
 
@@ -52,8 +52,8 @@ async function testCreateProject(){
         await driver.sleep(5000);
 
         // Find the button with text "Create New Org" using XPath
-        const createProjectButton = await driver.findElement(By.tagName('button'));
-        await createProjectButton.click();
+        const createProjectButton = await driver.findElements(By.tagName('button'));
+        await createProjectButton[1].click();
         await driver.wait(until.elementLocated(By.tagName('label')), 10000);
         // await driver.wait(until.elementIsVisible(By.id('projectTitle')), 10000);
         const projectTitleLabel = await driver.findElement(By.css('label'));

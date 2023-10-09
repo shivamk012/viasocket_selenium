@@ -73,9 +73,9 @@ async function testAddSteps(){
         const divElementsInBody = await driver.findElements(By.xpath('//body/div'));
         const [listComponent] = divElementsInBody.slice(-1);
         const listElements = await listComponent.findElements(By.tagName('li'));
-        // await testFunctionStep(driver , listElements);
+        // await testFunctionStep(driver , listElements );
         // await testIfStep(driver , listElements);  
-        // await testVariableStep(driver,listElements);
+        await testVariableStep(driver,listElements);
         // await testApiStepGetRequest(driver , listElements);
         // await testApiStepPostRequest(driver , listElements);
         // await testApiStepPatchRequest(driver , listElements);
@@ -86,7 +86,7 @@ async function testAddSteps(){
         //verify by checking text of h2 with id long-button
         // await testComment(driver,listElements); 
         
-        await testResponse(driver,listElements); 
+        // await testResponse(driver,listElements); 
       
 
         // const AddStepsRefrenceScreenshot = await driver.takeScreenshot();

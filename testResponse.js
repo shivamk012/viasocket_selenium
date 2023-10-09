@@ -20,12 +20,12 @@ async function testResponse(driver , listElements){
         await listElements[5].click();
         await driver.wait(until.elementLocated(By.className('ace_content')) , 10000);
         const add_response=await driver.findElement(By.xpath('//div[@id="functionScript"]/textarea'));
-        let inputText="'fjsdkfl'"
         await add_response.clear();
+        let inputText="'fjsdkfl'"
         add_response.sendKeys(inputText);
         const save=await driver.findElement(By.xpath('//button[text()="Save"]'))
         save.click();
-        await closeSlider(driver , 'responseslider' , true);
+        // await closeSlider(driver , 'responseslider' , true);
         const ResponseRefrenceScreenshot = await driver.takeScreenshot();
         fs.writeFileSync('./refrenceImage/ResponseRefrenceScreenshot.png' , ResponseRefrenceScreenshot , 'base64');
 

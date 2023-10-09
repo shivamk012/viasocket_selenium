@@ -1,7 +1,7 @@
 const Projects = require('../pages/projects');
 
 const projectsPage = new Projects();
-const testData = JSON.parse(process.env.USER_DETAILS);
+const testData = JSON.parse(process.env.USER_DETAILS_LOGIN);
 
 async function testProjects(){
     try{

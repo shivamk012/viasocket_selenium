@@ -54,13 +54,14 @@ async function testCreateScript(){
         // await projectTitleInput.sendKeys(Key.RETURN); //hacks ... tell this to dev team 
 
 
-        await driver.wait(until.elementLocated(By.xpath('//div[contains(@class, "projectTitle")]')) , 10000);
-        const allProjects = await driver.findElements(By.xpath('//div[contains(@class, "projectTitle")]'));
-
+        await driver.wait(until.elementLocated(By.xpath('//div[contains(@class, "project_name__title")]')) , 10000);
+        const allProjects = await driver.findElements(By.xpath('//div[contains(@class, "project_name__title")]'));
         await allProjects[0].click();
+        const scriptSlider = await driver.findElement(By.xpath('//div[contains(@class , "script-slider")]'));
+        await driver.wait(until.elementIsVisible(scriptSlider) , 10000);
 
-        await driver.wait(until.elementLocated(By.xpath('//button[text() = "New Script"]')) , 10000);
-        const newScriptButton = await driver.findElement(By.xpath('//button[text() = "New Script"]'));
+        await driver.wait(until.elementLocated(By.xpath('//button[text() = " New Flow"]')) , 10000);
+        const newScriptButton = await driver.findElement(By.xpath('//button[text() = " New Flow"]'));
         await newScriptButton.click();
 
         const scriptInputParentDiv = await driver.findElement(By.xpath('//label[text() = "Script title"]/..'));

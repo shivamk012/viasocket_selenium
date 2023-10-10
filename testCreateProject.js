@@ -4,7 +4,7 @@ const {Builder , By , Capabilities , until, Key} = require('selenium-webdriver')
 const chrome = require('selenium-webdriver/chrome')
 const constants = require('./constants');
 
-const projectName = ['new test project2'];
+const projectName = ['new test project50'];
 const testData = JSON.parse(process.env.USER_DETAILS_LOGIN);
 const fs = require('fs');
 const resemble = require('resemblejs');

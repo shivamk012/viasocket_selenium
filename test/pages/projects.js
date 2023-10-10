@@ -31,6 +31,6 @@ class Projects extends Login{
         const orgInput = await this.orgTitleInputField();
         await orgInput.sendKeys(title , Key.RETURN);
     }
-}
+}   
 
 module.exports = Projects;

@@ -19,7 +19,7 @@ async function compareImages(imagePath1, imagePath2) {
   });
 }
 
-describe('Login' , () => {
+('Login' , () => {
   let driver;
 
   before(async() => {

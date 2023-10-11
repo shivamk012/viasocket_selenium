@@ -65,6 +65,12 @@ describe('Login' , () => {
         const createNewOrg = await driver.findElement((By.xpath(`//*[@id="demo-customized-menu"]/div[3]/ul/li[8]`)));
         await createNewOrg.click();
         
+        const TextField = await driver.findElement(By.id('orgtitle'));
+        await TextField.sendKeys("My new Organisation");
+
+        const CreateOrgButton = await driver.findElement(By.className(`MuiButton-containedPrimary`))
+        await CreateOrgButton.click();
+        
         resolve();
       }catch(err){
       reject(err)

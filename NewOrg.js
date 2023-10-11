@@ -25,10 +25,6 @@ describe('Login' , () => {
   before(async() => {
     const chromeOptions = new chrome.Options().windowSize({ width: 1920, height: 1080 });
     const caps = new Capabilities();
-    caps.set('goog:chromeOptions', {
-      debuggerAddress: 'https://dev-flow.viasocket.com/', // Address to connect to Chrome DevTools Protocol
-    });
-    chromeOptions.set('chromeOptions', caps);
 
     driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
   })
@@ -47,23 +43,28 @@ describe('Login' , () => {
         
         await emailInput.sendKeys(testData[0]);
         await passwordInput.sendKeys(testData[1]);
+
         
         const submitbtn = await driver.findElement(By.xpath('//button[@type = "submit"]'));
         
         await driver.actions().click(submitbtn).perform();
         
         await driver.wait(until.urlIs(`${constants.app_link}/projects`), 10000);
-        await driver.sleep(5000);
-        const screenshot1 = await driver.takeScreenshot();
+        await driver.sleep(1000);
+        // const screenshot1 = await driver.takeScreenshot();
+        
+        //TODO: dont use mui classes
+        const Org=await driver.findElement(By.className(`MuiAvatar-root MuiAvatar-rounded`));
+        await driver.actions().click(Org).perform();
 
-        fs.writeFileSync('LoginRefrenceScreenshot.png' , screenshot1 , 'base64');
-        const screenshot2 = await driver.takeScreenshot();
-        fs.writeFileSync('LoginTestScreenshot.png' , screenshot2   , 'base64');
+        const SwitchOrg = await driver.findElement(By.xpath('//ul[@role="menu"]/li[1]'));
+        await driver.actions().click(SwitchOrg).perform();
+
         
-        const comparisonResult = await compareImages('./LoginRefrenceScreenshot.png', './LoginTestScreenshot.png');
-        fs.writeFileSync('comparisonLogin.png', comparisonResult.getBuffer());
+        await driver.wait(until.elementLocated(By.id('demo-customized-menu')) , 10000);
+        const createNewOrg = await driver.findElement((By.xpath(`//*[@id="demo-customized-menu"]/div[3]/ul/li[8]`)));
+        await createNewOrg.click();
         
-        console.log('Image comparison result:', comparisonResult);
         resolve();
       }catch(err){
       reject(err)
@@ -71,6 +72,6 @@ describe('Login' , () => {
     })
 
     after(async() => {
-      // await driver.quit();
+    //   await driver.quit();
     })
-  });
+});

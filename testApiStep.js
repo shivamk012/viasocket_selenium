@@ -1,7 +1,8 @@
 const apiRequest = require('./utilities/api');
 
+
 async function testApiStepGetRequest(driver , listElements){
-    apiRequest(driver , listElements , 0 , 'api_get_request' , process.env.GET_REQUEST_URL);
+    apiRequest(driver , listElements , 0 , 'api_get_request' , process.env.GET_REQUEST_URL, 'get');
 }
 
 async function testApiStepPostRequest(driver , listElements){

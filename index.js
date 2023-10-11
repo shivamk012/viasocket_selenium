@@ -1,7 +1,9 @@
 const dotenv = require('dotenv');
-const testSign = require('./testSign');
+const testSignUp = require('./testSignUp');
 
 dotenv.config();
+const testCreateOrg = require('./testCreateOrg');
+// const testSign = require('./test/specs/testSignUp.spec');
 
-testSign();
+testSignUp();
 

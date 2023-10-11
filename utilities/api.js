@@ -2,13 +2,37 @@ const {until , By} = require('selenium-webdriver');
 const getButtonHavingText = require('./getButtonHavingText');
 const closeSlider = require('./closeSlider');
 
-async function apiRequest(driver , listElements , requestMethodIndex , stepName , requestUrl){
+const fs = require('fs');
+const resemble = require('resemblejs');
+
+async function compareImages(imagePath1, imagePath2) {
+    return new Promise((resolve, reject) => {
+      resemble(imagePath1)
+        .compareTo(imagePath2)
+        .onComplete(data => resolve(data))
+        .ignoreLess()
+        .onComplete(data => resolve(data));
+    });
+  }
+
+
+let get = 'get';
+let post = 'post';
+let put = 'put';
+let delete1 = 'delete';
+let patch = 'patch';
+
+
+
+async function apiRequest(driver , listElements , requestMethodIndex , stepName , requestUrl,requestMethod){
     try{
-        await listElements[1].click();
+        await listElements[0].click();
         await driver.wait(until.elementLocated(By.id(`${process.env.STEP_PANEL_ID}`)) , 10000);
         const ApiAccordions = await driver.findElements(By.id(`${process.env.STEP_PANEL_ID}`));
         const [apiAccordion , responseAccordion] = ApiAccordions;
-        const api_stepname = await apiAccordion.findElement(By.id(`${process.env.API_STEPNAME_INPUT_ID}`));
+        await driver.wait(until.elementLocated(By.id(`${process.env.API_STEPNAME_INPUT_ID}`)) , 10000);
+        const api_stepname = await driver.findElement(By.id(`${process.env.API_STEPNAME_INPUT_ID}`));
+        await api_stepname.click();
         await api_stepname.sendKeys(stepName);
         await responseAccordion.click();
 
@@ -32,11 +56,13 @@ async function apiRequest(driver , listElements , requestMethodIndex , stepName 
     
         await urlInput.sendKeys(requestUrl);
 
+        // NOTE:  index = 1 => post , 2 => put , 4-> patch. these request needs a json body 
         if(requestMethodIndex === 1 || requestMethodIndex === 2 || requestMethodIndex === 4){
             const textEditorDiv = await apiPanelContent.findElement(By.id('jsonEditor'));
             const textEditor = await textEditorDiv.findElement(By.css('textarea'));
             if(requestMethodIndex === 1) await textEditor.sendKeys(process.env.POST_REQUEST_BODY);
-            else await textEditor.sendKeys(process.env.PUT_REQUEST_BODY)
+            else await textEditor.sendKeys(process.env.PUT_REQUEST_BODY);
+            await driver.sleep(1000);
         } 
         
         const buttons = await apiPanelContent.findElements(By.css('button'));
@@ -44,8 +70,20 @@ async function apiRequest(driver , listElements , requestMethodIndex , stepName 
         const saveButton = await getButtonHavingText(buttons , process.env.SAVE_BUTTON_TEXT);
         await dryRunButton.click();
         await saveButton.click();
-        await driver.sleep(5000);
-        await closeSlider(driver , "SliderMain");
+        await driver.sleep(1000);
+        await closeSlider(driver , "apiSliderMainContainer" , false);
+        
+        const apiRefrenceScreenshot = await driver.takeScreenshot();
+        fs.writeFileSync(`./refrenceImage/${requestMethod}apiRefrenceScreenshot.png` , apiRefrenceScreenshot , 'base64');
+
+        const apiTestScreenshot = await driver.takeScreenshot();
+        fs.writeFileSync(`./specs/${requestMethod}apiTestScreenshot.png` , apiTestScreenshot   , 'base64');
+        
+        const comparisonResult = await compareImages(`./refrenceImage/${requestMethod}apiRefrenceScreenshot.png`, `./specs/${requestMethod}apiTestScreenshot.png`);
+        fs.writeFileSync(`./comparisonImage/${requestMethod}comparisonapi.png`, comparisonResult.getBuffer());
+        
+        console.log('Image comparison result:', comparisonResult);
+
     }catch(err){
         console.log(err);
     }

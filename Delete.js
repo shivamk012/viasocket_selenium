@@ -47,6 +47,7 @@ describe('Login' , () => {
         
         await emailInput.sendKeys(testData[0]);
         await passwordInput.sendKeys(testData[1]);
+
         
         const submitbtn = await driver.findElement(By.xpath('//button[@type = "submit"]'));
         
@@ -56,14 +57,17 @@ describe('Login' , () => {
         await driver.sleep(5000);
         // const screenshot1 = await driver.takeScreenshot();
 
-        // fs.writeFileSync('screenshot1.png' , screenshot1 , 'base64');
-        const screenshot2 = await driver.takeScreenshot();
-        fs.writeFileSync('screenshot2.png' , screenshot2   , 'base64');
-        
-        const comparisonResult = await compareImages('./screenshot1.png', './screenshot2.png');
-        fs.writeFileSync('comparison.png', comparisonResult.getBuffer());
-        
-        console.log('Image comparison result:', comparisonResult);
+        const longButton = await driver.findElement(By.css('.actionBtnContainer'));
+        await driver.actions().click(longButton).perform();
+
+        const liElements = await driver.findElements(By.css('ul[aria-labelledby="long-button"] li'));
+        for (const liElement of liElements) {
+          const text = await liElement.getText();
+          if (text === 'Delete') {
+            await liElement.click();
+            break; 
+          }
+        }
         resolve();
       }catch(err){
       reject(err)
@@ -71,6 +75,6 @@ describe('Login' , () => {
     })
 
     after(async() => {
-      // await driver.quit();
+      await driver.quit();
     })
   });

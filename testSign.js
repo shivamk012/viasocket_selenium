@@ -1,7 +1,7 @@
 const {Builder , By , Capabilities , until, Key} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome')
 
-const testData = ['shivam' , 'koolwal' , 'test1@test1.com' , '123456778' , '123456778'];
+const testData = ['jeet' , 'verma' , '09vermajeet@gmail.com' , '123456778' , '123456778'];
 
 async function testSign(){
     const chromeOptions = new chrome.Options().windowSize({ width: 1920, height: 1080 });

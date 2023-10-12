@@ -61,12 +61,27 @@ describe('Login' , () => {
         await driver.actions().click(SwitchOrg).perform();
 
         
-        await driver.wait(until.elementLocated(By.id('demo-customized-menu')) , 10000);
-        const createNewOrg = await driver.findElement((By.xpath(`//*[@id="demo-customized-menu"]/div[3]/ul/li[8]`)));
-        await createNewOrg.click();
+        // await driver.wait(until.elementLocated(By.id('demo-customized-menu')) , 10000);
+        // const createNewOrg = await driver.findElement((By.xpath(`//*[@id="demo-customized-menu"]/div[3]/ul/li[8]`)));
+        // await createNewOrg.click();
+
+        const divElement = await driver.findElement(By.id('demo-customized-menu'));
+        const ulElement = await divElement.findElement(By.tagName('ul'));
+        const liElements = await ulElement.findElements(By.tagName('li'));
+        const numLiElements = liElements.length;
+        if (numLiElements > 0) {
+          const lastLiElement = liElements.slice(-1)[0];
+          await lastLiElement.click();
+        } else {
+          console.log("No <li> elements found within the <ul>.");
+        }
+
+        // const createNewOrgElements = await driver.findElements(By.css(`[aria-label="demo-customized-button]`));
         
+        // createNewOrgElements.click();
+
         const TextField = await driver.findElement(By.id('orgtitle'));
-        await TextField.sendKeys("My new Organisation");
+        await TextField.sendKeys("Abhishek mandoli");
 
         const CreateOrgButton = await driver.findElement(By.className(`MuiButton-containedPrimary`))
         await CreateOrgButton.click();
@@ -78,6 +93,6 @@ describe('Login' , () => {
     })
 
     after(async() => {
-    //   await driver.quit();
+      // await driver.quit();
     })
 });

@@ -15,7 +15,16 @@ async function compareImages(imagePath1, imagePath2) {
     });
   }
 
-async function apiRequest(driver , listElements , requestMethodIndex , stepName , requestUrl){
+
+let get = 'get';
+let post = 'post';
+let put = 'put';
+let delete1 = 'delete';
+let patch = 'patch';
+
+
+
+async function apiRequest(driver , listElements , requestMethodIndex , stepName , requestUrl,requestMethod){
     try{
         await listElements[0].click();
         await driver.wait(until.elementLocated(By.id(`${process.env.STEP_PANEL_ID}`)) , 10000);
@@ -65,13 +74,13 @@ async function apiRequest(driver , listElements , requestMethodIndex , stepName 
         await closeSlider(driver , "apiSliderMainContainer" , false);
         
         const apiRefrenceScreenshot = await driver.takeScreenshot();
-        fs.writeFileSync('./refrenceImage/apiRefrenceScreenshot.png' , apiRefrenceScreenshot , 'base64');
+        fs.writeFileSync(`./refrenceImage/${requestMethod}apiRefrenceScreenshot.png` , apiRefrenceScreenshot , 'base64');
 
         const apiTestScreenshot = await driver.takeScreenshot();
-        fs.writeFileSync('./specs/apiTestScreenshot.png' , apiTestScreenshot   , 'base64');
+        fs.writeFileSync(`./specs/${requestMethod}apiTestScreenshot.png` , apiTestScreenshot   , 'base64');
         
-        const comparisonResult = await compareImages('./refrenceImage/apiRefrenceScreenshot.png', './specs/apiTestScreenshot.png');
-        fs.writeFileSync('./comparisonImage/comparisonapi.png', comparisonResult.getBuffer());
+        const comparisonResult = await compareImages(`./refrenceImage/${requestMethod}apiRefrenceScreenshot.png`, `./specs/${requestMethod}apiTestScreenshot.png`);
+        fs.writeFileSync(`./comparisonImage/${requestMethod}comparisonapi.png`, comparisonResult.getBuffer());
         
         console.log('Image comparison result:', comparisonResult);
 

@@ -54,14 +54,14 @@ describe('Login' , () => {
         
         await driver.wait(until.urlIs(`${constants.app_link}/projects`), 10000);
         await driver.sleep(5000);
-        const screenshot1 = await driver.takeScreenshot();
+        // const screenshot1 = await driver.takeScreenshot();
+        // fs.writeFileSync('./refrenceImage/LoginRefrenceScreenshot.png' , screenshot1 , 'base64');
 
-        fs.writeFileSync('LoginRefrenceScreenshot.png' , screenshot1 , 'base64');
         const screenshot2 = await driver.takeScreenshot();
-        fs.writeFileSync('LoginTestScreenshot.png' , screenshot2   , 'base64');
+        fs.writeFileSync('./specs/LoginTestScreenshot.png' , screenshot2   , 'base64');
         
-        const comparisonResult = await compareImages('./LoginRefrenceScreenshot.png', './LoginTestScreenshot.png');
-        fs.writeFileSync('comparisonLogin.png', comparisonResult.getBuffer());
+        const comparisonResult = await compareImages('./refrenceImage/LoginRefrenceScreenshot.png', './specs/LoginTestScreenshot.png');
+        fs.writeFileSync('./comparisonImage/comparisonLogin.png', comparisonResult.getBuffer());
         
         console.log('Image comparison result:', comparisonResult);
         resolve();

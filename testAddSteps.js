@@ -59,7 +59,7 @@ async function testAddSteps(){
         await allProjects[0].click();
         const scriptSlider = await driver.findElement(By.xpath('//div[contains(@class , "script-slider")]'));
         await driver.wait(until.elementIsVisible(scriptSlider) , 10000);
-        await driver.wait(until.elementLocated(By.xpath('.//div[contains(@class , "script_block")]')) , 10000);
+        await driver.wait(until.elementLocated(By.xpath('.//div[contains(@class , "script_block__title")]')) , 10000);
         const scripBlocks = await scriptSlider.findElements(By.xpath('.//div[contains(@class , "script_block")]'));
         await scripBlocks[0].click();
         
@@ -77,7 +77,7 @@ async function testAddSteps(){
         // await testIfStep(driver , listElements);  
         await testVariableStep(driver,listElements);
         // await testApiStepGetRequest(driver , listElements);
-        // await testApiStepPostRequest(driver , listElements);
+        await testApiStepPostRequest(driver , listElements);
         // await testApiStepPatchRequest(driver , listElements);
         // await testApiStepDeleteRequest(driver , listElements);
         // await testApiStepPutRequest(driver , listElements);

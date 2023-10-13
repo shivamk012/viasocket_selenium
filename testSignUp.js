@@ -2,12 +2,11 @@ const {Builder , By , Capabilities , until, Key} = require('selenium-webdriver')
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 const resemble = require('resemblejs');
+const dotenv = require('dotenv');
+dotenv.config();
 
-<<<<<<< HEAD
-const testData = ['jeet' , 'verma' , '09vermajeet@gmail.com' , '123456778' , '123456778'];
-=======
 
-const testData = process.env.USER_DETAIL_SIGNUP;
+const testData = ['abc' , 'xyz' , 'test1@test1abc.com' , '1234567788' , '1234567788'];
 
 async function compareImages(imagePath1, imagePath2) {
     return new Promise((resolve, reject) => {
@@ -18,9 +17,8 @@ async function compareImages(imagePath1, imagePath2) {
         .onComplete(data => resolve(data));
     });
   }
->>>>>>> 85d09cc55a7c63c02445d14a0b61b743151a69bb
 
-async function testSign(){
+async function testSignUp(){
     const chromeOptions = new chrome.Options().windowSize({ width: 1920, height: 1080 });
   const caps = new Capabilities();
   
@@ -42,7 +40,7 @@ async function testSign(){
         const createAccountBtn = await createAccountDiv.findElement(By.xpath('.//div'));
 
         await driver.actions().click(createAccountBtn).perform();
-          
+
         const accountDetailsForm = await driver.findElement(By.css('form'));
         const inputElements = await accountDetailsForm.findElements(By.css('input'));
 
@@ -57,8 +55,8 @@ async function testSign(){
 
         await driver.actions().move({origin : signUpButton}).click().perform();
 
-        const SignUpRefrenceScreenshot = await driver.takeScreenshot();
-        fs.writeFileSync('./refrenceImage/SignUpRefrenceScreenshot.png' , SignUpRefrenceScreenshot , 'base64');
+        // const SignUpRefrenceScreenshot = await driver.takeScreenshot();
+        // fs.writeFileSync('./refrenceImage/SignUpRefrenceScreenshot.png' , SignUpRefrenceScreenshot , 'base64');
         const SignUpTestScreenshot = await driver.takeScreenshot();
         fs.writeFileSync('./specs/SignUpTestScreenshot.png' , SignUpTestScreenshot   , 'base64');
         
@@ -66,15 +64,17 @@ async function testSign(){
         fs.writeFileSync('./comparisonImage/comparisonSignUp.png', comparisonResult.getBuffer());
         
         console.log('Image comparison result:', comparisonResult);
-        resolve();
+        // resolve();
         
     }
     catch(err){
         console.log(err);
-        reject(err); // Reject the Promise in case of an error
+        // reject(err); // Reject the Promise in case of an error
     }finally{
         // driver.quit();
     }
 }
 
-module.exports = testSign;
+testSignUp();
+
+// module.exports = testSignUp;

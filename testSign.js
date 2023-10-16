@@ -3,10 +3,6 @@ const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 const resemble = require('resemblejs');
 
-<<<<<<< HEAD
-const testData = ['jeet' , 'verma' , '09vermajeet@gmail.com' , '123456778' , '123456778'];
-=======
-
 const testData = process.env.USER_DETAIL_SIGNUP;
 
 async function compareImages(imagePath1, imagePath2) {
@@ -18,7 +14,7 @@ async function compareImages(imagePath1, imagePath2) {
         .onComplete(data => resolve(data));
     });
   }
->>>>>>> 85d09cc55a7c63c02445d14a0b61b743151a69bb
+
 
 async function testSign(){
     const chromeOptions = new chrome.Options().windowSize({ width: 1920, height: 1080 });

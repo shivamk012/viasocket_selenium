@@ -1,19 +1,16 @@
-const {Builder} = require('selenium-webdriver');
+const {Builder, until} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 
 module.exports = class Page {
     constructor(){
-        
         try{
-        let options = new chrome.Options();
-        let userDataDir = 'C:\\Users\\hp\\AppData\\Local\\Google\\Chrome\\User Data';
-        options.addArguments(`user-data-dir=${userDataDir}`);
+            let options = new chrome.Options();
+            let userDataDir = 'C:\\Users\\hp\\AppData\\Local\\Google\\Chrome\\User Data';
+            options.addArguments(`user-data-dir=${userDataDir}`);
 
-        this.driver = new Builder().setChromeOptions(options).forBrowser('chrome').build();
-        console.log('Driver created successfully');
-        // const chromeOptions = new chrome.Options();
-        // chromeOptions.addArguments('--user-data-dir=C:\\Users\\hp\\AppData\\Local\\Google\\Chrome\\User Data'); // Replace with your Chrome user data directory
-        // chromeOptions.addArguments('--profile-directory=C:\Users\hp\AppData\Local\Google\Chrome\User Data\Profile 1'); // Replace with your Chrome profile directory
+            this.driver = new Builder().setChromeOptions(options).forBrowser('chrome').build();
+            console.log('Driver created successfully');
+            this.app_link = (process.argv[2] === "test" ? process.env.TEST_LINK : process.env.PROD_LINK);
 
         }
         catch(err){
@@ -25,6 +22,10 @@ module.exports = class Page {
         return this.driver;
     }
 
+    currentUrl(endpoint){
+        return this.app_link + endpoint;
+    }
+
     async waitForPageToOpen(){
         await this.driver.wait(async() => {
           return this.driver.executeScript('return document.readyState').then(function(readyState) {
@@ -32,10 +33,15 @@ module.exports = class Page {
           });
         });
     }
+
+    async waitForEndpoint(endpoint){
+        await this.driver.wait(until.urlContains(this.currentUrl(endpoint)) , 10000);
+    }
+
     //to go to a URL 
     async open(endpoint){ 
-        console.log(process.env.APP_LINK + endpoint);
-        await this.driver.get(process.env.APP_LINK + endpoint);
+        console.log(this.currentUrl(endpoint));
+        await this.driver.get(this.currentUrl(endpoint));
         await this.waitForPageToOpen(); 
     }
 }

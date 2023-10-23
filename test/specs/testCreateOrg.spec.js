@@ -7,11 +7,9 @@ async function testProjects(){
     try{
         await projectsPage.open('/');
         await projectsPage.clickOnLoginWithGoogle();
-        // await projectsPage.enterEmail(testData[0]);
-        // await projectsPage.enterPassword(testData[1]);
-        // await projectsPage.loginUser();
-        // await projectsPage.openListOfOrgs();
-        // await projectsPage.createNewOrg('new org');
+        await projectsPage.waitForEndpoint('/projects');
+        await projectsPage.openListOfOrgs();
+        await projectsPage.createNewOrg('new org');
     }
     catch(err){
         console.log(err);

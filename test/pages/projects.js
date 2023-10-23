@@ -10,21 +10,30 @@ class Projects extends Login{
 
     async orgField(){
         // NOTE: long-button is used for orgtitle and on "..." button of each project 
-        const org = await this.driver.findElement(By.id('long-button'));
-        this.orgName = await org.getText();
-        return org;
+        const orgNameDiv = await this.driver.findElement(By.id('long-button'));
+        this.orgName = await orgNameDiv.getText();
+        const orgNameParent = await orgNameDiv.findElement(By.xpath('.//..'));
+        const orgNameListButton = await orgNameParent.findElement(By.css('div'));
+        return orgNameListButton;
     }
 
     async clickOnOrgButton(){
-        const org = await this.orgField();
-        const orgDiv = await org.findElement(By.xpath('.//..'));
-        await orgDiv.click();
+        const orgNameListButton = await this.orgField();
+        await orgNameListButton.click();
+    }
+
+    async openListOfOrgs(){
+        await this.clickOnOrgButton();
+        await this.driver.wait(until.elementLocated(By.id('account-menu')) , 10000);
+        const orgListToggleButton = await this.driver.findElement(By.id('account-menu')).findElement(By.css('li'));
+        await orgListToggleButton.click();
     }
 
     async orgTitleInputField(){
-        await driver.wait(until.elementLocated(By.id('orgtitle')), 10000);
-        const orgTitleInput = await driver.findElement(By.id('orgtitle'));
-        return orgTitleInput;
+        await driver.wait(until.elementLocated(By.id('demo-customized-menu')), 10000);
+        const orgList = await driver.findElements(By.id('demo-customized-menu')).findElement(By.css('ul'));
+        const createNewOrgButton = await orgList.findElements(By.css('li'))[-1];
+        return createNewOrgButton;
     }
 
     async createNewOrg(title){

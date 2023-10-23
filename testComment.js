@@ -29,11 +29,11 @@ async function testComment(driver , listElements){
         // await add_comment.sendKeys(Key.RETURN);
 
 
-        fs.writeFileSync('./refrenceImage/CommentsRefrenceScreenshot.png' , CommentsRefrenceScreenshot , 'base64');
+        fs.writeFileSync('./referenceImage/CommentsRefrenceScreenshot.png' , CommentsRefrenceScreenshot , 'base64');
         const CommentsTestScreenshot = await driver.takeScreenshot();
         fs.writeFileSync('./specs/CommentsTestScreenshot.png' , CommentsTestScreenshot   , 'base64');
         
-        const comparisonResult = await compareImages('./refrenceImage/CommentsRefrenceScreenshot.png', './specs/CommentsTestScreenshot.png');
+        const comparisonResult = await compareImages('./referenceImage/CommentsRefrenceScreenshot.png', './specs/CommentsTestScreenshot.png');
         fs.writeFileSync('./comparisonImage/comparisonComments.png', comparisonResult.getBuffer());
         
         console.log('Image comparison result:', comparisonResult);

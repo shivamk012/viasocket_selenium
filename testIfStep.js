@@ -30,12 +30,12 @@ async function testIfStep(driver , listElements){
 
 
         const IfStepRefrenceScreenshot = await driver.takeScreenshot();
-        fs.writeFileSync('./refrenceImage/IfStepRefrenceScreenshot.png' , IfStepRefrenceScreenshot , 'base64');
+        fs.writeFileSync('./referenceImage/IfStepRefrenceScreenshot.png' , IfStepRefrenceScreenshot , 'base64');
 
         const IfStepTestScreenshot = await driver.takeScreenshot();
         fs.writeFileSync('./specs/IfStepTestScreenshot.png' , IfStepTestScreenshot   , 'base64');
         
-        const comparisonResult = await compareImages('./refrenceImage/IfStepRefrenceScreenshot.png', './specs/IfStepTestScreenshot.png');
+        const comparisonResult = await compareImages('./referenceImage/IfStepRefrenceScreenshot.png', './specs/IfStepTestScreenshot.png');
         fs.writeFileSync('./comparisonImage/comparisonIfStep.png', comparisonResult.getBuffer());
         
         console.log('Image comparison result:', comparisonResult);

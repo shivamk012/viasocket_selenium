@@ -66,11 +66,11 @@ async function testCreateProject(){
 
 
         const CreateProjectRefrenceScreenshot = await driver.takeScreenshot();
-        fs.writeFileSync('./refrenceImage/CreateProjectRefrenceScreenshot.png' , CreateProjectRefrenceScreenshot , 'base64');
+        fs.writeFileSync('./referenceImage/CreateProjectRefrenceScreenshot.png' , CreateProjectRefrenceScreenshot , 'base64');
         const CreateProjectTestScreenshot = await driver.takeScreenshot();
         fs.writeFileSync('./specs/CreateProjectTestScreenshot.png' , CreateProjectTestScreenshot   , 'base64');
         
-        const comparisonResult = await compareImages('./refrenceImage/CreateProjectRefrenceScreenshot.png', './specs/CreateProjectTestScreenshot.png');
+        const comparisonResult = await compareImages('./referenceImage/CreateProjectRefrenceScreenshot.png', './specs/CreateProjectTestScreenshot.png');
         fs.writeFileSync('./comparisonImage/comparisonCreateProject.png', comparisonResult.getBuffer());
         
         console.log('Image comparison result:', comparisonResult);

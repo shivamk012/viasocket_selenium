@@ -57,26 +57,27 @@ async function testCreateScript(){
         await driver.wait(until.elementLocated(By.xpath('//div[contains(@class, "project_name__title")]')) , 10000);
         const allProjects = await driver.findElements(By.xpath('//div[contains(@class, "project_name__title")]'));
         await allProjects[0].click();
-        const scriptSlider = await driver.findElement(By.xpath('//div[contains(@class , "script-slider")]'));
-        await driver.wait(until.elementIsVisible(scriptSlider) , 10000);
-
-        await driver.wait(until.elementLocated(By.xpath('//button[text() = " New Flow"]')) , 10000);
-        const newScriptButton = await driver.findElement(By.xpath('//button[text() = " New Flow"]'));
+        await driver.wait(until.elementLocated(By.className('script_slider')));
+        const scriptSlider = await driver.findElement(By.className('script_slider'));
+        const newScriptButton = await scriptSlider.findElement(By.css('button'));
         await newScriptButton.click();
-
-        const scriptInputParentDiv = await driver.findElement(By.xpath('//label[text() = "Script title"]/..'));
-        const scriptInput = await scriptInputParentDiv.findElement(By.xpath('.//div/input'));
+        
+        await driver.wait(until.elementLocated(By.css('[class*="custom-modal"]')));
+        const newScriptForm = await driver.findElement(By.css('[class*="custom-modal"]'));
+        const scriptInput = await newScriptForm.findElement(By.css('input'));
+        await driver.wait(until.elementIsEnabled(scriptInput) , 10000);
+        await driver.sleep(2000);
         await scriptInput.sendKeys('test script1' , Key.RETURN);
         //verify by checking text of h2 with id long-button
 
 
 
         const CreateScriptRefrenceScreenshot = await driver.takeScreenshot();
-        fs.writeFileSync('./refrenceImage/CreateScriptRefrenceScreenshot.png' , CreateScriptRefrenceScreenshot , 'base64');
+        fs.writeFileSync('./referenceImage/CreateScriptRefrenceScreenshot.png' , CreateScriptRefrenceScreenshot , 'base64');
         const CreateScriptTestScreenshot = await driver.takeScreenshot();
         fs.writeFileSync('./specs/CreateScriptTestScreenshot.png' , CreateScriptTestScreenshot   , 'base64');
         
-        const comparisonResult = await compareImages('./refrenceImage/CreateScriptRefrenceScreenshot.png', './specs/CreateScriptTestScreenshot.png');
+        const comparisonResult = await compareImages('./referenceImage/CreateScriptRefrenceScreenshot.png', './specs/CreateScriptTestScreenshot.png');
         fs.writeFileSync('./comparisonImage/comparisonCreateScript.png', comparisonResult.getBuffer());
         
         console.log('Image comparison result:', comparisonResult);

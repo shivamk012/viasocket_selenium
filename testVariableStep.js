@@ -16,11 +16,12 @@ async function compareImages(imagePath1, imagePath2) {
 
 async function testVariableStep(driver , listElements){
     try{
+        await driver.sleep(2000);
         await listElements[2].click();
         // await driver.wait(until.elementLocated(By.xpath('//p[text() = "Create Variable"]')) , 10000);
         // const variableAccordion = await driver.findElement(By.xpath('//p[text() = "Create Variable"]'));
         // await variableAccordion.click();
-        await driver.wait(until.elementLocated(By.id(`${constants.variable_input_id}`)));
+        await driver.wait(until.elementLocated(By.id(`${constants.variable_input_id}`)) , 10000);
         const variable_name_input = await driver.findElement(By.id(`${constants.variable_input_id}`));
         await variable_name_input.click();
         await variable_name_input.sendKeys('input_variable');
@@ -33,15 +34,15 @@ async function testVariableStep(driver , listElements){
         const create_variable=await driver.findElement(By.xpath('//button[normalize-space()="Create Variable"]'))
         await driver.actions().click(create_variable).perform();
         
-        await closeSlider(driver , 'functionsliderbody' , true);
+        // await closeSlider(driver , 'functionsliderbody' , true);
 
         const VariableRefrenceScreenshot = await driver.takeScreenshot();
-        fs.writeFileSync('./refrenceImage/VariableRefrenceScreenshot.png' , VariableRefrenceScreenshot , 'base64');
+        fs.writeFileSync('./referenceImage/VariableRefrenceScreenshot.png' , VariableRefrenceScreenshot , 'base64');
 
         const VariableTestScreenshot = await driver.takeScreenshot();
         fs.writeFileSync('./specs/VariableTestScreenshot.png' , VariableTestScreenshot   , 'base64');
         
-        const comparisonResult = await compareImages('./refrenceImage/VariableRefrenceScreenshot.png', './specs/VariableTestScreenshot.png');
+        const comparisonResult = await compareImages('./referenceImage/VariableRefrenceScreenshot.png', './specs/VariableTestScreenshot.png');
         fs.writeFileSync('./comparisonImage/comparisonVariable.png', comparisonResult.getBuffer());
         
         console.log('Image comparison result:', comparisonResult);

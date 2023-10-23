@@ -39,12 +39,12 @@ async function testFunctionStep(driver , listElements){
         // const fullScreen_crossButton = await crossButtonDiv.findElements(By.xpath('.//button'));
 
         const FunctionRefrenceScreenshot = await driver.takeScreenshot();
-        fs.writeFileSync('./refrenceImage/FunctionRefrenceScreenshot.png' , FunctionRefrenceScreenshot , 'base64');
+        fs.writeFileSync('./referenceImage/FunctionRefrenceScreenshot.png' , FunctionRefrenceScreenshot , 'base64');
 
         const FunctionTestScreenshot = await driver.takeScreenshot();
         fs.writeFileSync('./specs/FunctionTestScreenshot.png' , FunctionTestScreenshot   , 'base64');
         
-        const comparisonResult = await compareImages('./refrenceImage/FunctionRefrenceScreenshot.png', './specs/FunctionTestScreenshot.png');
+        const comparisonResult = await compareImages('./referenceImage/FunctionRefrenceScreenshot.png', './specs/FunctionTestScreenshot.png');
         fs.writeFileSync('./comparisonImage/comparisonFunction.png', comparisonResult.getBuffer());
         
         console.log('Image comparison result:', comparisonResult);

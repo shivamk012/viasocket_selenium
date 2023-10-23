@@ -1,5 +1,6 @@
 const {Builder , By , Capabilities , until, Key} = require('selenium-webdriver');
-const chrome = require('selenium-webdriver/chrome')
+const chrome = require('selenium-webdriver/chrome');
+const axios = require('axios');
 const fs = require('fs');
 const getButtonHavingText = require('./utilities/getButtonHavingText')
 const resemble = require('resemblejs');
@@ -64,50 +65,35 @@ async function testAddSteps(){
         const scripBlocks = await scriptSlider.findElements(By.xpath('.//div[contains(@class , "script_block")]'));
         await scripBlocks[0].click();
 
-        const navBarButtons = await driver.findElements(By.css('[class*="workflownavbar"]'));
-        // const editButton = await getButtonHavingText(navBarButtons , 'EDIT');
-        await navBarButtons[1].click();
-        //TODO
-        //check if url of site contains a script id , project id and workflows       
-        await driver.wait(until.elementLocated(By.xpath('//input[contains(@placeholder , "Steps")]')) , 10000);
-        const addStepInput = await driver.findElement(By.xpath('//input[contains(@placeholder , "Steps")]'));
-        await addStepInput.click();
-        // const sourceCode = await driver.getPageSource();
-        // fs.writeFileSync('./sourceCode.txt' , sourceCode);
-        const divElementsInBody = await driver.findElements(By.xpath('//body/div'));
-        const [listComponent] = divElementsInBody.slice(-1);
-        const listElements = await listComponent.findElements(By.tagName('li'));
-        // await testFunctionStep(driver , listElements );
-        // await testIfStep(driver , listElements);  
-        // await testVariableStep(driver,listElements);
-        await testApiStepGetRequest(driver , listElements);
-        // await testApiStepPostRequest(driver , listElements);
-        // await testApiStepPatchRequest(driver , listElements);
-        // await testApiStepDeleteRequest(driver , listElements);
-        // await testApiStepPutRequest(driver , listElements);
+        await driver.wait(until.urlContains('workflows') , 10000);
+        const currentUrl = await driver.getCurrentUrl();
+        
+        const pattern = "workflows";
+        const workflowMatch = /workflow/.exec(currentUrl);
+        const publishedMatch = /published/.exec(currentUrl);
+        console.log(currentUrl[workflowMatch.index + currentUrl.length - 1] , currentUrl[publishedMatch.index]);
+        console.log(`https://flow.sokt.io/func/${currentUrl.substring(workflowMatch.index + pattern.length+1 , publishedMatch.index-1)}`);
+        const webhook = `https://flow.sokt.io/func/${currentUrl.substring(workflowMatch.index + pattern.length+1 , publishedMatch.index-1)}?a=1&b=1`;
+        const invocationResponse = await axios.post(webhook , {a : 1 , b : 1});
+        const logDiv = await driver.findElement(By.css('[class*="workflownavbar__tabs"]'));
+        const tabButtons = await logDiv.findElements(By.css('button'));
+        console.log(tabButtons);
+        const [logButton] = tabButtons.slice(-1);
+        console.log(logButton)
+        await logButton.click();
 
-        
-        //verify by checking text of h2 with id long-button
-        // await testComment(driver,listElements); 
-        
-        // await testResponse(driver,listElements); 
-      
-
-        // const AddStepsRefrenceScreenshot = await driver.takeScreenshot();
-        // fs.writeFileSync('./referenceImage/AddStepsRefrenceScreenshot.png' , AddStepsRefrenceScreenshot , 'base64');
-
-        // const AddStepsTestScreenshot = await driver.takeScreenshot();
-        // fs.writeFileSync('./specs/AddStepsTestScreenshot.png' , AddStepsTestScreenshot   , 'base64');
-        
-        // const comparisonResult = await compareImages('./referenceImage/AddStepsRefrenceScreenshot.png', './specs/AddStepsTestScreenshot.png');
-        // fs.writeFileSync('./comparisonImage/comparisonAddSteps.png', comparisonResult.getBuffer());
-        
-        // console.log('Image comparison result:', comparisonResult);
-        // resolve();
+        const logData = await driver.findElement(By.css('[class*="workflow"]'));
+        const payload = await driver.findElement(By.xpath('.//div[contains(@class , "logs__flowbody")]//span//span'));
+        await payload.click()
+        // const body = await payload.findElement(By.xpath('.//div[text() = "body"]'));
+        // await body.click();
 
     }
     catch(err){
         console.log(err);
+    }
+    finally{
+      // await driver.quit();
     }
 };
 

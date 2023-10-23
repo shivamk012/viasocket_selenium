@@ -24,11 +24,6 @@ describe('Login' , () => {
 
   before(async() => {
     const chromeOptions = new chrome.Options().windowSize({ width: 1920, height: 1080 });
-    const caps = new Capabilities();
-    caps.set('goog:chromeOptions', {
-      debuggerAddress: 'https://dev-flow.viasocket.com/', // Address to connect to Chrome DevTools Protocol
-    });
-    chromeOptions.set('chromeOptions', caps);
 
     driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
   })
@@ -53,15 +48,14 @@ describe('Login' , () => {
         await driver.actions().click(submitbtn).perform();
         
         await driver.wait(until.urlIs(`${constants.app_link}/projects`), 10000);
-        await driver.sleep(5000);
-        const screenshot1 = await driver.takeScreenshot();
+        // const screenshot1 = await driver.takeScreenshot();
+        // fs.writeFileSync('./refrenceImage/LoginRefrenceScreenshot.png' , screenshot1 , 'base64');
 
-        fs.writeFileSync('LoginRefrenceScreenshot.png' , screenshot1 , 'base64');
         const screenshot2 = await driver.takeScreenshot();
-        fs.writeFileSync('LoginTestScreenshot.png' , screenshot2   , 'base64');
+        fs.writeFileSync('./specs/LoginTestScreenshot.png' , screenshot2   , 'base64');
         
-        const comparisonResult = await compareImages('./LoginRefrenceScreenshot.png', './LoginTestScreenshot.png');
-        fs.writeFileSync('comparisonLogin.png', comparisonResult.getBuffer());
+        const comparisonResult = await compareImages('./refrenceImage/LoginRefrenceScreenshot.png', './specs/LoginTestScreenshot.png');
+        fs.writeFileSync('./comparisonImage/comparisonLogin.png', comparisonResult.getBuffer());
         
         console.log('Image comparison result:', comparisonResult);
         resolve();

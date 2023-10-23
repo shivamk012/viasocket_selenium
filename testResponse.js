@@ -25,14 +25,15 @@ async function testResponse(driver , listElements){
         add_response.sendKeys(inputText);
         const save=await driver.findElement(By.xpath('//button[text()="Save"]'))
         save.click();
+        await driver.sleep(2000);
         // await closeSlider(driver , 'responseslider' , true);
         const ResponseRefrenceScreenshot = await driver.takeScreenshot();
-        fs.writeFileSync('./refrenceImage/ResponseRefrenceScreenshot.png' , ResponseRefrenceScreenshot , 'base64');
+        fs.writeFileSync('./referenceImage/ResponseRefrenceScreenshot.png' , ResponseRefrenceScreenshot , 'base64');
 
         const ResponseTestScreenshot = await driver.takeScreenshot();
         fs.writeFileSync('./specs/ResponseTestScreenshot.png' , ResponseTestScreenshot   , 'base64');
         
-        const comparisonResult = await compareImages('./refrenceImage/ResponseRefrenceScreenshot.png', './specs/ResponseTestScreenshot.png');
+        const comparisonResult = await compareImages('./referenceImage/ResponseRefrenceScreenshot.png', './specs/ResponseTestScreenshot.png');
         fs.writeFileSync('./comparisonImage/comparisonResponse.png', comparisonResult.getBuffer());
         
         console.log('Image comparison result:', comparisonResult);

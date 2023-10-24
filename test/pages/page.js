@@ -34,8 +34,16 @@ module.exports = class Page {
         });
     }
 
-    async waitForEndpoint(endpoint){
-        await this.driver.wait(until.urlContains(this.currentUrl(endpoint)) , 10000);
+    async waitForEndpoint(endpoint , timer){
+        await this.driver.wait(until.urlContains(this.currentUrl(endpoint)) , timer);
+    }
+
+    async waitForContentToLoad(locator , timer){
+        await this.driver.wait(until.elementLocated(locator) , timer);
+    }
+
+    async waitForContentToBeVisible(locator , timer){
+        await this.driver.wait(until.elementIsVisible(locator) , timer);
     }
 
     //to go to a URL 
@@ -43,5 +51,9 @@ module.exports = class Page {
         console.log(this.currentUrl(endpoint));
         await this.driver.get(this.currentUrl(endpoint));
         await this.waitForPageToOpen(); 
+    }
+
+    async close(){
+        await this.driver.quit();
     }
 }

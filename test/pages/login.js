@@ -1,6 +1,5 @@
 const Page = require('./page');
 const {By , until} = require('selenium-webdriver');
-const fs = require('fs');
 
 module.exports = class Login extends Page {
     constructor(){

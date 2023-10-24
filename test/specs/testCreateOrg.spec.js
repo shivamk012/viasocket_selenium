@@ -9,6 +9,7 @@ async function testProjects(){
         await projectsPage.open(endpoints.HOME);
         await projectsPage.clickOnLoginWithGoogle();
         await projectsPage.waitForEndpoint(endpoints.PROJECT , 60000);
+        await projectsPage.waitForProjecPageToLoad();
         await projectsPage.openListOfOrgs();
         await projectsPage.createNewOrg('new org');
     }

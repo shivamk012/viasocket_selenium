@@ -23,18 +23,21 @@ class Projects extends Login{
         await orgNameListButton.click();
     }
 
-    async openListOfOrgs(){
+    async waitForProjecPageToLoad(){
         await super.waitForContentToLoad(By.css('[class*="project-page"]') , 10000);
         const projectPage = await this.driver.findElement(By.css('[class*="project-page"]'));
         await super.waitForContentToBeVisible(projectPage);
-        await this.clickOnOrgButton();
-        await this.driver.wait(until.elementLocated(By.id('account-menu')) , 10000);
-        const orgListToggleButton = await this.driver.findElement(By.id('account-menu')).findElement(By.css('li'));
-        await orgListToggleButton.click();
     }
 
-    async orgTitleInputField(){
-        await this.driver.wait(until.elementLocated(By.id('demo-customized-menu')), 10000);
+    async openListOfOrgs(){
+        await this.clickOnOrgButton();
+        await super.waitForContentToLoad(By.id('account-menu') , 10000);
+        const orgListOpenButton = await this.driver.findElement(By.id('account-menu')).findElement(By.css('li'));
+        await orgListOpenButton.click();
+    }
+
+    async getOrgTitleInputField(){
+        await super.waitForContentToLoad(By.id('demo-customized-menu') , 10000);
         const orgList = await this.driver.findElement(By.id('demo-customized-menu')).findElement(By.css('ul'));
         const [createNewOrgButton] = (await orgList.findElements(By.css('li'))).slice(-1);
         await createNewOrgButton.click();
@@ -58,7 +61,7 @@ class Projects extends Login{
     }
 
     async createNewOrg(title){
-        const orgInput = await this.orgTitleInputField();
+        const orgInput = await this.getOrgTitleInputField();
 
         await orgInput.sendKeys(title , Key.RETURN);
     }

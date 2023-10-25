@@ -6,6 +6,7 @@ class Projects extends Login{
         super();
         this.driver = super.Driver;
         this.orgName = '';
+        this.scriptSlider = '';
     }
 
     async orgField(){
@@ -58,6 +59,23 @@ class Projects extends Login{
         const projectTitleInputDiv = await projectTitleLabel.findElement(By.xpath('.//..'));
         const projectTitleInput = await projectTitleInputDiv.findElement(By.css('input'));
         await projectTitleInput.sendKeys(projectName , Key.RETURN);
+    }
+
+    async clickOnProjectName(){
+        await this.driver.wait(until.elementLocated(By.xpath('//div[contains(@class, "project_name__title")]')) , 10000);
+        const allProjects = await this.driver.findElements(By.xpath('//div[contains(@class, "project_name__title")]'));
+        await allProjects[0].click();
+    }
+
+    async waitForScriptSlider(){
+        this.scriptSlider = await this.driver.findElement(By.xpath('//div[contains(@class , "script_slider")]'));
+        await super.waitForContentToBeVisible(this.scriptSlider , 10000);
+    }
+    
+    async clickOnScript(){
+        await super.waitForContentToLoad(By.xpath('.//div[contains(@class , "script_block")]') , 10000);
+        const scripBlocks = await this.scriptSlider.findElements(By.xpath('.//div[contains(@class , "script_block")]'));
+        await scripBlocks[0].click();
     }
 
     async createNewOrg(title){

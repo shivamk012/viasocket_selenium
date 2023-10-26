@@ -5,7 +5,7 @@ module.exports = class Page {
     constructor(){
         try{
             let options = new chrome.Options();
-            let userDataDir = 'C:\\Users\\hp\\AppData\\Local\\Google\\Chrome\\User Data';
+            let userDataDir = process.env.USER_PROFILE_DIR;
             options.addArguments(`user-data-dir=${userDataDir}`);
 
             this.driver = new Builder().setChromeOptions(options).forBrowser('chrome').build();

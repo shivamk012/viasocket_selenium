@@ -1,5 +1,4 @@
 const FlowPage = require('../pages/flow');
-const endpoints = require('../enums');
 const axios = require('axios');
 
 async function testInvocation(){

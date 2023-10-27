@@ -19,7 +19,7 @@ async function compareImages(imagePath1, imagePath2) {
   });
 }
 
-describe('Login' , () => {
+('Login' , () => {
   let driver;
 
   before(async() => {
@@ -47,6 +47,7 @@ describe('Login' , () => {
         
         await emailInput.sendKeys(testData[0]);
         await passwordInput.sendKeys(testData[1]);
+
         
         const submitbtn = await driver.findElement(By.xpath('//button[@type = "submit"]'));
         
@@ -55,15 +56,18 @@ describe('Login' , () => {
         await driver.wait(until.urlIs(`${constants.app_link}/projects`), 10000);
         await driver.sleep(5000);
         // const screenshot1 = await driver.takeScreenshot();
-        // fs.writeFileSync('./refrenceImage/LoginRefrenceScreenshot.png' , screenshot1 , 'base64');
 
-        const screenshot2 = await driver.takeScreenshot();
-        fs.writeFileSync('./specs/LoginTestScreenshot.png' , screenshot2   , 'base64');
-        
-        const comparisonResult = await compareImages('./refrenceImage/LoginRefrenceScreenshot.png', './specs/LoginTestScreenshot.png');
-        fs.writeFileSync('./comparisonImage/comparisonLogin.png', comparisonResult.getBuffer());
-        
-        console.log('Image comparison result:', comparisonResult);
+        const longButton = await driver.findElement(By.css('.actionBtnContainer'));
+        await driver.actions().click(longButton).perform();
+
+        const liElements = await driver.findElements(By.css('ul[aria-labelledby="long-button"] li'));
+        for (const liElement of liElements) {
+          const text = await liElement.getText();
+          if (text === 'Delete') {
+            await liElement.click();
+            break; 
+          }
+        }
         resolve();
       }catch(err){
       reject(err)
@@ -71,6 +75,6 @@ describe('Login' , () => {
     })
 
     after(async() => {
-      // await driver.quit();
+      await driver.quit();
     })
   });

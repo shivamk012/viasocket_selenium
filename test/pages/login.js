@@ -29,6 +29,8 @@ module.exports = class Login extends Page {
 
     async clickOnLoginWithGoogle(){
         await this.driver.sleep(5000);
+        const currentUrl = await this.driver.getCurrentUrl();
+        if(currentUrl.includes("projects")) return;
         const proxuAuth = await this.driver.findElement(By.xpath('//proxy-auth'));
         const shadowRoot = await this.driver.executeScript('return arguments[0].shadowRoot' , proxuAuth);
         const [proxyCrossButton , googleLoginButton] = await shadowRoot.findElements(By.css('button'));

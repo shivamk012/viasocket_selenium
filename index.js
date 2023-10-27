@@ -1,5 +1,4 @@
 const dotenv = require('dotenv');
-const testSignUp = require('./testSignUp');
 
 dotenv.config();
 // const testCreateOrg = require('./testCreateOrg');

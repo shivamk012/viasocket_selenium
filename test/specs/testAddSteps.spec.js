@@ -12,7 +12,13 @@ async function testAddSteps(){
     await flowPage.clickOnScript();
     await flowPage.waitForFlowPageToOpen();
     await flowPage.clickOnEditButton();
-    await flowPage.DragAndDrop();
+    await flowPage.clickOnAddStepsButton();
+    await flowPage.listOfSteps();
+    await flowPage.createAPI1();
+    await flowPage.createVariable();
+    await flowPage.createIfCondition();
+    await flowPage.createFunction();
+    await flowPage.createAPI2();
 }
 
 module.exports = testAddSteps;

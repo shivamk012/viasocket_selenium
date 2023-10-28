@@ -60,7 +60,7 @@ class Projects extends Login{
         const projectTitleInput = await projectTitleInputDiv.findElement(By.css('input'));
         await projectTitleInput.sendKeys(projectName , Key.RETURN);
     }
-
+    
     async clickOnProjectName(){
         await this.driver.wait(until.elementLocated(By.xpath('//div[contains(@class, "project_name__title")]')) , 10000);
         const allProjects = await this.driver.findElements(By.xpath('//div[contains(@class, "project_name__title")]'));

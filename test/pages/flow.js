@@ -11,6 +11,7 @@ class FlowPage extends Projects{
         this.pageUrl = '';
         this.webHookUrl = '';
         this.navbarButtons = [];
+        this.steps = [];
     }
 
     async waitForFlowPageToOpen(){
@@ -27,6 +28,7 @@ class FlowPage extends Projects{
         await this.getNavBarButton();
         const editButton = await getButtonHavingText(this.navbarButtons , 'EDIT');
         await editButton.click();
+        await super.waitForEndpoint(endpoints.EDIT , 10000);
     }
 
     async DragAndDrop(){
@@ -47,6 +49,25 @@ class FlowPage extends Projects{
             console.error('Error',error);
         }
     } 
+
+    async clickOnAddSteps(){
+        const workflow = await this.driver.findElement(By.css('[class*="workflow__flow"]'));
+        const addStepsButton = await workflow.findElement(By.css('input'));
+        await addStepsButton.click();
+        const divElementsInBody = await workflow.findElements(By.xpath('//body/div'));
+        const [listComponent] = divElementsInBody.slice(-1);
+        const listElements = await listComponent.findElements(By.css('li'));
+    }
+
+    async getAllSteps(){
+        const divElementsInBody = await this.driver.findElements(By.xpath('//body/div'));
+        const [listComponent] = divElementsInBody.slice(-1);
+        this.steps = await listComponent.findElements(By.css('li'));
+    }
+
+    async clickOnStep(index){
+        await this.steps[index].click();
+    }
 }
 
 module.exports = FlowPage;

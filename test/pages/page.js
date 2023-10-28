@@ -35,7 +35,7 @@ module.exports = class Page {
     }
 
     async waitForEndpoint(endpoint , timer){
-        await this.driver.wait(until.urlContains(this.currentUrl(endpoint)) , timer);
+        await this.driver.wait(until.urlContains(endpoint) , timer);
     }
 
     async waitForContentToLoad(locator , timer){

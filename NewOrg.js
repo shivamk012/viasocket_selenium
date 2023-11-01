@@ -25,10 +25,6 @@ describe('Login' , () => {
   before(async() => {
     const chromeOptions = new chrome.Options().windowSize({ width: 1920, height: 1080 });
     const caps = new Capabilities();
-    caps.set('goog:chromeOptions', {
-      debuggerAddress: 'https://dev-flow.viasocket.com/', // Address to connect to Chrome DevTools Protocol
-    });
-    chromeOptions.set('chromeOptions', caps);
 
     driver = new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
   })
@@ -47,23 +43,41 @@ describe('Login' , () => {
         
         await emailInput.sendKeys(testData[0]);
         await passwordInput.sendKeys(testData[1]);
+
         
         const submitbtn = await driver.findElement(By.xpath('//button[@type = "submit"]'));
         
         await driver.actions().click(submitbtn).perform();
         
         await driver.wait(until.urlIs(`${constants.app_link}/projects`), 10000);
-        await driver.sleep(5000);
+        await driver.sleep(1000);
         // const screenshot1 = await driver.takeScreenshot();
-        // fs.writeFileSync('./refrenceImage/LoginRefrenceScreenshot.png' , screenshot1 , 'base64');
+        
+        //TODO: dont use mui classes
+        const Org=await driver.findElement(By.className(`MuiAvatar-root MuiAvatar-rounded`));
+        await driver.actions().click(Org).perform();
 
-        const screenshot2 = await driver.takeScreenshot();
-        fs.writeFileSync('./specs/LoginTestScreenshot.png' , screenshot2   , 'base64');
+        const SwitchOrg = await driver.findElement(By.xpath('//ul[@role="menu"]/li[1]'));
+        await driver.actions().click(SwitchOrg).perform();
+
+        const divElement = await driver.findElement(By.id('demo-customized-menu'));
+        const ulElement = await divElement.findElement(By.tagName('ul'));
+        const liElements = await ulElement.findElements(By.tagName('li'));
+        const numLiElements = liElements.length;
+        if (numLiElements > 0) {
+          const lastLiElement = liElements.slice(-1)[0];
+          await lastLiElement.click();
+        } else {
+          console.log("No <li> elements found within the <ul>.");
+        }
+
+
+        const TextField = await driver.findElement(By.id('orgtitle'));
+        await TextField.sendKeys("Abhishek mandoli");
+
+        const CreateOrgButton = await driver.findElement(By.className(`MuiButton-containedPrimary`))
+        await CreateOrgButton.click();
         
-        const comparisonResult = await compareImages('./refrenceImage/LoginRefrenceScreenshot.png', './specs/LoginTestScreenshot.png');
-        fs.writeFileSync('./comparisonImage/comparisonLogin.png', comparisonResult.getBuffer());
-        
-        console.log('Image comparison result:', comparisonResult);
         resolve();
       }catch(err){
       reject(err)
@@ -73,4 +87,4 @@ describe('Login' , () => {
     after(async() => {
       // await driver.quit();
     })
-  });
+});

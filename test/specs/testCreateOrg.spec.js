@@ -1,18 +1,21 @@
 const Projects = require('../pages/projects');
+const endpoints = require('../enums');
 
 const projectsPage = new Projects();
-const testData = JSON.parse(process.env.USER_DETAILS_LOGIN);
+// const testData = JSON.parse(process.env.USER_DETAILS_LOGIN);
 
 async function testProjects(){
     try{
-        await projectsPage.open('/');
-        await projectsPage.enterEmail(testData[0]);
-        await projectsPage.enterPassword(testData[1]);
-        await projectsPage.loginUser();
+        await projectsPage.open(endpoints.HOME);
+        await projectsPage.clickOnLoginWithGoogle();
+        await projectsPage.waitForEndpoint(endpoints.PROJECT , 60000);
+        await projectsPage.waitForProjecPageToLoad();
+        await projectsPage.openListOfOrgs();
+        await projectsPage.createNewOrg('new org');
     }
     catch(err){
         console.log(err);
     }
 };
-
-module.exports = testProjects;
+// testProjects();
+module.exports = testProjects;  

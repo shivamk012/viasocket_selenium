@@ -4,11 +4,13 @@
   "description": "automation scripts for viasocket",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.0",
     "dotenv": "^16.3.1",
     "jquery": "^3.7.1",
     "node-resemble-js": "^0.2.0",

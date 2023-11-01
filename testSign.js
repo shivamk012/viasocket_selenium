@@ -3,7 +3,6 @@ const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 const resemble = require('resemblejs');
 
-
 const testData = process.env.USER_DETAIL_SIGNUP;
 
 async function compareImages(imagePath1, imagePath2) {
@@ -15,6 +14,7 @@ async function compareImages(imagePath1, imagePath2) {
         .onComplete(data => resolve(data));
     });
   }
+
 
 async function testSign(){
     const chromeOptions = new chrome.Options().windowSize({ width: 1920, height: 1080 });

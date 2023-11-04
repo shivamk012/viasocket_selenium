@@ -1,5 +1,6 @@
 const {Builder, until} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+const fs = require('fs');
 
 module.exports = class Page {
     constructor(){
@@ -44,6 +45,24 @@ module.exports = class Page {
 
     async waitForContentToBeVisible(locator , timer){
         await this.driver.wait(until.elementIsVisible(locator) , timer);
+    }
+
+    async getLocalStorage(){
+        const localStorage = await this.driver.executeScript('return JSON.stringify(window.localStorage)');
+        fs.writeFileSync('./localStorage.json' , localStorage , 'utf-8');
+    }
+    
+    async processLocalStorage(){
+        const localStorage = fs.readFileSync('./localStorage.json' , 'utf-8');
+        const parsedLocalStorage = JSON.parse(localStorage);
+        const arrayOfJson = [parsedLocalStorage];
+        await fs.writeFileSync('./arrayofjson.json' , new Buffer(arrayOfJson , 'utf-8'));
+        const keys = Object.keys(parsedLocalStorage);
+        for(const key of keys){
+            if(key == "persist:root") continue;
+            console.log(`window.localStorage.setItem( '${key}' , '${parsedLocalStorage[key]}' )`);
+            await this.driver.executeScript(`window.localStorage.setItem( '${key}' , '${parsedLocalStorage[key]}' )`);
+        }
     }
 
     //to go to a URL 

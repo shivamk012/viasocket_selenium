@@ -6,7 +6,8 @@ dotenv.config();
 // const testInvocation = require('./test/specs/testInvocation.spec');
 // const testDragAndDrop = require('./test/specs/testDragAndDrop.spec');
 // const testCreateScript = require('./test/specs/testCreateScript.spec');
-const testAddSteps = require('./test/specs/testAddSteps.spec');
+// const testAddSteps = require('./test/specs/testAddSteps.spec');
+const testAskAI = require('./test/specs/testAskAI.spec');
 
 
-testAddSteps();
+testAskAI();

@@ -1,5 +1,5 @@
 const Projects = require('./projects');
-const endpoints = require('../enums');
+const {endpoints} = require('../enums');
 const {By,until} = require('selenium-webdriver');
 const getButtonHavingText = require('../../utilities/getButtonHavingText');
 const axios = require('axios');
@@ -52,11 +52,12 @@ class FlowPage extends Projects{
 
     async clickOnAddSteps(){
         const workflow = await this.driver.findElement(By.css('[class*="workflow__flow"]'));
-        const addStepsButton = await workflow.findElement(By.css('input'));
-        await addStepsButton.click();
-        const divElementsInBody = await workflow.findElements(By.xpath('//body/div'));
-        const [listComponent] = divElementsInBody.slice(-1);
-        const listElements = await listComponent.findElements(By.css('li'));
+
+        // NOTE:  Iske alava koi option nai mila content load ke wait karne ka. input elements 5 hai page pe to input ke liye wait ni kar sakte
+        await super.waitForContentToLoad(By.xpath('//button[text() = "Dry Run"]') , 10000); 
+        
+        const addStepsButton = await workflow.findElements(By.css('input'));
+        await addStepsButton[1].click();
     }
 
     async getAllSteps(){
@@ -67,6 +68,7 @@ class FlowPage extends Projects{
 
     async clickOnStep(index){
         await this.steps[index].click();
+        await super.waitForContentToLoad(By.id(`${process.env.STEP_PANEL_ID}`) , 10000);
     }
 }
 

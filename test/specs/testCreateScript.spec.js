@@ -1,5 +1,5 @@
 const FlowPage = require('../pages/flow');
-const endpoints = require('../enums');
+const {endpoints} = require('../enums');
 
 const flowPage = new FlowPage();
 

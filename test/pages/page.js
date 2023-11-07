@@ -7,8 +7,8 @@ module.exports = class Page {
         try{
             let options = new chrome.Options();
             let userDataDir = process.env.USER_PROFILE_DIR;
-            options.addArguments(`user-data-dir=${userDataDir}`);
-
+            console.log(process.argv);
+            if(process.argv[3] == "chromeProfile") options.addArguments(`user-data-dir=${userDataDir}`); 
             this.driver = new Builder().setChromeOptions(options).forBrowser('chrome').build();
             console.log('Driver created successfully');
             this.app_link = (process.argv[2] === "test" ? process.env.TEST_LINK : process.env.PROD_LINK);
@@ -52,7 +52,7 @@ module.exports = class Page {
         fs.writeFileSync('./localStorage.json' , localStorage , 'utf-8');
     }
     
-    async processLocalStorage(){
+    async setLocalStorage(){
         const localStorage = fs.readFileSync('./localStorage.json' , 'utf-8');
         const parsedLocalStorage = JSON.parse(localStorage);
         const arrayOfJson = [parsedLocalStorage];

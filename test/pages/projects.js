@@ -1,4 +1,4 @@
-const endpoints = require('../enums');
+const {endpoints} = require('../enums');
 const Login = require('./login'); 
 const {By , until , Key} = require('selenium-webdriver');// login class extends page class
 

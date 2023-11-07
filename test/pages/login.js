@@ -40,8 +40,8 @@ module.exports = class Login extends Page {
         const gmailId = await this.driver.findElement(By.xpath('//div[contains(text() , "@gmail.com")]'));
         await gmailId.click();
 
-        const accessToken = await this.driver.executeScript('return localStorage.getItem("proxy_auth_token");');
-        console.log('Access Token:', accessToken);
+        // const accessToken = await this.driver.executeScript('return localStorage.getItem("proxy_auth_token");');
+        // console.log('Access Token:', accessToken);
     }
 
     async loginUser(){

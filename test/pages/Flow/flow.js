@@ -79,6 +79,12 @@ class FlowPage extends Projects{
         await stepNameInput.sendKeys(stepName);
     }
 
+    async initialiseApiSlider(){
+        this.apiEditPanel = await this.driver.findElement(By.id(process.env.STEP_PANEL_ID));
+        this.apiResponsePanel = '';
+        this.apiContent = '';
+    }
+
     async fillInput(){
         const [editPanel , responsePanel] = await this.driver.findElements(By.id(process.env.STEP_PANEL_ID));
         this.apiEditPanel = editPanel;

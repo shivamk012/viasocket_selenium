@@ -1,8 +1,7 @@
-const Projects = require('./projects');
-const {endpoints} = require('../enums');
-const endpoints = require('../enums');
+const Projects = require('../Project/projects');
+const {endpoints} = require('../../enums');
 const {By,until,Key} = require('selenium-webdriver');
-const getButtonHavingText = require('../../utilities/getButtonHavingText');
+const getButtonHavingText = require('../../../utilities/getButtonHavingText');
 const axios = require('axios');
 
 class FlowPage extends Projects{
@@ -13,6 +12,9 @@ class FlowPage extends Projects{
         this.webHookUrl = '';
         this.navbarButtons = [];
         this.steps = [];
+        this.apiEditPanel = '';
+        this.apiResponsePanel = '';
+        this.apiContent = '';
     }
 
     async waitForFlowPageToOpen(){
@@ -69,28 +71,38 @@ class FlowPage extends Projects{
 
     async clickOnStep(index){
         await this.steps[index].click();
-        await super.waitForContentToLoad(By.id(`${process.env.STEP_PANEL_ID}`) , 10000);
-    }
-    // async variableSection(){
-        
-    // }
-
-    async clickOnAddStepsButton(){
-        await this.driver.sleep(4000);
-        const addStep=await this.driver.findElement(By.xpath("//div[@class='createfunction__addstep flex-start-center gap-2 p-2 br-1 MuiBox-root css-0']//*[name()='svg']"));
-        await this.driver.wait(until.elementIsVisible(addStep),4000);
-        await addStep.click();
+        await super.waitForContentToLoad(By.id(`${process.env.STEP_NAME_ID}`) , 10000);
     }
 
-    async listOfSteps(){
-        //await this.driver.sleep(4000);
-        const listElements=await this.driver.findElement(By.className("MuiAutocomplete-listbox css-17bd3z1"));
-        const liArray=await listElements.findElements(By.tagName("li"));
-        // const liArray=await Promise.all(listElements.map(async (element) => {
-        //     return element.getText();
-        // }));
-        return liArray;
+    async fillStepName(stepName){
+        const stepNameInput = await this.driver.findElement(By.id(process.env.STEP_NAME_ID));
+        await stepNameInput.sendKeys(stepName);
     }
+
+    async fillInput(){
+        const [editPanel , responsePanel] = await this.driver.findElements(By.id(process.env.STEP_PANEL_ID));
+        this.apiEditPanel = editPanel;
+        this.apiResponsePanel = responsePanel;
+    }
+
+    async fillUrl(url){
+        this.apiContent = await this.driver.findElement(By.id(process.env.STEP_PANEL_CONTENT_ID));
+        const apiUrlInputField = await this.apiContent.findElement(By.id(process.env.API_URL_INPUTDIV_ID));
+        await apiUrlInputField.sendKeys(url);
+    }
+
+    async selectApiMethod(methodTypeIndex){
+        const apiMethodDropDown = await this.apiContent.findElement(By.css('input'));
+        const requestMethodDiv = await apiMethodDropDown.findElement(By.xpath('.//..'));
+        await requestMethodDiv.click();
+
+        const allDivElements = await driver.findElements(By.css('div'));
+        const [requestMethodListDiv] = await allDivElements.slice(-2);
+
+        const requestMethodList = await requestMethodListDiv.findElements(By.css('li'));
+        await requestMethodList[methodTypeIndex].click();
+    }
+
     async createAPI1(){
         const apistep=await this.listOfSteps();
         await apistep[0].click();
@@ -156,70 +168,45 @@ class FlowPage extends Projects{
         await this.driver.findElement(By.xpath("//div[@class='flex-end-center MuiBox-root css-0']//div[2]")).click();
 }
 
-async createAPI2(){
-    await this.clickOnAddStepsButton();
-    const apistep=await this.listOfSteps();
-    await apistep[0].click();
-    await this.driver.sleep(4000);
-    const apiname=await this.driver.findElement(By.id("function-title-textfield"));
-    await this.driver.wait(until.elementIsVisible(apiname),4000);
-    await apiname.click()
-    await apiname.sendKeys("send_joke");
-    await apiname.sendKeys(Key.ENTER);
-    const api=await this.driver.findElement(By.id("requestInput"))
-    await api.click();
-    await api.sendKeys("https://flow.sokt.io/func/u4h5aFCxz7C9");
-    //now we fetch Dry Run ----- Save ----- Debug ...... Button
-    const requests=await this.driver.findElement(By.xpath('//div[@aria-label="Without label"]'));
-    await requests.click();
-    // const requestlist=await this.driver.findElement(By.className("MuiList-root MuiList-padding MuiMenu-list css-6qpmy0"));
-    // const requestArray=await requestlist.findElement(By.tagName("li"));
-    // console.log(requestArray);
-    // await requestArray[1].click();
-    await this.driver.findElement(By.xpath("//li[text()='POST']")).click();
-    const content="{'name':'Sushil'}"
-    const textAreaDiv = await this.driver.findElement(By.id('jsonEditor'));
-    const textArea = await textAreaDiv.findElement(By.xpath('.//textarea'));
-    await textArea.sendKeys(content);
-    // const queryParams=await this.driver.findElement(By.className("paramsCustomAutoSuggest border-1 bg-white MuiBox-root css-0"));
-    // await queryParams.sendKeys(content);
-    const listButtons=await this.driver.findElement(By.className("apiActionContainer MuiBox-root css-0"));
-    const buttonArray=await listButtons.findElements(By.tagName("button"));
-    console.log(buttonArray);
-    await buttonArray[1].click();  //this is for SAVE of API
-    await this.driver.sleep(2000);
-    await this.driver.findElement(By.xpath("//div[@class='flex-end-center MuiBox-root css-0']//div[2]")).click() //press cross button
-    await this.driver.sleep(2000);
-    await this.driver.findElement(By.xpath("//button[text()='Dry Run']")).click();
+    async createAPI2(){
+        await this.clickOnAddStepsButton();
+        const apistep=await this.listOfSteps();
+        await apistep[0].click();
+        await this.driver.sleep(4000);
+        const apiname=await this.driver.findElement(By.id("function-title-textfield"));
+        await this.driver.wait(until.elementIsVisible(apiname),4000);
+        await apiname.click()
+        await apiname.sendKeys("send_joke");
+        await apiname.sendKeys(Key.ENTER);
+        const api=await this.driver.findElement(By.id("requestInput"))
+        await api.click();
+        await api.sendKeys("https://flow.sokt.io/func/u4h5aFCxz7C9");
+        //now we fetch Dry Run ----- Save ----- Debug ...... Button
+        const requests=await this.driver.findElement(By.xpath('//div[@aria-label="Without label"]'));
+        await requests.click();
+        // const requestlist=await this.driver.findElement(By.className("MuiList-root MuiList-padding MuiMenu-list css-6qpmy0"));
+        // const requestArray=await requestlist.findElement(By.tagName("li"));
+        // console.log(requestArray);
+        // await requestArray[1].click();
+        await this.driver.findElement(By.xpath("//li[text()='POST']")).click();
+        const content="{'name':'Sushil'}"
+        const textAreaDiv = await this.driver.findElement(By.id('jsonEditor'));
+        const textArea = await textAreaDiv.findElement(By.xpath('.//textarea'));
+        await textArea.sendKeys(content);
+        // const queryParams=await this.driver.findElement(By.className("paramsCustomAutoSuggest border-1 bg-white MuiBox-root css-0"));
+        // await queryParams.sendKeys(content);
+        const listButtons=await this.driver.findElement(By.className("apiActionContainer MuiBox-root css-0"));
+        const buttonArray=await listButtons.findElements(By.tagName("button"));
+        console.log(buttonArray);
+        await buttonArray[1].click();  //this is for SAVE of API
+        await this.driver.sleep(2000);
+        await this.driver.findElement(By.xpath("//div[@class='flex-end-center MuiBox-root css-0']//div[2]")).click() //press cross button
+        await this.driver.sleep(2000);
+        await this.driver.findElement(By.xpath("//button[text()='Dry Run']")).click();
 
-    const dryRun=await this.driver.findElement(By.className("flex-start-end p-1 MuiBox-root css-0"));
-    await dryRun.findElement(By.tagName("button")).click();
-    
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        const dryRun=await this.driver.findElement(By.className("flex-start-end p-1 MuiBox-root css-0"));
+        await dryRun.findElement(By.tagName("button")).click();
+    }
 }
 
 module.exports = FlowPage;

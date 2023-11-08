@@ -1,4 +1,4 @@
-const Page = require('./page');
+const Page = require('../Page/page');
 const {By , until} = require('selenium-webdriver');
 
 module.exports = class Login extends Page {

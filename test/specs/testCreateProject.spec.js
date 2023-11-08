@@ -1,4 +1,4 @@
-const Projects = require('../pages/projects');
+const Projects = require('../pages/Project/projects');
 const {endpoints} = require('../enums');
 
 const projectsPage = new Projects();

@@ -47,6 +47,10 @@ module.exports = class Page {
         await this.driver.wait(until.elementIsVisible(locator) , timer);
     }
 
+    async waitForContentToBeNotVisible(locator , timer){
+        await this.driver.wait(until.elementIsNotVisible(locator) , timer);
+    }
+
     async getLocalStorage(){
         const localStorage = await this.driver.executeScript('return JSON.stringify(window.localStorage)');
         fs.writeFileSync('./localStorage.json' , localStorage , 'utf-8');

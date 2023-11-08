@@ -1,4 +1,4 @@
-const FlowPage = require('../pages/flow');
+const FlowPage = require('../pages/Flow/flow');
 const {endpoints , stepIndex} = require('../enums');
 
 const flowPage = new FlowPage();

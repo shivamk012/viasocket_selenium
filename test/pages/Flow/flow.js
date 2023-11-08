@@ -2,7 +2,7 @@ const Projects = require('../Project/projects');
 const {endpoints} = require('../../enums');
 const {By,until,Key} = require('selenium-webdriver');
 const getButtonHavingText = require('../../../utilities/getButtonHavingText');
-const axios = require('axios');
+const fs = require('fs');
 
 class FlowPage extends Projects{
     constructor(){
@@ -15,6 +15,8 @@ class FlowPage extends Projects{
         this.apiEditPanel = '';
         this.apiResponsePanel = '';
         this.apiContent = '';
+        this.dryRunButton = '';
+        this.createButton = '';
     }
 
     async waitForFlowPageToOpen(){
@@ -80,21 +82,37 @@ class FlowPage extends Projects{
     }
 
     async initialiseApiSlider(){
-        this.apiEditPanel = await this.driver.findElement(By.id(process.env.STEP_PANEL_ID));
-        this.apiResponsePanel = '';
-        this.apiContent = '';
-    }
-
-    async fillInput(){
-        const [editPanel , responsePanel] = await this.driver.findElements(By.id(process.env.STEP_PANEL_ID));
-        this.apiEditPanel = editPanel;
-        this.apiResponsePanel = responsePanel;
+        try{
+            const accordions = await this.driver.findElements(By.id(process.env.STEP_PANEL_ID));
+            this.apiResponsePanel = accordions[1];
+            this.apiEditPanel = accordions[0];
+            this.apiContent = await this.driver.findElement(By.id(process.env.STEP_PANEL_CONTENT_ID));
+            const buttons = await this.apiContent.findElements(By.css('button'));
+            await super.waitForContentToBeVisible(buttons[0] , 10000);
+            this.dryRunButton = await getButtonHavingText(buttons , process.env.DRY_RUN_BUTTON_TEXT);
+            this.createButton = await getButtonHavingText(buttons , process.env.SAVE_BUTTON_TEXT);
+        }catch(err){
+            console.log(err);
+        }
     }
 
     async fillUrl(url){
-        this.apiContent = await this.driver.findElement(By.id(process.env.STEP_PANEL_CONTENT_ID));
-        const apiUrlInputField = await this.apiContent.findElement(By.id(process.env.API_URL_INPUTDIV_ID));
-        await apiUrlInputField.sendKeys(url);
+        let apiUrlInputField = await this.apiContent.findElement(By.id(process.env.API_URL_INPUTDIV_ID));
+        await apiUrlInputField.click();
+        apiUrlInputField = await this.apiContent.findElement(By.id(process.env.API_URL_INPUTDIV_ID));
+        await apiUrlInputField.sendKeys(url , Key.ENTER);
+        
+        // NOTE: need to click outside otherwise dry will consider url.
+        await this.apiContent.click();
+    }
+
+    async clickOnDryRunButton(){
+        await this.dryRunButton.click();
+        await super.waitForContentToLoad(By.css('.object-key-val') , 30000);
+    }
+
+    async clickOnCreateButton(){
+        await this.createButton.click();
     }
 
     async selectApiMethod(methodTypeIndex){
@@ -102,11 +120,12 @@ class FlowPage extends Projects{
         const requestMethodDiv = await apiMethodDropDown.findElement(By.xpath('.//..'));
         await requestMethodDiv.click();
 
-        const allDivElements = await driver.findElements(By.css('div'));
-        const [requestMethodListDiv] = await allDivElements.slice(-2);
+        const allDivElements = await this.driver.findElements(By.css('div'));
+        const [requestMethodListDiv] = allDivElements.slice(-2);
 
         const requestMethodList = await requestMethodListDiv.findElements(By.css('li'));
         await requestMethodList[methodTypeIndex].click();
+        await super.waitForContentToBeNotVisible(requestMethodListDiv , 10000);
     }
 
     async createAPI1(){

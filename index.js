@@ -5,9 +5,10 @@ dotenv.config();
 // const testInvocation = require('./test/specs/testInvocation.spec');
 // const testDragAndDrop = require('./test/specs/testDragAndDrop.spec');
 // const testCreateScript = require('./test/specs/testCreateScript.spec');
-const testAddSteps = require('./test/specs/testAddSteps.spec');
+// const testAddSteps = require('./test/specs/testAddSteps.spec');
 // const testLogin = require('./test/specs/testLogin.spec');
+const testApiStep = require('./test/specs/testApiStep.spec');
 
 
 // testInvocation();
-testAddSteps();
+testApiStep();

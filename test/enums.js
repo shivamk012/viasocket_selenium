@@ -21,4 +21,12 @@ const stepIndex = {
     FUNCTION : 4
 }
 
-module.exports = {endpoints , stepIndex};
+const apiIndex = {
+    GET : 0,
+    POST : 1, 
+    PUT : 2,
+    DELETE : 3,
+    PATCH : 4
+}
+
+module.exports = {endpoints , stepIndex , apiIndex};

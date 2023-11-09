@@ -7,6 +7,4 @@ dotenv.config();
 const testAddSteps = require('./test/specs/testAddSteps.spec');
 
 testAddSteps();
-//const testDragAndDrop = require('./test/specs/testDragAndDrop.spec');
-//const createProject = require('./test/specs/testCreateProject.spec');
 

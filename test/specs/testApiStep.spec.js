@@ -21,6 +21,9 @@ async function testApiStep(methodType){
             await flowPage.fillStepName('api_step');
             await flowPage.selectApiMethod(apiIndex[methodType]);
             await flowPage.fillUrl(process.env.GET_REQUEST_URL);
+            if(apiIndex[methodType] === 1 || api[methodType] === 2 || api[methodType] === 4){
+                await flowPage.sendBodyData(apiIndex[methodType]);
+            } 
             await flowPage.clickOnDryRunButton();
             await flowPage.clickOnCreateButton();
         }catch(err){
@@ -31,4 +34,24 @@ async function testApiStep(methodType){
     })
 }
 
-module.exports = testApiStep;
+async function testGetStep(){
+    await testApiStep('GET');
+}
+
+async function testPostStep(){
+    await testApiStep('POST');
+}
+
+async function testPutStep(){
+    await testApiStep('PUT');
+}
+
+async function testDeleteStep(){
+    await testApiStep('DELETE');
+}
+
+async function testPatchStep(){
+    await testApiStep('PATCH');
+}
+
+module.exports = {testGetStep , testPostStep , testPutStep , testDeleteStep , testPatchStep};

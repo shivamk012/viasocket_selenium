@@ -128,6 +128,16 @@ class FlowPage extends Projects{
         await super.waitForContentToBeNotVisible(requestMethodListDiv , 10000);
     }
 
+    async sendBodyData(requestMethodIndex){
+        if(requestMethodIndex === 1 || requestMethodIndex === 2 || requestMethodIndex === 4){
+            const textEditorDiv = await this.apiContent.findElement(By.id('jsonEditor'));
+            const textEditor = await textEditorDiv.findElement(By.css('textarea'));
+            if(requestMethodIndex === 1) await textEditor.sendKeys(process.env.POST_REQUEST_BODY);
+            else await textEditor.sendKeys(process.env.PUT_REQUEST_BODY);
+            await this.driver.sleep(1000);
+        } 
+    }
+
     async createAPI1(){
         const apistep=await this.listOfSteps();
         await apistep[0].click();

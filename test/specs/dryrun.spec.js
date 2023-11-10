@@ -1,21 +1,29 @@
+const { expect } = require('chai');
+
 const Projects = require('../pages/projects');
 const endpoints = require('../enums');
 const DryRunfile = require('../pages/dryrun');
-
+const { exitCode } = require('process');
+const { CONNREFUSED } = require('dns');
 
 const dryrun=new DryRunfile();
-
-
 async function dryrunflow(){
-        await dryrun.open(endpoints.HOME);
-        await dryrun.clickOnLoginWithGoogle();
-        await dryrun.waitForEndpoint(endpoints.PROJECT , 60000);
-        await dryrun.openProject();
-        await dryrun.openscript();
-        await dryrun.clickonDryrunButton();
-        await dryrun.selectPOSTrequest();
-        await dryrun.formData_01();
-        await dryrun.finalDryrunButton();
-     }
+    describe('Selenium Tests', function () {
+        it('Run the Selenium script and select POST request', async function () {
+          await dryrun.open(endpoints.HOME);
+          await dryrun.openProject();
+          await dryrun.openscript();
+          await dryrun.clickonDryrunButton();
+          //case:01 select the post request
+          const selectedOption = await dryrun.selectPOSTrequest();
+          expect(selectedOption).to.equal("POST");
+        }).timeout(30000);
 
+        it('Edit request url:Url is not editable',async function(){
+          //case:02 try to edit url
+          const isURLnotChanged = await dryrun.editURL();
+          expect(isURLnotChanged).to.be.true;
+          }).timeout(20000);
+      });
+}
 module.exports = dryrunflow;

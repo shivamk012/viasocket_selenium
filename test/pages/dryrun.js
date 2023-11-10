@@ -1,6 +1,7 @@
 const Login = require('./login'); 
 const {By , until , Key, Actions} = require('selenium-webdriver');// login class extends page class
 
+
 class dryrun extends Login{
     constructor(){
         super();
@@ -35,9 +36,17 @@ class dryrun extends Login{
         await select.click();
         const itemToSelect = await this.driver.findElement(By.xpath('//*[text()="POST"]'));
         await itemToSelect.click();
-
-        
+        const selectedOption = await select.getText();
+        return selectedOption;
     }
+
+    async editURL() {
+        const urlblock = await this.driver.findElement(By.xpath(`//div[@id='requestInput']`));
+        const currentURL = await urlblock.getText();
+        await this.driver.actions().doubleClick(urlblock).sendKeys(Key.BACK_SPACE).perform();
+        const editedURL = await urlblock.getText();
+        return editedURL === currentURL;
+      }
 
     async sendName(name){
         const Name_inputField = await this.driver.findElement(By.xpath(`(//input[@id='name'])[1]`));
@@ -69,6 +78,6 @@ class dryrun extends Login{
         const finalDryrunButton = await this.driver.findElement(By.xpath(`//button[@class='MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-disableElevation MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-disableElevation dry-run-btn css-1gn8hqb']`));
         await finalDryrunButton.click();
     }
-}   
+}  
 
 module.exports = dryrun;

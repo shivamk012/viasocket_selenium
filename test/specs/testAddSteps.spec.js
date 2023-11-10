@@ -1,5 +1,5 @@
-const FlowPage = require('../pages/flow');
-const endpoints = require('../enums');
+const FlowPage = require('../pages/Flow/flow');
+const {endpoints , stepIndex} = require('../enums');
 
 const flowPage = new FlowPage();
 
@@ -12,13 +12,9 @@ async function testAddSteps(){
     await flowPage.clickOnScript();
     await flowPage.waitForFlowPageToOpen();
     await flowPage.clickOnEditButton();
-    await flowPage.clickOnAddStepsButton();
-    await flowPage.listOfSteps();
-    await flowPage.createAPI1();
-    await flowPage.createVariable();
-    await flowPage.createIfCondition();
-    await flowPage.createFunction();
-    await flowPage.createAPI2();
+    await flowPage.clickOnAddSteps();
+    await flowPage.getAllSteps();
+    await flowPage.clickOnStep(stepIndex.API);
 }
 
 module.exports = testAddSteps;

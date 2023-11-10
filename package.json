@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index"
+    "start:dev chromeProfile" : "node index test chromeProfile",
+    "start chromeProfile" : "node index prod chromeProfile",
+    "start:dev" : "node index test",
+    "start" : "node index prod"
   },
   "author": "",
   "license": "ISC",

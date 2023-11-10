@@ -1,4 +1,6 @@
-const Login = require('./login'); 
+
+const {endpoints} = require('../../enums');
+const Login = require('../Login/login'); 
 const {By , until , Key, Actions} = require('selenium-webdriver');// login class extends page class
 
 class Projects extends Login{
@@ -48,7 +50,8 @@ class Projects extends Login{
     }
 
     async clickOnNewProject(){
-        const newProjectButton = await this.driver.findElements(By.tagName('button'));
+        await super.waitForContentToLoad(By.css('button') , 60000);
+        const newProjectButton = await this.driver.findElements(By.css('button'));
         await newProjectButton[1].click();
         // await this.driver.wait(until.elementIsVisible(By.id('projectTitle')), 10000);
     }
@@ -76,6 +79,20 @@ class Projects extends Login{
         await super.waitForContentToLoad(By.xpath('.//div[contains(@class , "script_block")]') , 10000);
         const scripBlocks = await this.scriptSlider.findElements(By.xpath('.//div[contains(@class , "script_block")]'));
         await scripBlocks[0].click();
+        await super.waitForEndpoint(endpoints.PUBLISHED , 10000);
+    }
+
+    async clickOnNewFlow(){
+        await this.driver.wait(until.elementLocated(By.xpath('//button[text() = "New Flow"]')) , 10000);
+        const newScriptButton = await this.driver.findElement(By.xpath('//button[text() = "New Flow"]'));
+        await newScriptButton.click();
+    }
+
+    async createNewScript(scriptName){
+        await super.waitForContentToLoad(By.css('[class*="custom-modal"]') , 10000);
+        const scriptModal = await this.driver.findElements(By.css('[class*="custom-modal"]'));
+        const scriptInput = await scriptModal[1].findElement(By.css('input'));
+        await scriptInput.sendKeys(scriptName , Key.RETURN);
     }
 
     async createNewOrg(title){

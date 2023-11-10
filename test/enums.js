@@ -29,4 +29,10 @@ const apiIndex = {
     PATCH : 4
 }
 
-module.exports = {endpoints , stepIndex , apiIndex};
+const actions = {
+    PAUSE : 0,
+    RENAME : 1,
+    DELETE  : 2
+}
+
+module.exports = {endpoints , stepIndex , apiIndex , actions};

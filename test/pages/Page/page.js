@@ -1,7 +1,7 @@
 const {Builder, until} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
-
+const resemble = require('resemblejs');
 module.exports = class Page {
     constructor(){
         try{
@@ -78,5 +78,26 @@ module.exports = class Page {
 
     async close(){
         await this.driver.quit();
+    }
+
+    async addBlurToElement(locator){
+        await this.driver.executeScript("arguments[0].style.filter = 'blur(5px)';" , locator);
+    }
+
+    async takeScreenShotAndSave(imagePath){
+        const FunctionRefrenceScreenshot = await this.driver.takeScreenshot();
+        fs.writeFileSync(imagePath , FunctionRefrenceScreenshot , 'base64');
+    }
+
+    async compareScreenShot(referenceImagePath , specImagePath , comparisonImagePath){
+        return new Promise(async(resolve , reject) => {
+            try{
+                const comparisonResult = await compareImages(referenceImagePath, specImagePath);
+                fs.writeFileSync(comparisonImagePath, comparisonResult.getBuffer());
+                resolve(comparisonResult);
+            }catch(err){
+                reject(err);
+            }
+        })
     }
 }

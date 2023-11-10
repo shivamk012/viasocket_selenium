@@ -8,8 +8,9 @@ dotenv.config();
 // const testAddSteps = require('./test/specs/testAddSteps.spec');
 // const testLogin = require('./test/specs/testLogin.spec');
 // const {testPostStep} = require('./test/specs/testApiStep.spec');
-const testVariableStep = require('./test/specs/testCreateVariable.spec');
+// const testVariableStep = require('./test/specs/testCreateVariable.spec');
+const testPauseProject = require('./test/specs/testPauseProject.spec')
 
 
 // testInvocation();
-testVariableStep();
+testPauseProject();

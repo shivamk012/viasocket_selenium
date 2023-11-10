@@ -73,7 +73,7 @@ class FlowPage extends Projects{
 
     async clickOnStep(index){
         await this.steps[index].click();
-        await super.waitForContentToLoad(By.id(`${process.env.STEP_NAME_ID}`) , 10000);
+        await super.waitForContentToLoad(By.css(`[class*=${process.env.CUSTOM_SLIDER_CLASS}]`) , 10000);
     }
 
     async fillStepName(stepName){
@@ -90,7 +90,6 @@ class FlowPage extends Projects{
             const buttons = await this.apiContent.findElements(By.css('button'));
             await super.waitForContentToBeVisible(buttons[0] , 10000);
             this.dryRunButton = await getButtonHavingText(buttons , process.env.DRY_RUN_BUTTON_TEXT);
-            this.createButton = await getButtonHavingText(buttons , process.env.SAVE_BUTTON_TEXT);
         }catch(err){
             console.log(err);
         }
@@ -112,6 +111,8 @@ class FlowPage extends Projects{
     }
 
     async clickOnCreateButton(){
+        this.createButton = await this.driver.findElement(By.xpath(`//button[text() = "${process.env.SAVE_BUTTON_TEXT}"]`));
+        this.driver.executeScript("arguments[0].scrollIntoView(true);", this.createButton);
         await this.createButton.click();
     }
 
@@ -158,6 +159,21 @@ class FlowPage extends Projects{
         await this.driver.sleep(3000);
         await buttonArray[1].click();  //this is for SAVE of API
         await this.driver.findElement(By.xpath("//div[@class='flex-end-center MuiBox-root css-0']//div[2]")).click() //press cross button
+    }
+
+    async fillVariableName(name){
+        await super.waitForContentToLoad(By.id(process.env.VARIABLE_NAME_FIELD_ID) , 10000);
+        const var_name=await this.driver.findElement(By.id(process.env.VARIABLE_NAME_FIELD_ID));
+        await var_name.click();
+        await var_name.sendKeys(name);
+    }
+
+    async fillVariableValue(value){
+        const variableSlideCustomSuggestDiv = await this.driver.findElement(By.css('[class*="variableinput"]'));
+        await variableSlideCustomSuggestDiv.click();
+        const variableCustomSuggestInputs = await variableSlideCustomSuggestDiv.findElements(By.css('div'));
+        const [variableValueDiv] = variableCustomSuggestInputs.slice(-1);
+        await variableValueDiv.sendKeys(value);
     }
 
     async createVariable(){

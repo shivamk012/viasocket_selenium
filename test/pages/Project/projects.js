@@ -8,6 +8,7 @@ class Projects extends Login{
         this.driver = super.Driver;
         this.orgName = '';
         this.scriptSlider = '';
+        this.listOfScripts = '';
     }
 
     async orgField(){
@@ -76,8 +77,8 @@ class Projects extends Login{
     
     async clickOnScript(){
         await super.waitForContentToLoad(By.xpath('.//div[contains(@class , "script_block")]') , 10000);
-        const scripBlocks = await this.scriptSlider.findElements(By.xpath('.//div[contains(@class , "script_block")]'));
-        await scripBlocks[0].click();
+        this.listOfScripts = await this.scriptSlider.findElements(By.xpath('.//div[contains(@class , "script_block")]'));
+        await this.listOfScripts[0].click();
         await super.waitForEndpoint(endpoints.PUBLISHED , 10000);
     }
 

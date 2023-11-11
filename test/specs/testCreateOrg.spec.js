@@ -1,10 +1,10 @@
 const Projects = require('../pages/projects');
-const endpoints = require('../enums');
+const {endpoints} = require('../enums');
 
 const projectsPage = new Projects();
 // const testData = JSON.parse(process.env.USER_DETAILS_LOGIN);
 
-async function testProjects(){
+async function testCreateOrg(){
     try{
         await projectsPage.open(endpoints.HOME);
         await projectsPage.clickOnLoginWithGoogle();
@@ -18,4 +18,4 @@ async function testProjects(){
     }
 };
 // testProjects();
-module.exports = testProjects;  
+module.exports = testCreateOrg;  

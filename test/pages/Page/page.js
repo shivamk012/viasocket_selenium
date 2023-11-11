@@ -80,8 +80,8 @@ module.exports = class Page {
         await this.driver.quit();
     }
 
-    async addBlurToElement(locator){
-        await this.driver.executeScript("arguments[0].style.filter = 'blur(5px)';" , locator);
+    async addBlurToElement(webelement){
+        await this.driver.executeScript("arguments[0].style.filter = 'blur(10px)';" , webelement);
     }
 
     async takeScreenShotAndSave(imagePath){

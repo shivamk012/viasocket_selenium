@@ -168,6 +168,16 @@ class FlowPage extends Projects{
         await var_name.sendKeys(name);
     }
 
+    async blurLogSlider(){
+        const logSlider = await this.driver.findElement(By.css('[class*="logs_slider"]'));
+        await super.addBlurToElement(logSlider);
+    }
+    
+    async blurWorkFlow(){
+        const workflow = await this.driver.findElement(By.css('[class*="workflow"]'));
+        await super.addBlurToElement(workflow);
+    }
+
     async fillVariableValue(value){
         const variableSlideCustomSuggestDiv = await this.driver.findElement(By.css('[class*="variableinput"]'));
         await variableSlideCustomSuggestDiv.click();

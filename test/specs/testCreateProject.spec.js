@@ -9,6 +9,11 @@ async function testCreateProject(){
         await projectsPage.clickOnLoginWithGoogle();
         await projectsPage.waitForEndpoint(endpoints.PROJECT , 60000);
         await projectsPage.clickOnNewProject();
+        // await projectsPage.createNewProject('new project199990 ');
+        // await projectsPage.clickOnNewProject();
+        // await projectsPage.createNewProject('new project199990 ');
+        //await projectsPage.multipleEnterClick('Multiple enter clicks project');
+        await projectsPage.multipleButtonClick('new clicks project');
         await projectsPage.createNewProject('new project19999');
         await projectsPage.createNewProject('new project19999');
     }catch(err){

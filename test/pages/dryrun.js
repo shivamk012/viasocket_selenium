@@ -1,6 +1,7 @@
-const Login = require('./login'); 
+const Login = require('./Login/login'); 
 const {By , until , Key, Actions} = require('selenium-webdriver');// login class extends page class
-
+const Projects = require('./Project/projects');
+const {endpoints} = require('../enums');
 
 class dryrun extends Login{
     constructor(){

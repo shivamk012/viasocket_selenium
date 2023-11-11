@@ -7,8 +7,10 @@ dotenv.config();
 //const createProject = require('./test/specs/testCreateProject.spec');
 
 //const createScript = require('./test/specs/testAddScript.spec');
-const dryrun = require('./test/specs/dryrun.spec');
+//const dryrun = require('./test/specs/dryrun.spec');
+const renamescript = require('./test/specs/testRenameScript.spec');
 // testDragAndDrop();
 // createProject();
 // createScript();
-dryrun();
+//dryrun();
+renamescript();

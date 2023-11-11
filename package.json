@@ -4,11 +4,8 @@
   "description": "automation scripts for viasocket",
   "main": "index.js",
   "scripts": {
-    "test": "npx mocha ",
-    "start:dev chromeProfile" : "node index test chromeProfile",
-    "start chromeProfile" : "node index prod chromeProfile",
-    "start:dev" : "node index test",
-    "start" : "node index prod"
+    "test": "mocha",
+    "start-test": "concurrently \"npm run start chromeProfile\" \"npm index\""
   },
   "author": "",
   "license": "ISC",

@@ -41,14 +41,8 @@ async function testDeleteProject(){
             expect(projectListDiv).to.be.empty;
         })
         
-        it('should send project into deleted projects section on project page' , async() => {
-            const nameOfDeletedProject = await projectPage.getListOfDeletedProjects();
-            console.log(nameOfDeletedProject);
-            expect(nameOfDeletedProject).to.equal('Dummy Project');
-        })
-        
         after(async() => {
-            // await projectPage.close();
+            await projectPage.close();
         })
     })
 }

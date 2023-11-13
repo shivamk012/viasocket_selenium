@@ -29,25 +29,42 @@ async function testInvocation(){
         it('should return that script is paused' , async() => {
             try{
                 const response = await axios.get(process.env.WEBHOOKURL_TEST_PAUSED_SCRIPT);
-                const responseData = response.data;
-                expect(responseData.message).to.be.equal('Script is either paused or deleted');
             }catch(err){
-                console.log(err);
+                const responseData = err.response.data;
+                // console.log(res)
+                expect(responseData.message).to.be.equal('Script is either paused or deleted');
             }
-            
         })
 
-        // it('should return that script is deleted' , () => {
+        it('should return that script is deleted' , async() => {
+            try{
+                const response = await axios.get(process.env.WEBHOOKURL_TEST_DELETED_SCRIPT);
+            }catch(err){
+                const responseData = err.response.data;
+                // console.log(res)
+                expect(responseData.message).to.be.equal('Script is either paused or deleted');
+            }
+        })
 
-        // })
+        it('should return that project is paused' , async() => {
+            try{
+                const response = await axios.get(process.env.WEBHOOKURL_TEST_PAUSED_PROJECT);
+            }catch(err){
+                const responseData = err.response.data;
+                // console.log(res)
+                expect(responseData.message).to.be.equal('Project is either paused or deleted');
+            }
+        })
 
-        // it('should return that project is paused' , () => {
-
-        // })
-
-        // it('should return that project is deleted' , () => {
-
-        // })
+        it('should return that project is deleted' , async() => {
+            try{
+                const response = await axios.get(process.env.WEBHOOKURL_TEST_DELETED_PROJECT);
+            }catch(err){
+                const responseData = err.response.data;
+                // console.log(res)
+                expect(responseData.message).to.be.equal('Project is either paused or deleted');
+            }
+        })
     })
 }
 

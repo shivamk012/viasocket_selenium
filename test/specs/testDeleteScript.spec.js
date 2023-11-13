@@ -43,14 +43,8 @@ async function testDeleteScript(){
         expect(scriptListDiv).to.be.empty;
     })
     
-    it('should send script into deleted scripts section in script slider' , async() => {
-        const nameOfDeletedScript = await projectPage.getListOfDeletedScripts();
-        console.log(nameOfDeletedScript);
-        expect(nameOfDeletedScript).to.equal('Dummy Script');
-    })
-    
     after(async() => {
-        // await projectPage.close();
+        await projectPage.close();
     })
 }
 

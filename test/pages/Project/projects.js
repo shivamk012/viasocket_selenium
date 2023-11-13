@@ -69,7 +69,8 @@ class Projects extends Login{
 
     async errorBox(){
         const error=await this.driver.findElement(By.id("alert-container-0"));
-        return error
+        const text=await error.getText();
+        return text
     }
     
     async arrayOfOrgs(){
@@ -104,6 +105,19 @@ class Projects extends Login{
         const projectTitleInputDiv = await projectTitleLabel.findElement(By.xpath('.//..'));
         const projectTitleInput = await projectTitleInputDiv.findElement(By.css('input'));
         await projectTitleInput.sendKeys(projectName , Key.RETURN);
+        await this.driver.sleep(2000);
+    }
+
+    async getAllProjectsText(){
+        const element=await this.driver.findElement(By.className('project_list flex-col MuiBox-root css-0'));
+        const elements=await element.findElements(By.css("div"));
+        const text_array=new Set();
+        for(let value of elements){
+            const text=await value.getText();
+            text_array.add(text);
+        }
+        console.log(text_array);
+        return text_array;
     }
     
     async clickOnProjectName(){
@@ -148,6 +162,15 @@ class Projects extends Login{
     async deleteProject(){
         await this.intitaliseActionButtonsForProject();
         await this.actionButtons[actions.DELETE].click();
+    }
+
+    async renameProject(new_name){
+        await this.intitaliseActionButtonsForProject();
+        await this.actionButtons[actions.RENAME].click();
+        const rename_field=await this.driver.findElement(By.css("[class*='css-8bj23o']"));
+        await rename_field.sendKeys(Key.BACK_SPACE);
+        await rename_field.sendKeys("renamed_name");
+        await rename_field.sendKeys(Key.ENTER);
     }
 
     async pauseScript(){

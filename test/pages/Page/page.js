@@ -2,6 +2,7 @@ const {Builder, until} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 const resemble = require('resemblejs');
+const Jimp = require('jimp');
 module.exports = class Page {
     constructor(){
         try{
@@ -12,15 +13,29 @@ module.exports = class Page {
             this.driver = new Builder().setChromeOptions(options).forBrowser('chrome').build();
             console.log('Driver created successfully');
             this.app_link = (process.argv[2] === "test" ? process.env.TEST_LINK : process.env.PROD_LINK);
-
+            this.mode = process.argv[4] === "capture";
         }
         catch(err){
             console.log(err);
         }
     }
 
+    async compareImages(imagePath1, imagePath2) {
+        return new Promise((resolve, reject) => {
+          resemble(imagePath1)
+            .compareTo(imagePath2)
+            .onComplete(data => resolve(data))
+            .ignoreLess()
+            .onComplete(data => resolve(data));
+        });
+      }
+
     get Driver(){
         return this.driver;
+    }
+
+    get isCaptureMode(){
+        return this.mode
     }
 
     currentUrl(endpoint){
@@ -84,16 +99,44 @@ module.exports = class Page {
         await this.driver.executeScript("arguments[0].style.filter = 'blur(10px)';" , webelement);
     }
 
-    async takeScreenShotAndSave(imagePath){
-        const FunctionRefrenceScreenshot = await this.driver.takeScreenshot();
-        fs.writeFileSync(imagePath , FunctionRefrenceScreenshot , 'base64');
-    }
+    async takeScreenShotAndCrop(element , imagePath){
+        // const screenShot = await this.driver.takeScreenshot();
+        // const rect = await element.getRect();
 
-    async compareScreenShot(referenceImagePath , specImagePath , comparisonImagePath){
+        // // Calculate the region to crop
+        // const left = rect.x;
+        // const top = rect.y;
+        // const width = rect.width;
+        // const height = rect.height;
+        // sharp(screenShot)
+        // .extract({ left: left, top: top, width: width, height: height })
+        // .toFile('./functionflow.png', function (err) {
+        //     if (err) console.log(err);
+        // })
+        
+        const location = await element.getRect();
+
+        // Take a screenshot of the entire page
+        const screenshot = await this.driver.takeScreenshot();
+
+        // Use Jimp to process the image
+        const image = await Jimp.read(Buffer.from(screenshot, 'base64'));
+        
+        // Crop the image to the region of the element
+        console.log(location);
+        image.crop(location.x, location.y, location.width, location.height);
+        
+        // Save the cropped image
+        if(process.argv[4] === "capture") await image.writeAsync(`./test/ReferenceImages/${imagePath}`);
+        else await image.writeAsync(`./test/SpecImages/${imagePath}`);
+    }
+    
+    async compareScreenShot(imagePath){
         return new Promise(async(resolve , reject) => {
             try{
-                const comparisonResult = await compareImages(referenceImagePath, specImagePath);
-                fs.writeFileSync(comparisonImagePath, comparisonResult.getBuffer());
+                if(process.argv[4] === "capture") resolve("capture");
+                const comparisonResult = await this.compareImages(`./test/ReferenceImages/${imagePath}`, `./test/SpecImages/${imagePath}`);
+                fs.writeFileSync(`./test/ComparisonImages/${imagePath}`, comparisonResult.getBuffer());
                 resolve(comparisonResult);
             }catch(err){
                 reject(err);

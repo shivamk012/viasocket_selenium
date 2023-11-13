@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev chromeProfile" : "node index test chromeProfile",
-    "start chromeProfile" : "node index prod chromeProfile",
-    "start:dev" : "node index test",
-    "start" : "node index prod"
+    "start:dev chromeProfile capture": "node index test chromeProfile capture",
+    "start chromeProfile capture": "node index prod chromeProfile capture",
+    "start:dev": "node index test",
+    "start": "node index prod"
   },
   "author": "",
   "license": "ISC",
@@ -16,10 +16,12 @@
     "axios": "^1.6.0",
     "axois": "^0.0.1-security",
     "dotenv": "^16.3.1",
+    "jimp": "^0.22.10",
     "jquery": "^3.7.1",
     "node-resemble-js": "^0.2.0",
     "resemblejs": "^5.0.0",
-    "selenium-webdriver": "^4.13.0"
+    "selenium-webdriver": "^4.13.0",
+    "sharp": "^0.32.6"
   },
   "devDependencies": {
     "chai": "^4.3.10",

@@ -123,8 +123,8 @@ module.exports = class Page {
         const image = await Jimp.read(Buffer.from(screenshot, 'base64'));
         
         // Crop the image to the region of the element
-        console.log(location);
-        image.crop(location.x, location.y, location.width, location.height);
+        // console.log(location);
+        image.crop(location.x, location.y, location.x+location.width, location.y+location.height);
         
         // Save the cropped image
         if(process.argv[4] === "capture") await image.writeAsync(`./test/ReferenceImages/${imagePath}`);

@@ -1,5 +1,4 @@
-
-const {endpoints} = require('../../enums');
+const {endpoints , actions} = require('../../enums');
 const Login = require('../Login/login'); 
 const {By , until , Key, Actions} = require('selenium-webdriver');// login class extends page class
 
@@ -9,6 +8,8 @@ class Projects extends Login{
         this.driver = super.Driver;
         this.orgName = '';
         this.scriptSlider = '';
+        this.listOfScripts = '';
+        this.actionButtons = [];
     }
 
     async orgField(){
@@ -114,13 +115,50 @@ class Projects extends Login{
     async waitForScriptSlider(){
         this.scriptSlider = await this.driver.findElement(By.xpath('//div[contains(@class , "script_slider")]'));
         await super.waitForContentToBeVisible(this.scriptSlider , 10000);
+        await super.waitForContentToLoad(By.xpath('.//div[contains(@class , "script_block")]') , 10000);
+        this.listOfScripts = await this.scriptSlider.findElements(By.xpath('.//div[contains(@class , "script_block")]'));
     }
     
     async clickOnScript(){
-        await super.waitForContentToLoad(By.xpath('.//div[contains(@class , "script_block")]') , 10000);
-        const scripBlocks = await this.scriptSlider.findElements(By.xpath('.//div[contains(@class , "script_block")]'));
-        await scripBlocks[0].click();
+        await this.listOfScripts[0].click();
         await super.waitForEndpoint(endpoints.PUBLISHED , 10000);
+    }
+
+    async intitaliseActionButtonsForScript(){
+        const actionButtonContainer = await this.listOfScripts[0].findElement(By.css('[class*="actionBtnContainer"]'));
+        await actionButtonContainer.click();
+        await super.waitForContentToLoad(By.id(process.env.ACTION_BUTTONS_DIV_ID) , 10000);
+        const actionButtonsDiv = await this.driver.findElement(By.id(process.env.ACTION_BUTTONS_DIV_ID));
+        this.actionButtons = await actionButtonsDiv.findElements(By.css('li'));
+    }
+    
+    async intitaliseActionButtonsForProject(){
+        const actionButtonContainer = await this.driver.findElement(By.css('[class*="actionBtnContainer"]'));
+        await actionButtonContainer.click();
+        await super.waitForContentToLoad(By.id(process.env.ACTION_BUTTONS_DIV_ID) , 10000);
+        const actionButtonsDiv = await this.driver.findElement(By.id(process.env.ACTION_BUTTONS_DIV_ID));
+        this.actionButtons = await actionButtonsDiv.findElements(By.css('li'));
+    }
+    
+    async pauseProject(){
+        await this.intitaliseActionButtonsForProject();
+        await this.actionButtons[actions.PAUSE].click();
+    }
+    
+    async deleteProject(){
+        await this.intitaliseActionButtonsForProject();
+        await this.actionButtons[actions.DELETE].click();
+    }
+
+    async pauseScript(){
+        await this.intitaliseActionButtonsForScript();
+        await this.actionButtons[actions.PAUSE].click();
+    }
+    
+    async deleteScript(){
+        await this.intitaliseActionButtonsForScript();
+        await this.actionButtons[actions.DELETE].click();
+        
     }
 
     async clickOnNewFlow(){

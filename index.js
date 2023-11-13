@@ -8,7 +8,11 @@ dotenv.config();
 // const testAddSteps = require('./test/specs/testAddSteps.spec');
 // const testLogin = require('./test/specs/testLogin.spec');
 const testCreateOrg= require('./test/specs/testCreateOrg.spec');
+// const testVariableStep = require('./test/specs/testCreateVariable.spec');
+// const testPauseProject = require('./test/specs/testPauseProject.spec')
 
 
 testCreateOrg()
+
+// testInvocation();
 

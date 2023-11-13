@@ -1,21 +1,56 @@
-const Projects = require('../pages/projects');
+const Projects = require('../pages/Project/projects');
 const {endpoints} = require('../enums');
+const {expect}=require('chai');
+
 
 const projectsPage = new Projects();
 // const testData = JSON.parse(process.env.USER_DETAILS_LOGIN);
 
 async function testCreateOrg(){
-    try{
-        await projectsPage.open(endpoints.HOME);
-        await projectsPage.clickOnLoginWithGoogle();
-        await projectsPage.waitForEndpoint(endpoints.PROJECT , 60000);
-        await projectsPage.waitForProjecPageToLoad();
-        await projectsPage.openListOfOrgs();
-        await projectsPage.createNewOrg('new org');
-    }
-    catch(err){
-        console.log(err);
-    }
-};
+
+    describe("Organisation test cases",async function(){
+        
+        it('Create org then it must be created',async ()=>{
+            await projectsPage.open(endpoints.HOME);
+            await projectsPage.clickOnLoginWithGoogle();
+            await projectsPage.waitForEndpoint(endpoints.PROJECT , 60000);
+            await projectsPage.waitForProjecPageToLoad();
+            await projectsPage.openListOfOrgs();
+            await projectsPage.createNewOrg('shivam11');
+            const string1=await projectsPage.fetchOrgName();
+            const string2="Shivam11";
+            expect(string1).to.equal(string2);  
+            await projectsPage.crossOrgTextField();   // Ise hme remove krna hai final execution k time pr
+        }).timeout(50000);
+
+
+        it("if orgname is less than 4 character then it show error message",async ()=>{
+            await projectsPage.openListOfOrgs();
+            await projectsPage.sleep_task(3000);
+            await projectsPage.createNewOrg('abc');
+            const alertBox=projectsPage.errorBox();
+            expect(alertBox).to.not.equal('none', 'Element is not visible');
+            await projectsPage.crossOrgTextField();
+        }).timeout(50000);
+
+        it("if orgname is equal to 4 then it show error",async ()=>{
+            await projectsPage.openListOfOrgs();
+            await projectsPage.sleep_task(3000);
+            await projectsPage.createNewOrg('abcd');
+            const alertBox=projectsPage.errorBox();
+            expect(alertBox).to.not.equal('none', 'Element is not visible');
+            await projectsPage.crossOrgTextField();
+        }).timeout(500000);
+
+        it("when we switch org then it switched successfully",async ()=>{
+            await projectsPage.openListOfOrgs();
+            await projectsPage.sleep_task(3000);
+            const array=await projectsPage.arrayOfOrgs();
+            const string1=await projectsPage.switcOrg(array,2);
+            const string2=await projectsPage.fetchOrgName();
+            expect(string1).to.equal(string2.charAt(0).toLowerCase()+string2.slice(1));
+        }).timeout(500000);
+})}
+;
 // testProjects();
 module.exports = testCreateOrg;  

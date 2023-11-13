@@ -49,12 +49,53 @@ class Projects extends Login{
         return orgInput;
     }
 
+    async createNewOrg(title){
+        const orgInput = await this.getOrgTitleInputField();
+        await orgInput.sendKeys(title , Key.RETURN); 
+        
+    }
+    async fetchOrgName(){
+        await this.driver.sleep(3000);
+        const name_field=await this.driver.findElement(By.css('[class*="css-pzevym"]'));
+        await this.driver.wait(until.elementIsVisible(name_field),3000);
+        const name_string=await name_field.getText();
+        return name_string;
+    }
+      
+    async sleep_task(time){
+        await this.driver.sleep(time);
+    }
+
+    async errorBox(){
+        const error=await this.driver.findElement(By.id("alert-container-0"));
+        return error
+    }
+    
+    async arrayOfOrgs(){
+        const Parent_array=await this.driver.findElement(By.css('[class*="css-1j8ctzr"]'));
+        const array=Parent_array.findElements(By.css("li"));
+        return await array
+    }
+
+    async switcOrg(array,index){
+        const text=await array[index].getText();
+        await array[index].click();
+        return text
+
+    }
+    
+    async crossOrgTextField(){
+        const cross=await this.driver.findElement(By.xpath("//body/div[@role='presentation']/div[@role='presentation']/div[@role='dialog']/form[1]/div[1]//*[name()='svg']"))
+        await cross.click();
+    }
+    
     async clickOnNewProject(){
         await super.waitForContentToLoad(By.css('button') , 60000);
         const newProjectButton = await this.driver.findElements(By.css('button'));
         await newProjectButton[1].click();
         // await this.driver.wait(until.elementIsVisible(By.id('projectTitle')), 10000);
     }
+
     
     async createNewProject(projectName){
         await super.waitForContentToLoad(By.css('label') , 10000);
@@ -95,10 +136,6 @@ class Projects extends Login{
         await scriptInput.sendKeys(scriptName , Key.RETURN);
     }
 
-    async createNewOrg(title){
-        const orgInput = await this.getOrgTitleInputField();
-        await orgInput.sendKeys(title , Key.RETURN);
-    }
 }   
 
 module.exports = Projects;

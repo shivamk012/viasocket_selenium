@@ -109,6 +109,7 @@ class Projects extends Login{
     }
 
     async getAllProjectsText(){
+        await this.driver.sleep(2000);
         const element=await this.driver.findElement(By.className('project_list flex-col MuiBox-root css-0'));
         const elements=await element.findElements(By.css("div"));
         const text_array=new Set();
@@ -116,6 +117,7 @@ class Projects extends Login{
             const text=await value.getText();
             text_array.add(text);
         }
+        text_array.delete('');
         console.log(text_array);
         return text_array;
     }
@@ -167,10 +169,16 @@ class Projects extends Login{
     async renameProject(new_name){
         await this.intitaliseActionButtonsForProject();
         await this.actionButtons[actions.RENAME].click();
-        const rename_field=await this.driver.findElement(By.css("[class*='css-8bj23o']"));
-        await rename_field.sendKeys(Key.BACK_SPACE);
-        await rename_field.sendKeys("renamed_name");
-        await rename_field.sendKeys(Key.ENTER);
+        const activeElement = await this.driver.executeScript('return document.activeElement');
+        await this.driver.executeScript('arguments[0].select()', activeElement);
+        await this.driver.actions().sendKeys(Key.BACK_SPACE).perform();
+        await activeElement.sendKeys(new_name);
+        await activeElement.sendKeys(Key.ENTER);
+        await this.driver.sleep(2000);
+    }
+
+    async refreshPage(){
+        await this.driver.navigate().refresh();
     }
 
     async pauseScript(){

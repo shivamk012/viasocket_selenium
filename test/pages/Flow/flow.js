@@ -57,10 +57,8 @@ class FlowPage extends Projects{
 
     async clickOnAddSteps(){
         const workflow = await this.driver.findElement(By.css('[class*="workflow__flow"]'));
-
         // NOTE:  Iske alava koi option nai mila content load ke wait karne ka. input elements 5 hai page pe to input ke liye wait ni kar sakte
         await super.waitForContentToLoad(By.xpath('//button[text() = "Dry Run"]') , 10000); 
-        
         const addStepsButton = await workflow.findElements(By.css('input'));
         await addStepsButton[1].click();
     }
@@ -140,8 +138,7 @@ class FlowPage extends Projects{
     }
 
     async createAPI1(){
-        const apistep=await this.listOfSteps();
-        await apistep[0].click();
+        await this.clickOnStep()
         await this.driver.sleep(4000);
         const apiname=await this.driver.findElement(By.id("function-title-textfield"));
         await this.driver.wait(until.elementIsVisible(apiname),4000);

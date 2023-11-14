@@ -61,19 +61,6 @@ async function testCreateProject(){
             expect(alertBox).to.equal('error\nProject name too short');
             await projectsPage.crossOrgTextField();
         });
-
-        it.only("script should be paused after click on pause button",async function(){
-            await projectsPage.open(endpoints.HOME);
-            await projectsPage.clickOnLoginWithGoogle();
-            await projectsPage.waitForEndpoint(endpoints.PROJECT , 60000);
-            await projectsPage.renameProject()
-        }).timeout(5000)
-
-
-
-
-
-
     })
 }
 

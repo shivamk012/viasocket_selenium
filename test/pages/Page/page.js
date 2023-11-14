@@ -12,7 +12,6 @@ module.exports = class Page {
             this.driver = new Builder().setChromeOptions(options).forBrowser('chrome').build();
             console.log('Driver created successfully');
             this.app_link = (process.argv[2] === "test" ? process.env.TEST_LINK : process.env.PROD_LINK);
-
         }
         catch(err){
             console.log(err);

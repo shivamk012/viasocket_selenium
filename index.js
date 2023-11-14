@@ -7,12 +7,13 @@ dotenv.config();
 // const testCreateScript = require('./test/specs/testCreateScript.spec');
 // const testAddSteps = require('./test/specs/testAddSteps.spec');
 // const testLogin = require('./test/specs/testLogin.spec');
-const testCreateOrg= require('./test/specs/testCreateOrg.spec');
+// const testRenameProject= require('./test/specs/testIfBlockStep.spec');
+const testIfBlockStep = require('./test/specs/testIfBlockStep.spec');
 // const testVariableStep = require('./test/specs/testCreateVariable.spec');
 // const testPauseProject = require('./test/specs/testPauseProject.spec')
 
 
-testCreateOrg()
+testIfBlockStep()
 
 // testInvocation();
 

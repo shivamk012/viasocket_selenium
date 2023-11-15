@@ -1,6 +1,7 @@
 const {endpoints , actions} = require('../../enums');
 const Login = require('../Login/login'); 
-const {By , until , Key, Actions} = require('selenium-webdriver');// login class extends page class
+const {By , until , Key, Actions} = require('selenium-webdriver');
+// login class extends page class
 
 class Projects extends Login{
     constructor(){
@@ -10,6 +11,8 @@ class Projects extends Login{
         this.scriptSlider = '';
         this.listOfScripts = '';
         this.actionButtons = [];
+        this.actionButtonDiv = '';
+        this.listOfProjects = [];
     }
 
     async orgField(){
@@ -124,8 +127,8 @@ class Projects extends Login{
     
     async clickOnProjectName(){
         await this.driver.wait(until.elementLocated(By.xpath('//div[contains(@class, "project_name__title")]')) , 10000);
-        const allProjects = await this.driver.findElements(By.xpath('//div[contains(@class, "project_name__title")]'));
-        await allProjects[0].click();
+        this.listOfProjects = await this.driver.findElements(By.xpath('//div[contains(@class, "project_name__title")]'));
+        await this.listOfProjects[0].click();
     }
 
     async waitForScriptSlider(){
@@ -140,32 +143,32 @@ class Projects extends Login{
         await super.waitForEndpoint(endpoints.PUBLISHED , 10000);
     }
 
-    async intitaliseActionButtonsForScript(){
+    async clickOnActionButtonMenuScript(){
         const actionButtonContainer = await this.listOfScripts[0].findElement(By.css('[class*="actionBtnContainer"]'));
         await actionButtonContainer.click();
         await super.waitForContentToLoad(By.id(process.env.ACTION_BUTTONS_DIV_ID) , 10000);
-        const actionButtonsDiv = await this.driver.findElement(By.id(process.env.ACTION_BUTTONS_DIV_ID));
-        this.actionButtons = await actionButtonsDiv.findElements(By.css('li'));
+        this.actionButtonDiv = await this.driver.findElement(By.id(process.env.ACTION_BUTTONS_DIV_ID));
+        this.actionButtons = await this.actionButtonDiv.findElements(By.css('li'));
     }
     
-    async intitaliseActionButtonsForProject(){
+    async clickOnActionButtonMenuProject(){
         const actionButtonContainer = await this.driver.findElement(By.css('[class*="actionBtnContainer"]'));
         await actionButtonContainer.click();
         await super.waitForContentToLoad(By.id(process.env.ACTION_BUTTONS_DIV_ID) , 10000);
-        const actionButtonsDiv = await this.driver.findElement(By.id(process.env.ACTION_BUTTONS_DIV_ID));
-        this.actionButtons = await actionButtonsDiv.findElements(By.css('li'));
+        this.actionButtonDiv = await this.driver.findElement(By.id(process.env.ACTION_BUTTONS_DIV_ID));
+        this.actionButtons = await this.actionButtonDiv.findElements(By.css('li'));
     }
     
     async pauseProject(){
-        await this.intitaliseActionButtonsForProject();
         await this.actionButtons[actions.PAUSE].click();
+        await this.driver.sleep(2000);
     }
     
     async deleteProject(){
-        await this.intitaliseActionButtonsForProject();
         await this.actionButtons[actions.DELETE].click();
+        await this.driver.sleep(2000);
     }
-
+    
     async renameProject(new_name){
         await this.intitaliseActionButtonsForProject();
         await this.actionButtons[actions.RENAME].click();
@@ -182,14 +185,13 @@ class Projects extends Login{
     }
 
     async pauseScript(){
-        await this.intitaliseActionButtonsForScript();
         await this.actionButtons[actions.PAUSE].click();
+        await this.driver.sleep(2000);
     }
     
     async deleteScript(){
-        await this.intitaliseActionButtonsForScript();
         await this.actionButtons[actions.DELETE].click();
-        
+        await this.driver.sleep(2000);
     }
 
     async clickOnNewFlow(){
@@ -205,6 +207,74 @@ class Projects extends Login{
         await scriptInput.sendKeys(scriptName , Key.RETURN);
     }
 
+
+    async hoverOnMenuButton(){
+        const actionButtonContainer = await this.driver.findElements(By.id('long-button'));
+        await this.driver.actions().move({origin : actionButtonContainer[1]}).pause(1000).perform();
+        return actionButtonContainer[1];
+    }
+
+    async takeScreenShotOfMenuButton(imagePath){
+        const actionBtnContainer = await this.hoverOnMenuButton();
+        await super.takeScreenShotAndCrop(actionBtnContainer , imagePath);
+    }
+
+    async takeScreenShotActionButtons(imagePath){
+        await super.takeScreenShotAndCrop(this.actionButtonDiv , imagePath);
+    }
+
+    async getListOfProjects(){
+        const projectListDiv = await this.driver.findElements(By.css('[class*="project_list__projects"]'));
+        return projectListDiv;
+    }
+
+    async getListOfDeletedProjects(){
+        await super.waitForContentToLoad(By.xpath('//span[text() = "Deleted Projects"]') , 10000);
+        const deletedProjectWebElement = await this.driver.findElement(By.xpath('//span[text() = "Deleted Projects"]'));
+        const deletedProjectDiv = await deletedProjectWebElement.findElement(By.xpath('.//../following-sibling::*'));
+        // await deletedProjectDiv.click();
+        // const deletedProjectsListDiv = await deletedProjectDiv.findElement(By.xpath(''));
+        // await super.waitForContentToLoad(By.css('[class*="project_name__title"]') , 10000);
+        const deletedProjectsListWebElements = await deletedProjectDiv.findElements(By.css('[class*="project_name__title"]'));
+        console.log(deletedProjectsListWebElements);
+        const text = await deletedProjectsListWebElements[0].getText();
+        return text;
+    }
+
+    async getListOfScripts(){
+        const flowTextSpanElement = await this.driver.findElement(By.xpath('//span[text() = "FLOWS"]'));
+        const scriptListParents = await flowTextSpanElement.findElement(By.xpath('.//..'));
+        const listOfScripts = await scriptListParents.findElements(By.css('[class*="script_block"]'));
+        return listOfScripts;
+    }
+
+    async getListOfDeletedScripts(){
+        const deletedScriptSpanElement = await this.driver.findElement(By.xpath('//span[text() = "DELETED FLOWS"]'));;
+        const deletedScriptsParent = await deletedScriptSpanElement.findElement(By.xpath('.//..'));
+        await deletedScriptsParent.click();
+        await super.waitForContentToLoad(By.css('[class*="script_block"]') , 10000);
+        const listOfScriptsParentDiv = await deletedScriptsParent.findElement(By.xpath('.//following-sibling::*'));
+        const listOfDeletedScripts = await listOfScriptsParentDiv.findElements(By.css('[class*="script_block"]'));
+        if(!listOfDeletedScripts.length) return null;
+        const text = await listOfDeletedScripts[0].getText();
+        return text;
+    }
+
+    async getListOfPausedScripts(){
+        const pausedScriptSpanElement = await this.driver.findElement(By.xpath('//span[text() = "PAUSED FLOWS"]'));
+        const pausedScriptParentDiv = await pausedScriptSpanElement.findElement(By.xpath('.//..'));
+        const listOfPausedScripts = await pausedScriptParentDiv.findElements(By.css('[class*="script_block"]'));
+        if(!listOfPausedScripts.length) return null;
+        const text = await listOfPausedScripts[0].getText();
+        return text;
+    }
+
+    async checkIfClassPresent(className){
+        const projectTitleDiv = await this.driver.findElement(By.css('[class*="project_name__title"]'));
+        const projectTitleDivParent = await projectTitleDiv.findElement(By.xpath('.//..'));
+        const projectTitleClass = await projectTitleDivParent.getAttribute('class');
+        return projectTitleClass.includes(className);
+    }
 }   
 
 module.exports = Projects;

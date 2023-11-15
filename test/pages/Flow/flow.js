@@ -72,11 +72,19 @@ class FlowPage extends Projects{
     async clickOnStep(index){
         await this.steps[index].click();
         await super.waitForContentToLoad(By.css(`[class*=${process.env.CUSTOM_SLIDER_CLASS}]`) , 10000);
+        await this.driver.sleep(1000);
     }
 
     async fillStepName(stepName){
         const stepNameInput = await this.driver.findElement(By.id(process.env.STEP_NAME_ID));
         await stepNameInput.sendKeys(stepName);
+        await this.driver.sleep(2000);
+    }
+    
+    async getStepName(){
+        const stepNameInput = await this.driver.findElement(By.id(process.env.STEP_NAME_ID));
+        const stepname = await stepNameInput.getAttribute('value');
+        return stepname;
     }
 
     async initialiseApiSlider(){
@@ -103,15 +111,57 @@ class FlowPage extends Projects{
         await this.apiContent.click();
     }
 
+    async getUrl(){
+        let apiUrlInputField = await this.apiContent.findElement(By.id(process.env.API_URL_INPUTDIV_ID));
+        const url = await apiUrlInputField.getText();
+        return url;
+    }
+
     async clickOnDryRunButton(){
         await this.dryRunButton.click();
         await super.waitForContentToLoad(By.css('.object-key-val') , 30000);
+        const responseContent = await this.driver.findElement(By.id(process.env.RESPOSNE_CONTENT_PANEL_ID));
+        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , responseContent);
+    }
+
+    async getResponseData(){
+        const responseContent = await this.driver.findElement(By.id(process.env.RESPOSNE_CONTENT_PANEL_ID));
+        const response = await responseContent.getText();
+        return response;
+    }
+
+    async getResponsDataVariableStep(){
+        await super.waitForContentToLoad(By.id('json-pretty') , 10000);
+        const text = await this.getResponseData();
+        return text;
+    }
+
+    async takeVariableResponseScreenShot(imagePath){
+        await super.waitForContentToLoad(By.id('json-pretty') , 10000);
+        const responseContent = await this.driver.findElement(By.id(process.env.RESPOSNE_CONTENT_PANEL_ID));
+        await super.takeScreenShotAndCrop(responseContent , imagePath);
+    }
+
+    async takeResponseScreenShot(imagePath){
+        const responseContent = await this.driver.findElement(By.id(process.env.RESPOSNE_CONTENT_PANEL_ID));
+        await super.takeScreenShotAndCrop(responseContent , imagePath);
+    }
+
+    async takeScreenShotWorkFlow(imagePath){
+        const flow = await this.driver.findElements(By.css('[class*="workflow__flow"]'));
+        await super.takeScreenShotAndCrop(flow[1] , imagePath);
     }
 
     async clickOnCreateButton(){
         this.createButton = await this.driver.findElement(By.xpath(`//button[text() = "${process.env.SAVE_BUTTON_TEXT}"]`));
         this.driver.executeScript("arguments[0].scrollIntoView(true);", this.createButton);
         await this.createButton.click();
+    }
+
+    async clickOnVariableSliderAccordion(){
+        const accordions = await this.driver.findElements(By.css('[class*="variableslider__accordion"]'));
+        await accordions[0].click();
+        await super.waitForContentToLoad(By.xpath('//button[text() = "Update"]') , 10000);
     }
 
     async selectApiMethod(methodTypeIndex){
@@ -125,6 +175,12 @@ class FlowPage extends Projects{
         const requestMethodList = await requestMethodListDiv.findElements(By.css('li'));
         await requestMethodList[methodTypeIndex].click();
         await super.waitForContentToBeNotVisible(requestMethodListDiv , 10000);
+    }
+
+    async getSelectedApiMethod(){
+        const apiMethodDropDown = await this.apiContent.findElement(By.css('input'));
+        const text = await apiMethodDropDown.getAttribute('value');
+        return text.toUpperCase();
     }
 
     async sendBodyData(requestMethodIndex){
@@ -165,14 +221,25 @@ class FlowPage extends Projects{
         await var_name.sendKeys(name);
     }
 
-    async blurLogSlider(){
-        const logSlider = await this.driver.findElement(By.css('[class*="logs_slider"]'));
-        await super.addBlurToElement(logSlider);
+    async getVariableName(){
+        const varName=await this.driver.findElement(By.id(process.env.VARIABLE_NAME_FIELD_ID));
+        // const varNameParent = await varName.findElement(By.xpath('.//..'));
+        // const varNameHolder = await varNameParent.findElement(By.css('span'));
+        const text = await varName.getAttribute('value');
+        return text;
     }
-    
-    async blurWorkFlow(){
-        const workflow = await this.driver.findElement(By.css('[class*="workflow"]'));
-        await super.addBlurToElement(workflow);
+
+    async takeScreenShotFunctionSlider(imagePath){
+        const stepNameInput = await this.driver.findElement(By.id(process.env.STEP_NAME_ID));
+        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , stepNameInput);
+        await super.takeScreenShotAndCrop(stepNameInput , imagePath);
+    }
+
+    async takeScreenShotVariableSlider(imagePath){
+        await super.waitForContentToLoad(By.css('[class*="variableinput"]') , 10000);
+        const slider = await this.driver.findElement(By.css('[class*="functionsliderbody"]'));
+        const sliderparent = await slider.findElement(By.xpath('.//..'));
+        await super.takeScreenShotAndCrop(sliderparent , imagePath);
     }
 
     async fillVariableValue(value){
@@ -181,6 +248,15 @@ class FlowPage extends Projects{
         const variableCustomSuggestInputs = await variableSlideCustomSuggestDiv.findElements(By.css('div'));
         const [variableValueDiv] = variableCustomSuggestInputs.slice(-1);
         await variableValueDiv.sendKeys(value);
+    }
+
+    async getVariableValue(){
+        const variableSlideCustomSuggestDiv = await this.driver.findElement(By.css('[class*="variableinput"]'));
+        await variableSlideCustomSuggestDiv.click();
+        const variableCustomSuggestInputs = await variableSlideCustomSuggestDiv.findElements(By.css('div'));
+        const [variableValueDiv] = variableCustomSuggestInputs.slice(-1);
+        const varValue = await variableValueDiv.getText();
+        return varValue;
     }
 
     async createVariable(){
@@ -224,7 +300,7 @@ class FlowPage extends Projects{
         await this.driver.findElement(By.xpath("//div[@class='MuiBox-root css-0']//button[@type='button'][normalize-space()='Dry Run']")).click();
         await this.driver.findElement(By.xpath("//div[@class='MuiBox-root css-0']//button[@type='button'][normalize-space()='Save']")).click();
         await this.driver.findElement(By.xpath("//div[@class='flex-end-center MuiBox-root css-0']//div[2]")).click();
-}
+    }
 
     async createAPI2(){
         await this.clickOnAddStepsButton();

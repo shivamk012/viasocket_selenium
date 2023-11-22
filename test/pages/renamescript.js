@@ -1,6 +1,7 @@
 const Projects = require('../pages/Project/projects');
 const endpoints = require('../enums');
 const {By,until,Key} = require('selenium-webdriver');
+const fs = require('fs');
 //vrt image func
 // const fs = require('fs');
 // const resemble = require('resemblejs');
@@ -46,7 +47,7 @@ class RenameScript extends Projects{
     }
 
     async getScriptName(){
-            const select = await this.driver.findElement(By.xpath(`//span[@class='MuiTypography-root MuiTypography-base1 line-height text-overflow-eclipse css-19o2zjz']`));
+            const select = await this.driver.findElement(By.xpath(`//div[@class='flex-col-start-center gap-4 w-100 MuiBox-root css-0']//div[1]//div[1]//div[1]//p[1]`));
             const scriptName = await select.getText();
             return scriptName;
     }
@@ -103,6 +104,11 @@ class RenameScript extends Projects{
         await activeElement.sendKeys(name);
         const edit = await this.driver.findElement(By.xpath(`//div[@class='sliderbox flex flex-grow MuiBox-root css-0']`));
         await edit.click();
+    }
+
+    async blurProjectSlider(){
+        const projectSlider = await this.driver.findElement(By.xpath(`//div[@class='project-page-cont flex-center-center pt-nav MuiBox-root css-0']`));
+        await super.addBlurToElement(projectSlider);
     }
 }
 module.exports = RenameScript;

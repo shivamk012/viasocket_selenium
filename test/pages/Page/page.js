@@ -1,17 +1,17 @@
 const {Builder, until} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
-
+const resemble = require('resemblejs');
 module.exports = class Page {
     constructor(){
         try{
             let options = new chrome.Options();
             let userDataDir = process.env.USER_PROFILE_DIR;
             console.log(process.argv);
-            if(process.argv[3] == "chromeProfile") options.addArguments(`user-data-dir=${userDataDir}`); 
+            if(process.argv[4] == "chromeProfile") options.addArguments(`user-data-dir=${userDataDir}`); 
             this.driver = new Builder().setChromeOptions(options).forBrowser('chrome').build();
             console.log('Driver created successfully');
-            this.app_link = (process.argv[2] === "test" ? process.env.TEST_LINK : process.env.PROD_LINK);
+            this.app_link = (process.argv[3] === "test" ? process.env.TEST_LINK : process.env.PROD_LINK);
         }
         catch(err){
             console.log(err);
@@ -77,5 +77,26 @@ module.exports = class Page {
 
     async close(){
         await this.driver.quit();
+    }
+
+    async addBlurToElement(webelement){
+        await this.driver.executeScript("arguments[0].style.filter = 'blur(10px)';" , webelement);
+    }
+
+    async takeScreenShotAndSave(imagePath){
+        const FunctionRefrenceScreenshot = await this.driver.takeScreenshot();
+        fs.writeFileSync(imagePath , FunctionRefrenceScreenshot , 'base64');
+    }
+
+    async compareScreenShot(referenceImagePath , specImagePath , comparisonImagePath){
+        return new Promise(async(resolve , reject) => {
+            try{
+                const comparisonResult = await compareImages(referenceImagePath, specImagePath);
+                fs.writeFileSync(comparisonImagePath, comparisonResult.getBuffer());
+                resolve(comparisonResult);
+            }catch(err){
+                reject(err);
+            }
+        })
     }
 }

@@ -17,6 +17,9 @@ async function testApiStep(methodType){
             await flowPage.clickOnAddSteps();
             await flowPage.getAllSteps();
             await flowPage.clickOnStep(stepIndex.API);
+            await flowPage.blurLogSlider();
+            await flowPage.blurWorkFlow();
+            await flowPage.takeScreenShotAndSave('./functionslider.png')
             await flowPage.initialiseApiSlider();
             await flowPage.fillStepName('api_step');
             await flowPage.selectApiMethod(apiIndex[methodType]);

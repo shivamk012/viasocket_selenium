@@ -24,7 +24,6 @@ async function testRenameScript(){
 
         it('Case:02 Try to send only spaces as script name-not accepted',async function(){
           //case:02 send only spaces
-          
           const selectedOption = await rename.getScriptName();
           await rename.sendSpaces();
           const selectedOption2 = await rename.getScriptName();
@@ -50,13 +49,16 @@ async function testRenameScript(){
             it('Case:04 new valid script name',async function(){
               //case:04 new script name
               const selectedOption = await rename.getScriptName();
-              await rename.updateScriptName("valid");
+              await rename.updateScriptName("newtest");
               const selectedOption2 = await rename.getScriptName();
-              expect(selectedOption).to.equal(selectedOption2);
-              await rename.takeSs();
+              expect(selectedOption).to.equal("newtest");
               }).timeout(30000);
 
-              
+            // it('case:05 vrt',async function(){
+            //   await rename.blurProjectSlider();
+            //   await rename.takeScreenShotAndSave('./functionslider.png');
+            //   await rename.compareScreenShot(referenceImagePath , specImagePath , comparisonImagePath);
+            // })     
       });
 }
 module.exports = testRenameScript;

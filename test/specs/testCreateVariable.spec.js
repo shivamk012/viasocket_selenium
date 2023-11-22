@@ -1,0 +1,31 @@
+const FlowPage = require('../pages/Flow/flow');
+const {endpoints , stepIndex} = require('../enums');
+
+const flowPage = new FlowPage();
+
+async function testVariableStep(){
+    return new Promise(async(resolve , reject) => {
+        try{
+            await flowPage.open(endpoints.HOME);
+            await flowPage.clickOnLoginWithGoogle();
+            await flowPage.waitForEndpoint(endpoints.PROJECT , 60000);
+            await flowPage.clickOnProjectName();
+            await flowPage.waitForScriptSlider();
+            await flowPage.clickOnScript();
+            await flowPage.waitForFlowPageToOpen();
+            await flowPage.clickOnEditButton();
+            await flowPage.clickOnAddSteps();
+            await flowPage.getAllSteps();
+            await flowPage.clickOnStep(stepIndex.VARIABLE);
+            await flowPage.fillVariableName('random variable');
+            await flowPage.fillVariableValue('1');
+            await flowPage.clickOnCreateButton();
+        }catch(err){
+                reject(err);
+        }finally{
+            // await flowPage.close();
+        }
+    })
+}
+
+module.exports = testVariableStep;

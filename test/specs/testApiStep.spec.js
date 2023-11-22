@@ -11,15 +11,14 @@ async function testApiStep(methodType){
         })
 
         it('should render function step' , async() => {
-        try{
+            try{
                 await flowPage.open(endpoints.HOME);
-                await flowPage.clickOnLoginWithGoogle();
+                await flowPage.loginUser();
                 await flowPage.waitForEndpoint(endpoints.PROJECT , 60000);
                 await flowPage.clickOnProjectName();
                 await flowPage.waitForScriptSlider();
                 await flowPage.clickOnScript();
                 await flowPage.waitForFlowPageToOpen();
-                await flowPage.clickOnEditButton();
                 await flowPage.clickOnAddSteps();
                 await flowPage.getAllSteps();
                 await flowPage.clickOnStep(stepIndex.API);

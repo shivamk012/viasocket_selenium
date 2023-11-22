@@ -39,17 +39,11 @@ module.exports = class Login extends Page {
         await this.driver.wait(until.urlContains('accounts.google.com') , 10000);
         const gmailId = await this.driver.findElement(By.xpath('//div[contains(text() , "@gmail.com")]'));
         await gmailId.click();
-
-        // const accessToken = await this.driver.executeScript('return localStorage.getItem("proxy_auth_token");');
-        // console.log('Access Token:', accessToken);
     }
 
     async loginUser(){
-        const submitbtn = await this.driver.findElement(By.xpath('//button[@type = "submit"]')); 
-        
-        await this.driver.actions().click(submitbtn).perform();
-        
-        await this.driver.wait(until.urlIs(`${process.env.APP_LINK}/projects`), 10000);
+        await this.driver.executeScript(`window.localStorage.setItem( "proxy_auth_token" , '${process.env.access_token}' )`);
+        await this.driver.navigate().refresh();
     }
 
 }

@@ -3,14 +3,19 @@ const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 const resemble = require('resemblejs');
 const Jimp = require('jimp');
+
 module.exports = class Page {
     constructor(){
         try{
+            // let service = new chrome.ServiceBuilder('C:\\Users\\91702\\Downloads\\chromedriver-win64').build();
+            // chrome.setDefaultService(service);
             let options = new chrome.Options();
             let userDataDir = process.env.USER_PROFILE_DIR;
             console.log(process.argv);
             if(process.argv[3] == "chromeProfile") options.addArguments(`user-data-dir=${userDataDir}`); 
+            
             this.driver = new Builder().setChromeOptions(options).forBrowser('chrome').build();
+            // this.driver = new Builder().forBrowser('chrome').build();
             console.log('Driver created successfully');
             this.app_link = (process.argv[2] === "test" ? process.env.TEST_LINK : process.env.PROD_LINK);
             this.mode = process.argv[4] === "capture";
@@ -72,16 +77,17 @@ module.exports = class Page {
     }
     
     async setLocalStorage(){
-        const localStorage = fs.readFileSync('./localStorage.json' , 'utf-8');
-        const parsedLocalStorage = JSON.parse(localStorage);
-        const arrayOfJson = [parsedLocalStorage];
-        await fs.writeFileSync('./arrayofjson.json' , new Buffer(arrayOfJson , 'utf-8'));
-        const keys = Object.keys(parsedLocalStorage);
-        for(const key of keys){
-            if(key == "persist:root") continue;
-            console.log(`window.localStorage.setItem( '${key}' , '${parsedLocalStorage[key]}' )`);
-            await this.driver.executeScript(`window.localStorage.setItem( '${key}' , '${parsedLocalStorage[key]}' )`);
-        }
+        // const localStorage = fs.readFileSync('./localStorage.json' , 'utf-8');
+        // const parsedLocalStorage = JSON.parse(localStorage);
+        // const arrayOfJson = [parsedLocalStorage];
+        // await fs.writeFileSync('./arrayofjson.json' , new Buffer(arrayOfJson , 'utf-8'));
+        // const keys = Object.keys(parsedLocalStorage);
+        // for(const key of keys){
+        //     if(key == "persist:root") continue;
+        //     console.log(`window.localStorage.setItem( '${key}' , '${parsedLocalStorage[key]}' )`);
+        // }
+        
+        await this.driver.executeScript(`window.localStorage.setItem( "proxy_auth_token" , '${process.env.access_token}' )`);
     }
 
     //to go to a URL 

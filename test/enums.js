@@ -9,7 +9,8 @@ const endpoints = {
     PLUGIN : '/plugin',
     PLUGINAUTH : '/auth',
     ACTION : '/action',
-    EMBED : '/embedProjects'
+    EMBED : '/embedProjects',
+    DEV_SLACK_PLUG : '/projects/orgSZWRqfwCw/projxY8B4axH/workflows/scriEz6Mbp1J/draft' 
 }
 
 const stepIndex = {

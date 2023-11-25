@@ -7,7 +7,7 @@ const ScriptPage = new Scripts();
 async function testCreateScript(){
     try{
         await ScriptPage.open(endpoints.HOME);
-        await ScriptPage.clickOnLoginWithGoogle();
+        await ScriptPage.loginUser();
         await ScriptPage.waitForEndpoint(endpoints.PROJECT , 60000);
         await ScriptPage.openProject();
         await ScriptPage.clickOnNewFlow();

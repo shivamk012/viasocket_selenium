@@ -19,7 +19,7 @@ async function testDeleteProject(){
         
         it('should have menu button on mouse hover' , async() => {
             await projectPage.open(endpoints.HOME);
-            await projectPage.clickOnLoginWithGoogle();
+            await projectPage.loginUser();
             await projectPage.waitForEndpoint(endpoints.PROJECT , 60000);
             await projectPage.takeScreenShotOfMenuButton('menuButtonProject.png');
             const misMatch = await compareSS('menuButtonProject.png');

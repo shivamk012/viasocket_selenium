@@ -62,10 +62,12 @@ class FlowPage extends Projects{
         await super.waitForContentToLoad(By.xpath('//button[text() = "Dry Run"]') , 10000); 
         
         const addStepsButton = await workflow.findElements(By.css('input'));
+        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , addStepsButton[1]);
         await addStepsButton[1].click();
     }
 
     async getAllSteps(){
+        await super.waitForContentToLoad(By.xpath('//span[text() = "MSG91"]') , 100000);
         const divElementsInBody = await this.driver.findElements(By.xpath('//body/div'));
         const [listComponent] = divElementsInBody.slice(-1);
         this.steps = await listComponent.findElements(By.css('li'));
@@ -233,7 +235,7 @@ class FlowPage extends Projects{
     }
 
     async takeScreenShotFunctionSlider(imagePath){
-        const stepNameInput = await this.driver.findElement(By.id(process.env.STEP_NAME_ID));
+        const stepNameInput = await this.driver.findElement(By.css('[class*="custom_slider__halfscreen"]'));
         await this.driver.executeScript('arguments[0].scrollIntoView(true)' , stepNameInput);
         await super.takeScreenShotAndCrop(stepNameInput , imagePath);
     }
@@ -251,6 +253,15 @@ class FlowPage extends Projects{
         const variableCustomSuggestInputs = await variableSlideCustomSuggestDiv.findElements(By.css('div'));
         const [variableValueDiv] = variableCustomSuggestInputs.slice(-1);
         await variableValueDiv.sendKeys(value);
+    }
+
+    async selectPlugin(searchTerm){
+        let plug = '';
+        for(let i=0 ; i<this.steps.length ; ++i){
+            const text = await this.steps[i].getText();
+            if(text === searchTerm) plug = this.steps[i]; 
+        }
+        if(!plug) await plug.click();
     }
 
     async getVariableValue(){

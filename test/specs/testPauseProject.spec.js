@@ -12,7 +12,7 @@ async function testPauseProject(){
     
     it('should pause project on pause button click' , async()=>{
         await projectPage.open(endpoints.HOME);
-        await projectPage.clickOnLoginWithGoogle();
+        await projectPage.loginUser();
         await projectPage.waitForEndpoint(endpoints.PROJECT , 60000);
         await projectPage.clickOnActionButtonMenuProject();
         await projectPage.pauseProject();

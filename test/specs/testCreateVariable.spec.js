@@ -18,16 +18,15 @@ async function testVariableStep(){
             flowPage = new FlowPage()
         })
 
-        it('should render api slider' , async() => {
+        it('should render variable slider' , async() => {
             try{
                 await flowPage.open(endpoints.HOME);
-                await flowPage.clickOnLoginWithGoogle();
+                await flowPage.loginUser();
                 await flowPage.waitForEndpoint(endpoints.PROJECT , 60000);
                 await flowPage.clickOnProjectName();
                 await flowPage.waitForScriptSlider();
                 await flowPage.clickOnScript();
                 await flowPage.waitForFlowPageToOpen();
-                await flowPage.clickOnEditButton();
                 await flowPage.clickOnAddSteps();
                 await flowPage.getAllSteps();
                 await flowPage.clickOnStep(stepIndex.VARIABLE);

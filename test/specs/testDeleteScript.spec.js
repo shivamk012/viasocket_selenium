@@ -19,7 +19,7 @@ async function testDeleteScript(){
     
     it('should have menu button on mouse hover' , async() => {
         await projectPage.open(endpoints.HOME);
-        await projectPage.clickOnLoginWithGoogle();
+        await projectPage.loginUser();
         await projectPage.waitForEndpoint(endpoints.PROJECT , 60000);
         await projectPage.clickOnProjectName();
         await projectPage.waitForScriptSlider();

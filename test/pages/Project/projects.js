@@ -77,11 +77,11 @@ class Projects extends Login{
     async waitForScriptSlider(){
         this.scriptSlider = await this.driver.findElement(By.xpath('//div[contains(@class , "script_slider")]'));
         await super.waitForContentToBeVisible(this.scriptSlider , 10000);
-        await super.waitForContentToLoad(By.xpath('.//div[contains(@class , "script_block")]') , 10000);
-        this.listOfScripts = await this.scriptSlider.findElements(By.xpath('.//div[contains(@class , "script_block")]'));
     }
     
     async clickOnScript(){
+        await super.waitForContentToLoad(By.xpath('.//div[contains(@class , "script_block")]') , 10000);
+        this.listOfScripts = await this.scriptSlider.findElements(By.xpath('.//div[contains(@class , "script_block")]'));
         await this.listOfScripts[0].click();
         await super.waitForEndpoint(endpoints.EDIT , 10000);
     }
@@ -136,6 +136,7 @@ class Projects extends Login{
     }
 
     async createNewOrg(title){
+        console.log(title);
         const orgInput = await this.getOrgTitleInputField();
         await orgInput.sendKeys(title , Key.RETURN);
     }

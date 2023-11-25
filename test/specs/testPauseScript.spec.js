@@ -11,7 +11,7 @@ async function testPauseScript(){
     
     it('should pause script on pause button click' , async()=>{
         await projectPage.open(endpoints.HOME);
-        await projectPage.clickOnLoginWithGoogle();
+        await projectPage.loginUser();
         await projectPage.waitForEndpoint(endpoints.PROJECT , 60000);
         await projectPage.clickOnProjectName();
         await projectPage.waitForScriptSlider();

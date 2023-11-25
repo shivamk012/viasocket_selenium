@@ -18,7 +18,7 @@ module.exports = class Page {
             // this.driver = new Builder().forBrowser('chrome').build();
             console.log('Driver created successfully');
             this.app_link = (process.argv[2] === "test" ? process.env.TEST_LINK : process.env.PROD_LINK);
-            this.mode = process.argv[4] === "capture";
+            this.mode = process.argv[3] === "capture";
         }
         catch(err){
             console.log(err);
@@ -90,6 +90,11 @@ module.exports = class Page {
         await this.driver.executeScript(`window.localStorage.setItem( "proxy_auth_token" , '${process.env.access_token}' )`);
     }
 
+    async openLink(link){
+        await this.driver.get(link);
+        await this.waitForPageToOpen(); 
+    }
+
     //to go to a URL 
     async open(endpoint){ 
         console.log(this.currentUrl(endpoint));
@@ -130,17 +135,17 @@ module.exports = class Page {
         
         // Crop the image to the region of the element
         // console.log(location);
-        image.crop(location.x, location.y, location.x+location.width, location.y+location.height);
+        image.crop(location.x, location.y, location.width, location.height);
         
         // Save the cropped image
-        if(process.argv[4] === "capture") await image.writeAsync(`./test/ReferenceImages/${imagePath}`);
+        if(process.argv[3] === "capture") await image.writeAsync(`./test/ReferenceImages/${imagePath}`);
         else await image.writeAsync(`./test/SpecImages/${imagePath}`);
     }
     
     async compareScreenShot(imagePath){
         return new Promise(async(resolve , reject) => {
             try{
-                if(process.argv[4] === "capture") resolve("capture");
+                if(process.argv[3] === "capture") resolve("capture");
                 const comparisonResult = await this.compareImages(`./test/ReferenceImages/${imagePath}`, `./test/SpecImages/${imagePath}`);
                 fs.writeFileSync(`./test/ComparisonImages/${imagePath}`, comparisonResult.getBuffer());
                 resolve(comparisonResult);

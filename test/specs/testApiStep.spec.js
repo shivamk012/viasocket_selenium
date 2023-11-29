@@ -19,7 +19,6 @@ async function testApiStep(methodType){
                 await flowPage.waitForScriptSlider();
                 await flowPage.clickOnScript();
                 await flowPage.waitForFlowPageToOpen();
-                await flowPage.clickOnEditButton();
                 await flowPage.clickOnAddSteps();
                 await flowPage.getAllSteps();
                 await flowPage.clickOnStep(stepIndex.API);

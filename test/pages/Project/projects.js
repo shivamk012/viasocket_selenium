@@ -82,8 +82,8 @@ class Projects extends Login{
     }
     
     async clickOnScript(){
-        await this.listOfScripts[0].click();
-        await super.waitForEndpoint(endpoints.PUBLISHED , 10000);
+        await this.listOfScripts[0].click(); 
+        await super.waitForEndpoint(endpoints.EDIT , 10000);
     }
 
     async clickOnActionButtonMenuScript(){

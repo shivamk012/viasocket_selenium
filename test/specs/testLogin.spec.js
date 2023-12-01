@@ -8,7 +8,7 @@ async function testLogin(){
         try{
             await loginPage.open('/');
             if(process.argv[3] == "getToken"){
-                await loginPage.clickOnLoginWithGoogle();
+                await loginPage.loginUser();
                 await loginPage.waitForEndpoint(endpoints.PROJECT , 10000);
                 await loginPage.getLocalStorage();
                 resolve();

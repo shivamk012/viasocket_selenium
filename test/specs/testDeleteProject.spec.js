@@ -1,7 +1,6 @@
 const ProjectPage = require('../pages/Project/projects');
 const {endpoints} = require('../enums');
 const {expect} = require('chai');
-let projectPage;
 
 async function compareSS(imagePath){
     const comparisonResult = await projectPage.compareScreenShot(imagePath);
@@ -13,13 +12,14 @@ async function compareSS(imagePath){
 
 async function testDeleteProject(){
     describe('Testing Delete Project Functionality' , () => {
+        let projectPage;
         before(async() => {
             projectPage = new ProjectPage();
         })
         
         it('should have menu button on mouse hover' , async() => {
             await projectPage.open(endpoints.HOME);
-            await projectPage.clickOnLoginWithGoogle();
+            await projectPage.loginUser();
             await projectPage.waitForEndpoint(endpoints.PROJECT , 60000);
             await projectPage.takeScreenShotOfMenuButton('menuButtonProject.png');
             const misMatch = await compareSS('menuButtonProject.png');

@@ -2,18 +2,18 @@ const FlowPage = require('../pages/Flow/flow');
 const {endpoints , stepIndex , apiIndex} = require('../enums');
 const {expect} = require('chai');
 
-let flowPage;
 
 async function testApiStep(methodType){
     describe('test api step slider' , () => {
+        let flowPage;
         before(() => {
             flowPage = new FlowPage();
         })
 
         it('should render function step' , async() => {
-        try{
+            try{
                 await flowPage.open(endpoints.HOME);
-                await flowPage.clickOnLoginWithGoogle();
+                await flowPage.loginUser();
                 await flowPage.waitForEndpoint(endpoints.PROJECT , 60000);
                 await flowPage.clickOnProjectName();
                 await flowPage.waitForScriptSlider();
@@ -22,10 +22,10 @@ async function testApiStep(methodType){
                 await flowPage.clickOnAddSteps();
                 await flowPage.getAllSteps();
                 await flowPage.clickOnStep(stepIndex.API);
-                await flowPage.takeScreenShotFunctionSlider('apiSlider');
-                const comparisonResult = await flowPage.compareScreenShot('apiSlider'); 
+                await flowPage.takeScreenShotFunctionSlider('apiSlider.png');
                 const isCaptureMode = await flowPage.isCaptureMode;
                 if(isCaptureMode) return;
+                const comparisonResult = await flowPage.compareScreenShot('apiSlider.png'); 
                 const num = Math.floor(comparisonResult.rawMisMatchPercentage);
                 expect(num).to.be.lessThan(20);
             }catch(err){
@@ -63,18 +63,18 @@ async function testApiStep(methodType){
 
         it('should have correct resposne' , async() => {
             await flowPage.takeResponseScreenShot('apiResponse.png');
-            const result = await flowPage.compareScreenShot('apiResponse.png');
             const isCaptureMode = await flowPage.isCaptureMode;
             if(isCaptureMode) return;
+            const result = await flowPage.compareScreenShot('apiResponse.png');
             const num = Math.floor(result.rawMisMatchPercentage);
             expect(num).to.be.lessThan(20);
         })
-
+        
         it('api slider input fields should not become empty on dry run click' , async() => {
             await flowPage.takeScreenShotFunctionSlider('filledApiSlider.png');
-            const comparisonResult = await flowPage.compareScreenShot('filledApiSlider.png');
             const isCaptureMode = await flowPage.isCaptureMode;
-            if(isCaptureMode) return;
+            if(isCaptureMode) return
+            const comparisonResult = await flowPage.compareScreenShot('filledApiSlider.png');
             const num = Math.floor(comparisonResult.rawMisMatchPercentage);
             expect(num).to.be.lessThan(20);
         })
@@ -84,9 +84,9 @@ async function testApiStep(methodType){
 
         })
 
-        // after(async()=>{
-        //     await flowPage.close();
-        // })
+        after(async()=>{
+            await flowPage.close();
+        })
     })
 }
 

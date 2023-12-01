@@ -3,17 +3,21 @@ const chrome = require('selenium-webdriver/chrome');
 const fs = require('fs');
 const resemble = require('resemblejs');
 const Jimp = require('jimp');
+
 module.exports = class Page {
     constructor(){
         try{
+            // let service = new chrome.ServiceBuilder('C:\\Users\\91702\\Downloads\\chromedriver-win64').build();
+            // chrome.setDefaultService(service);
             let options = new chrome.Options();
-            let userDataDir = process.env.USER_PROFILE_DIR;
             console.log(process.argv);
-            if(process.argv[3] == "chromeProfile") options.addArguments(`user-data-dir=${userDataDir}`); 
+            
             this.driver = new Builder().setChromeOptions(options).forBrowser('chrome').build();
+            // this.driver = new Builder().forBrowser('chrome').build();
             console.log('Driver created successfully');
-            this.app_link = (process.argv[2] === "test" ? process.env.TEST_LINK : process.env.PROD_LINK);
-            this.mode = process.argv[4] === "capture";
+            this.isDev = process.argv[2] === "test" || process.argv[3] === "test";
+            this.app_link = (this.isDev ? process.env.TEST_LINK : process.env.PROD_LINK);
+            this.mode = process.argv[3] === "capture" || process.argv[4] === "capture";
         }
         catch(err){
             console.log(err);
@@ -38,6 +42,10 @@ module.exports = class Page {
         return this.mode
     }
 
+    get isDevMode(){
+        return this.isDev
+    }
+
     currentUrl(endpoint){
         return this.app_link + endpoint;
     }
@@ -58,6 +66,10 @@ module.exports = class Page {
         await this.driver.wait(until.elementLocated(locator) , timer);
     }
 
+    async waitForMultipleElementsToLoad(locator , timer){
+        await this.driver.wait(until.elementsLocated(locator) , timer);
+    }
+
     async waitForContentToBeVisible(locator , timer){
         await this.driver.wait(until.elementIsVisible(locator) , timer);
     }
@@ -72,16 +84,22 @@ module.exports = class Page {
     }
     
     async setLocalStorage(){
-        const localStorage = fs.readFileSync('./localStorage.json' , 'utf-8');
-        const parsedLocalStorage = JSON.parse(localStorage);
-        const arrayOfJson = [parsedLocalStorage];
-        await fs.writeFileSync('./arrayofjson.json' , new Buffer(arrayOfJson , 'utf-8'));
-        const keys = Object.keys(parsedLocalStorage);
-        for(const key of keys){
-            if(key == "persist:root") continue;
-            console.log(`window.localStorage.setItem( '${key}' , '${parsedLocalStorage[key]}' )`);
-            await this.driver.executeScript(`window.localStorage.setItem( '${key}' , '${parsedLocalStorage[key]}' )`);
-        }
+        // const localStorage = fs.readFileSync('./localStorage.json' , 'utf-8');
+        // const parsedLocalStorage = JSON.parse(localStorage);
+        // const arrayOfJson = [parsedLocalStorage];
+        // await fs.writeFileSync('./arrayofjson.json' , new Buffer(arrayOfJson , 'utf-8'));
+        // const keys = Object.keys(parsedLocalStorage);
+        // for(const key of keys){
+        //     if(key == "persist:root") continue;
+        //     console.log(`window.localStorage.setItem( '${key}' , '${parsedLocalStorage[key]}' )`);
+        // }
+        
+        await this.driver.executeScript(`window.localStorage.setItem( "proxy_auth_token" , '${process.env.access_token}' )`);
+    }
+
+    async openLink(link){
+        await this.driver.get(link);
+        await this.waitForPageToOpen(); 
     }
 
     //to go to a URL 
@@ -124,17 +142,17 @@ module.exports = class Page {
         
         // Crop the image to the region of the element
         // console.log(location);
-        image.crop(location.x, location.y, location.x+location.width, location.y+location.height);
+        image.crop(location.x, location.y, location.width, location.height);
         
         // Save the cropped image
-        if(process.argv[4] === "capture") await image.writeAsync(`./test/ReferenceImages/${imagePath}`);
+        if(process.argv[3] === "capture") await image.writeAsync(`./test/ReferenceImages/${imagePath}`);
         else await image.writeAsync(`./test/SpecImages/${imagePath}`);
     }
     
     async compareScreenShot(imagePath){
         return new Promise(async(resolve , reject) => {
             try{
-                if(process.argv[4] === "capture") resolve("capture");
+                if(process.argv[3] === "capture") resolve("capture");
                 const comparisonResult = await this.compareImages(`./test/ReferenceImages/${imagePath}`, `./test/SpecImages/${imagePath}`);
                 fs.writeFileSync(`./test/ComparisonImages/${imagePath}`, comparisonResult.getBuffer());
                 resolve(comparisonResult);

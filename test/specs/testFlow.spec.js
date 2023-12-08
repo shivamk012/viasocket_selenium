@@ -1,5 +1,6 @@
 const FlowPage = require('../pages/Flow/flow');
 const {endpoints , stepIndex} = require('../enums');
+const expect=require('chai')
 
 const flowPage = new FlowPage();
 

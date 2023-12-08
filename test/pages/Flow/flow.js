@@ -18,6 +18,8 @@ class FlowPage extends Projects{
         this.dryRunButton = '';
         this.createButton = '';
         this.addStepsMainContainer = '';
+        this.listOfStepsNewFlow = [];
+        this.menuButtonStep = '';
     }
 
     async waitForFlowPageToOpen(){
@@ -70,20 +72,29 @@ class FlowPage extends Projects{
 
     async clickOnAddSteps(){
         const workflow = await this.driver.findElement(By.css('[class*="workflow__flow"]'));
-
         // NOTE:  Iske alava koi option nai mila content load ke wait karne ka. input elements 5 hai page pe to input ke liye wait ni kar sakte
-        await super.waitForContentToLoad(By.xpath('//button[text() = "Dry Run"]') , 10000); 
-    
+        await super.waitForContentToLoad(By.xpath('//*[text() = "Do"]') , 10000); 
         const addStepsButton = await workflow.findElements(By.css('input'));
-        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , addStepsButton[1]);
-        await addStepsButton[1].click();
+        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , addStepsButton[2]);
+        await addStepsButton[2].click();
     }
 
-    async getAllSteps(){
+    async getAllStepsNewFlow(){
+        const stepsParentDiv = await this.driver.findElement(By.css('[class*="createfunction"]'));
+        this.listOfStepsNewFlow = await stepsParentDiv.findElement(By.css('button'));
+    }
+
+    async getAllStepsUsedFlow(){
         await super.waitForContentToLoad(By.xpath('//span[text() = "MSG91"]') , 100000);
         const divElementsInBody = await this.driver.findElements(By.xpath('//body/div'));
         const [listComponent] = divElementsInBody.slice(-1);
         this.steps = await listComponent.findElements(By.css('li'));
+    }
+
+    async getAllSteps(){
+        await super.waitForContentToLoad(By.css('[class*="createfunction"]') , 10000);
+        const stepsParentDiv = await this.driver.findElement(By.css('[class*="createfunction"]'));
+        this.steps = await stepsParentDiv.findElements(By.css('button'));
     }
 
     async clickOnStep(index){
@@ -169,10 +180,20 @@ class FlowPage extends Projects{
         await super.takeScreenShotAndCrop(flow[1] , imagePath);
     }
 
-    async clickOnCreateButton(){
-        this.createButton = await this.driver.findElement(By.xpath(`//button[text() = "${process.env.SAVE_BUTTON_TEXT}"]`));
+    async clickOnCreateButton(isVar){
+        const saveButton = isVar ? process.env.VARIABLE_SAVE_BUTTON : process.env.SAVE_BUTTON_TEXT;
+        this.createButton = await this.driver.findElement(By.xpath(`//button[text() = "${saveButton}"]`));
         this.driver.executeScript("arguments[0].scrollIntoView(true);", this.createButton);
         await this.createButton.click();
+    }
+
+    async waitForStepToCreate(){
+        await super.waitForContentToLoad(By.css('[class*="actionButton"]') , 100000);
+    }
+
+    async clickOnMenuButtonOfStep(){
+        this.menuButtonStep = await this.driver.findElement(By.css('class*="actionButton"'));
+        await  this.menuButtonStep.click();
     }
 
     async clickOnVariableSliderAccordion(){
@@ -211,8 +232,7 @@ class FlowPage extends Projects{
     }
 
     async createAPI1(){
-        const apistep=await this.listOfSteps();
-        await apistep[0].click();
+        await this.clickOnStep()
         await this.driver.sleep(4000);
         const apiname=await this.driver.findElement(By.id("function-title-textfield"));
         await this.driver.wait(until.elementIsVisible(apiname),4000);

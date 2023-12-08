@@ -145,14 +145,14 @@ module.exports = class Page {
         image.crop(location.x, location.y, location.width, location.height);
         
         // Save the cropped image
-        if(process.argv[3] === "capture") await image.writeAsync(`./test/ReferenceImages/${imagePath}`);
+        if(process.argv[4] === "capture") await image.writeAsync(`./test/ReferenceImages/${imagePath}`);
         else await image.writeAsync(`./test/SpecImages/${imagePath}`);
     }
     
     async compareScreenShot(imagePath){
         return new Promise(async(resolve , reject) => {
             try{
-                if(process.argv[3] === "capture") resolve("capture");
+                if(process.argv[4] === "capture") resolve("capture");
                 const comparisonResult = await this.compareImages(`./test/ReferenceImages/${imagePath}`, `./test/SpecImages/${imagePath}`);
                 fs.writeFileSync(`./test/ComparisonImages/${imagePath}`, comparisonResult.getBuffer());
                 resolve(comparisonResult);

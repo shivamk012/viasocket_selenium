@@ -92,6 +92,10 @@ class FlowPage extends Projects{
         await this.driver.sleep(1000);
     }
 
+    async clickOnComment(index){
+        await this.steps[index].click();
+    }
+
     async fillStepName(stepName){
         const stepNameInput = await this.driver.findElement(By.id(process.env.STEP_NAME_ID));
         await stepNameInput.sendKeys(stepName);
@@ -117,6 +121,7 @@ class FlowPage extends Projects{
             console.log(err);
         }
     }
+
 
     async fillUrl(url){
         let apiUrlInputField = await this.apiContent.findElement(By.id(process.env.API_URL_INPUTDIV_ID));

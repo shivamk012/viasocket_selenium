@@ -53,7 +53,7 @@ async function testApiStep(methodType){
         })
 
         it('dry run should produce a response' , async()=>{
-            if(apiIndex[methodType] === 1 || api[methodType] === 2 || api[methodType] === 4){
+            if(apiIndex[methodType] === 1 || apiIndex[methodType] === 2 || apiIndex[methodType] === 4){
                 await flowPage.sendBodyData(apiIndex[methodType]);
             } 
             await flowPage.clickOnDryRunButton();
@@ -81,11 +81,11 @@ async function testApiStep(methodType){
 
         it('should create a api step in flow' , async() => {
             await flowPage.clickOnCreateButton();
-
+            await flowPage.waitForStepToCreate();
         })
 
         after(async()=>{
-            await flowPage.close();
+            // await flowPage.close();
         })
     })
 }

@@ -1,6 +1,7 @@
 const {endpoints , actions} = require('../../enums');
 const Login = require('../Login/login'); 
 const {By , until , Key, Actions} = require('selenium-webdriver');
+const getUniqueName = require('../../../utilities/getDate');
 // login class extends page class
 
 class Projects extends Login{
@@ -13,6 +14,21 @@ class Projects extends Login{
         this.actionButtons = [];
         this.actionButtonDiv = '';
         this.listOfProjects = [];
+        this.currentOrgName = ''; // stores the value of new org created
+        this.currentProjectName = ''; // stores the value of new project created
+        this.currentScriptName = ''; // stores the value of new scripts created
+    }
+
+    get orgNameInput(){
+        return this.currentOrgName;
+    }
+
+    get projectNameInput(){
+        return this.currentProjectName;
+    }
+
+    get scriptNameInput(){
+        return this.currentScriptName;
     }
 
     async orgField(){
@@ -53,22 +69,85 @@ class Projects extends Login{
         return orgInput;
     }
 
+    async createNewOrg(title){
+        const orgInput = await this.getOrgTitleInputField();
+        this.currentOrgName = getUniqueName('org');
+        await orgInput.sendKeys(title || this.currentOrgName , Key.RETURN); 
+    }
+
+    async fetchOrgName(){
+        await this.driver.sleep(3000);
+        const name_field=await this.driver.findElement(By.id('long-button'));
+        await this.driver.wait(until.elementIsVisible(name_field),3000);
+        const name_string=await name_field.getText();
+        return name_string;
+    }
+      
+    async sleep_task(time){
+        await this.driver.sleep(time);
+    }
+
+    async errorBox(){
+        const error=await this.driver.findElement(By.id("alert-container-0"));
+        const text=await error.getText();
+        return text
+    }
+    
+    async arrayOfOrgs(){
+        const Parent_array=await this.driver.findElement(By.css('[class*="css-1j8ctzr"]'));
+        const array=Parent_array.findElements(By.css("li"));
+        return await array
+    }
+
+    async switcOrg(array,index){
+        const text=await array[index].getText();
+        await array[index].click();
+        return text
+
+    }
+    
+    async crossOrgTextField(){
+        const cross=await this.driver.findElement(By.xpath("//body/div[@role='presentation']/div[@role='presentation']/div[@role='dialog']/form[1]/div[1]//*[name()='svg']"))
+        await cross.click();
+    }
+    
     async clickOnNewProject(){
         await super.waitForContentToLoad(By.css('button') , 60000);
-        await super.waitForContentToLoad(By.xpath('//button[text() = " New Project"]') , 10000);
+        await super.waitForContentToLoad(By.xpath('//button[text() = "New Project"]') , 10000);
         const newProjectButton = await this.driver.findElements(By.css('button'));
         await newProjectButton[1].click();
         // await this.driver.wait(until.elementIsVisible(By.id('projectTitle')), 10000);
     }
+
     
     async createNewProject(projectName){
         await super.waitForContentToLoad(By.css('label') , 10000);
         const projectTitleLabel = await this.driver.findElement(By.css('label'));
         const projectTitleInputDiv = await projectTitleLabel.findElement(By.xpath('.//..'));
         const projectTitleInput = await projectTitleInputDiv.findElement(By.css('input'));
-        await projectTitleInput.sendKeys(projectName , Key.RETURN);
+        this.currentProjectName = getUniqueName('project');
+        await projectTitleInput.sendKeys(projectName || this.currentProjectName, Key.RETURN);
+        await this.driver.sleep(2000);
+    }
+
+    async getAllProjectsText(){
+        await this.driver.sleep(2000);
+        const element=await this.driver.findElement(By.className('project_list flex-col MuiBox-root css-0'));
+        const elements=await element.findElements(By.css("div"));
+        const text_array=new Set();
+        for(let value of elements){
+            const text=await value.getText();
+            text_array.add(text);
+        }
+        text_array.delete('');
+        console.log(text_array);
+        return text_array;
     }
     
+    async waitForProjectToLoad(){
+        await this.driver.wait(until.elementLocated(By.xpath('//div[contains(@class, "project_name__title")]')) , 10000);
+    }
+
     async clickOnProjectName(){
         await this.driver.wait(until.elementLocated(By.xpath('//div[contains(@class, "project_name__title")]')) , 10000);
         this.listOfProjects = await this.driver.findElements(By.xpath('//div[contains(@class, "project_name__title")]'));
@@ -124,6 +203,21 @@ class Projects extends Login{
         await this.driver.sleep(2000);
     }
     
+    async renameProject(new_name){
+        await this.intitaliseActionButtonsForProject();
+        await this.actionButtons[actions.RENAME].click();
+        const activeElement = await this.driver.executeScript('return document.activeElement');
+        await this.driver.executeScript('arguments[0].select()', activeElement);
+        await this.driver.actions().sendKeys(Key.BACK_SPACE).perform();
+        await activeElement.sendKeys(new_name);
+        await activeElement.sendKeys(Key.ENTER);
+        await this.driver.sleep(2000);
+    }
+
+    async refreshPage(){
+        await this.driver.navigate().refresh();
+    }
+
     async pauseScript(){
         await this.actionButtons[actions.PAUSE].click();
         await this.driver.sleep(2000);
@@ -144,13 +238,9 @@ class Projects extends Login{
         await super.waitForContentToLoad(By.css('[class*="custom-modal"]') , 10000);
         const scriptModal = await this.driver.findElement(By.css('[class*="custom-modal"]'));
         const scriptInput = await scriptModal.findElement(By.css('input'));
-        await scriptInput.sendKeys(scriptName , Key.RETURN);
-    }
-
-    async createNewOrg(title){
-        console.log(title);
-        const orgInput = await this.getOrgTitleInputField();
-        await orgInput.sendKeys(title , Key.RETURN);
+        this.currentScriptName = getUniqueName('script');
+        await scriptInput.sendKeys(scriptName || this.currentScriptName, Key.RETURN);
+        await this.driver.sleep(5000);
     }
 
     async hoverOnMenuButton(){

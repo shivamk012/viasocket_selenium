@@ -2,7 +2,7 @@ const ProjectPage = require('../pages/Project/projects');
 const {endpoints} = require('../enums');
 const {expect} = require('chai');
 
-async function compareSS(imagePath){
+async function compareSS(projectPage , imagePath){
     const comparisonResult = await projectPage.compareScreenShot(imagePath);
     const isCaptureMode = await projectPage.isCaptureMode;
     if(isCaptureMode) return;
@@ -22,7 +22,7 @@ async function testDeleteProject(){
             await projectPage.loginUser();
             await projectPage.waitForEndpoint(endpoints.PROJECT , 60000);
             await projectPage.takeScreenShotOfMenuButton('menuButtonProject.png');
-            const misMatch = await compareSS('menuButtonProject.png');
+            const misMatch = await compareSS(projectPage , 'menuButtonProject.png');
             if(!misMatch) return;
             expect(misMatch).to.be.lessThan(20);
         })
@@ -30,7 +30,7 @@ async function testDeleteProject(){
         it('should open menu on mouse click' , async() => {
             await projectPage.clickOnActionButtonMenuProject();
             await projectPage.takeScreenShotActionButtons('actionButtonsProject.png');
-            const misMatch = await compareSS('actionButtonsProject.png');
+            const misMatch = await compareSS(projectPage , 'actionButtonsProject.png');
             if(!misMatch) return;
             expect(misMatch).to.be.lessThan(20);
         })

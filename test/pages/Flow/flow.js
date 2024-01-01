@@ -75,8 +75,8 @@ class FlowPage extends Projects{
         // NOTE:  Iske alava koi option nai mila content load ke wait karne ka. input elements 5 hai page pe to input ke liye wait ni kar sakte
         await super.waitForContentToLoad(By.xpath('//*[text() = "Do"]') , 10000); 
         const addStepsButton = await workflow.findElements(By.css('input'));
-        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , addStepsButton[2]);
-        await addStepsButton[2].click();
+        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , addStepsButton[1]);
+        await addStepsButton[1].click();
     }
 
     async getAllStepsNewFlow(){

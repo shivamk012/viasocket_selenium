@@ -1,10 +1,10 @@
 const FlowPage = require('../pages/Flow/flow');
 const {endpoints} = require('../enums');
 const getUniqueName = require('../../utilities/getDate');
+let flowPage;
 
 async function testCreateScript(){
     describe('test create script' , async() => {
-        let flowPage;
         before(async() => {
             flowPage = new FlowPage();
         })

@@ -11,18 +11,19 @@ async function testFunction(){
             describe('Function Test Script', function () {
                 it('Case:01 Function Block clicked', async function () {
                     await fun.open(endpoints.HOME);
-                    await fun.clickOnLoginWithGoogle();
+                    await fun.loginUser();
                     await fun.waitForEndpoint(endpoints.PROJECT , 60000);
                     await fun.clickOnProjectName();
                     await fun.waitForScriptSlider();
                     await fun.clickOnScript();
                     //await fun.clickOnEditButton();
                     await fun.clickOnAddSteps();
-                    await fun.getAllSteps()
+                    await fun.getAllStepsUsedFlow();
                     
                     //case:01 Click create function
-                    await fun.clickOnComment(stepIndex.FUNCTION);
-                        }).timeout(30000); 
+                    await fun.clickOnStep(stepIndex.FUNCTION);
+                        
+                }).timeout(30000); 
 
                 it('Case:02 write empty function name',async function(){
                     //case:02 write empty function name
@@ -40,7 +41,7 @@ async function testFunction(){
                 it('Case:04 write Duplicate function name',async function(){
                     // await fun.clickOnEditButton();
                     await fun.clickOnAddSteps();
-                    await fun.getAllSteps()
+                    await fun.getAllStepsUsedFlow();
                     await fun.clickOnComment(stepIndex.FUNCTION);
                     await fun.funName("fun01");
                     await fun.create();
@@ -50,7 +51,7 @@ async function testFunction(){
                     await fun.closeFunctionSlider();
                     //await fun.clickOnEditButton();
                     await fun.clickOnAddSteps();
-                    await fun.getAllSteps();
+                    await fun.getAllStepsUsedFlow();
                     await fun.clickOnComment(stepIndex.FUNCTION);
                     await fun.funName("New fun");
                     await fun.writeFunction();

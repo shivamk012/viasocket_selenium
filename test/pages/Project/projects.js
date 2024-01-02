@@ -145,23 +145,30 @@ class Projects extends Login{
     }
     
     async waitForProjectToLoad(){
-        await this.driver.wait(until.elementLocated(By.xpath('//div[contains(@class, "project_name__title")]')) , 10000);
+        await this.driver.wait(until.elementLocated(By.css(`[class*=${process.env.PROJECT_NAME_CLASS}]`) , 10000));
     }
-
+0
     async clickOnProjectName(){
-        await this.driver.wait(until.elementLocated(By.xpath('//div[contains(@class, "project_name__title")]')) , 10000);
-        this.listOfProjects = await this.driver.findElements(By.xpath('//div[contains(@class, "project_name__title")]'));
-        await this.listOfProjects[0].click();
+        try{
+            await super.waitForMultipleElementsToLoad(By.css(`[class*=${process.env.PROJECT_NAME_CLASS}]`) , 10000);
+            await this.driver.sleep(2000);
+            this.listOfProjects = await this.driver.findElements(By.css(`[class*=${process.env.PROJECT_NAME_CLASS}]`));
+            await this.listOfProjects[0].click();
+        }catch(err){
+            throw(err);
+        }
     }
 
     async waitForScriptSlider(){
+        await super.waitForContentToLoad(By.xpath('//div[contains(@class , "script_slider")]') , 10000);
         this.scriptSlider = await this.driver.findElement(By.xpath('//div[contains(@class , "script_slider")]'));
         await super.waitForContentToBeVisible(this.scriptSlider , 10000);
     }
     
     async clickOnScript(){
-        await super.waitForContentToLoad(By.xpath('.//div[contains(@class , "script_block")]') , 10000);
-        this.listOfScripts = await this.scriptSlider.findElements(By.xpath('.//div[contains(@class , "script_block")]'));
+        await super.waitForContentToLoad(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`) , 10000);
+        await this.driver.sleep(2000);
+        this.listOfScripts = await this.scriptSlider.findElements(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`));
         await this.listOfScripts[0].click();
         await super.waitForEndpoint(endpoints.EDIT , 10000);
     }
@@ -170,8 +177,8 @@ class Projects extends Login{
         await super.waitForContentToLoad(By.xpath('//span[text() = "FLOWS"]') , 10000);
         const flowTextSpanElement = await this.driver.findElement(By.xpath('//span[text() = "FLOWS"]'));
         const scriptListParents = await flowTextSpanElement.findElement(By.xpath('.//..'));
-        await super.waitForContentToLoad(By.css('[class*="script_block"]') , 10000);
-        this.listOfScripts = await scriptListParents.findElements(By.css('[class*="script_block"]'));
+        await super.waitForContentToLoad(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`) , 10000);
+        this.listOfScripts = await scriptListParents.findElements(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`));
         return this.listOfScripts;
     }
 
@@ -229,8 +236,8 @@ class Projects extends Login{
     }
 
     async clickOnNewFlow(){
-        await this.driver.wait(until.elementLocated(By.xpath('//button[text() = "New Flow"]')) , 10000);
-        const newScriptButton = await this.driver.findElement(By.xpath('//button[text() = "New Flow"]'));
+        await this.driver.wait(until.elementLocated(By.xpath('//button[text() = "Create new flow"]')) , 10000);
+        const newScriptButton = await this.driver.findElement(By.xpath('//button[text() = "Create new flow"]'));
         await newScriptButton.click();
     }
 
@@ -269,8 +276,8 @@ class Projects extends Login{
         const deletedProjectDiv = await deletedProjectWebElement.findElement(By.xpath('.//../following-sibling::*'));
         // await deletedProjectDiv.click();
         // const deletedProjectsListDiv = await deletedProjectDiv.findElement(By.xpath(''));
-        // await super.waitForContentToLoad(By.css('[class*="project_name__title"]') , 10000);
-        const deletedProjectsListWebElements = await deletedProjectDiv.findElements(By.css('[class*="project_name__title"]'));
+        // await super.waitForContentToLoad(By.css(`[class*=${process.env.PROJECT_NAME_CLASS}]`) , 10000);
+        const deletedProjectsListWebElements = await deletedProjectDiv.findElements(By.css(`[class*=${process.env.PROJECT_NAME_CLASS}]`));
         console.log(deletedProjectsListWebElements);
         const text = await deletedProjectsListWebElements[0].getText();
         return text;
@@ -281,9 +288,9 @@ class Projects extends Login{
         const deletedScriptSpanElement = await this.driver.findElement(By.xpath('//span[text() = "DELETED FLOWS"]'));;
         const deletedScriptsParent = await deletedScriptSpanElement.findElement(By.xpath('.//..'));
         await deletedScriptsParent.click();
-        await super.waitForContentToLoad(By.css('[class*="script_block"]') , 10000);
+        await super.waitForContentToLoad(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`) , 10000);
         const listOfScriptsParentDiv = await deletedScriptsParent.findElement(By.xpath('.//following-sibling::*'));
-        const listOfDeletedScripts = await listOfScriptsParentDiv.findElements(By.css('[class*="script_block"]'));
+        const listOfDeletedScripts = await listOfScriptsParentDiv.findElements(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`));
         if(!listOfDeletedScripts.length) return null;
         const text = await listOfDeletedScripts[0].getText();
         return text;
@@ -292,14 +299,14 @@ class Projects extends Login{
     async getListOfPausedScripts(){
         const pausedScriptSpanElement = await this.driver.findElement(By.xpath('//span[text() = "PAUSED FLOWS"]'));
         const pausedScriptParentDiv = await pausedScriptSpanElement.findElement(By.xpath('.//..'));
-        const listOfPausedScripts = await pausedScriptParentDiv.findElements(By.css('[class*="script_block"]'));
+        const listOfPausedScripts = await pausedScriptParentDiv.findElements(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`));
         if(!listOfPausedScripts.length) return null;
         const text = await listOfPausedScripts[0].getText();
         return text;
     }
 
     async checkIfClassPresent(className){
-        const projectTitleDiv = await this.driver.findElement(By.css('[class*="project_name__title"]'));
+        const projectTitleDiv = await this.driver.findElement(By.css(`[class*=${process.env.PROJECT_NAME_CLASS}]`));
         const projectTitleDivParent = await projectTitleDiv.findElement(By.xpath('.//..'));
         const projectTitleClass = await projectTitleDivParent.getAttribute('class');
         return projectTitleClass.includes(className);

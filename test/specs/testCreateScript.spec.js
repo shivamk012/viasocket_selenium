@@ -17,11 +17,11 @@ async function testCreateScript(){
                 await flowPage.clickOnProjectName();
                 await flowPage.waitForScriptSlider();
                 await flowPage.clickOnNewFlow();
-                await flowPage.createNewScript(getUniqueName());
+                await flowPage.createNewScript(getUniqueName('script'));
             }catch(err){
                 console.log(err);
             }
-        })
+            })
         
         after(async() => {
             await flowPage.close();

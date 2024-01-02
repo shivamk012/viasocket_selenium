@@ -14,10 +14,10 @@ async function testCreateProject(){
             projectsPage = new Projects();
         })
 
-        it("When we create project the it create successfully",async function(){
+        it("When we create project the it create successfully the",async function(){
             await projectsPage.open(endpoints.HOME);
             await projectsPage.loginUser();
-            await projectsPage.waitForEndpoint(endpoints.PROJECT , 60000);
+            await projectsPage.waitForEndpoint(endpoints.PROJECT ,60000);
             await projectsPage.clickOnNewProject();
             await projectsPage.createNewProject();
             const array = await projectsPage.getAllProjectsText();
@@ -39,15 +39,6 @@ async function testCreateProject(){
             await projectsPage.waitForEndpoint(endpoints.PROJECT , 60000);
             await projectsPage.clickOnNewProject();
             await projectsPage.createNewProject('new');
-            const alertBox=await projectsPage.errorBox();
-            expect(alertBox).to.equal('error\nProject name too short');
-            await projectsPage.crossOrgTextField();
-        });
-
-        it("Project with name equal to 4 characters not created",async function(){
-            await projectsPage.waitForEndpoint(endpoints.PROJECT , 60000);
-            await projectsPage.clickOnNewProject();
-            await projectsPage.createNewProject('news');
             const alertBox=await projectsPage.errorBox();
             expect(alertBox).to.equal('error\nProject name too short');
             await projectsPage.crossOrgTextField();

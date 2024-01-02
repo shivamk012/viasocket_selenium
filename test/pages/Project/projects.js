@@ -82,7 +82,7 @@ class Projects extends Login{
         const name_string=await name_field.getText();
         return name_string;
     }
-      
+    
     async sleep_task(time){
         await this.driver.sleep(time);
     }
@@ -132,7 +132,7 @@ class Projects extends Login{
 
     async getAllProjectsText(){
         await this.driver.sleep(2000);
-        const element=await this.driver.findElement(By.className('project_list flex-col MuiBox-root css-0'));
+        const element=await this.driver.findElement(By.className('project_list flex-grow  MuiBox-root css-0'));
         const elements=await element.findElements(By.css("div"));
         const text_array=new Set();
         for(let value of elements){

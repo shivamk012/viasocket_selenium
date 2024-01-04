@@ -2,6 +2,7 @@ const {endpoints , actions} = require('../../enums');
 const Login = require('../Login/login'); 
 const {By , until , Key, Actions} = require('selenium-webdriver');
 const getUniqueName = require('../../../utilities/getDate');
+const fs = require('fs');
 // login class extends page class
 
 class Projects extends Login{
@@ -14,6 +15,7 @@ class Projects extends Login{
         this.actionButtons = [];
         this.actionButtonDiv = '';
         this.listOfProjects = [];
+        this.listOfOrgs = [];
         this.currentOrgName = ''; // stores the value of new org created
         this.currentProjectName = ''; // stores the value of new project created
         this.currentScriptName = ''; // stores the value of new scripts created
@@ -59,10 +61,16 @@ class Projects extends Login{
         await orgListOpenButton.click();
     }
 
-    async getOrgTitleInputField(){
+    async getListOfOrgs(){
         await super.waitForContentToLoad(By.id('demo-customized-menu') , 10000);
-        const orgList = await this.driver.findElement(By.id('demo-customized-menu')).findElement(By.css('ul'));
-        const [createNewOrgButton] = (await orgList.findElements(By.css('li'))).slice(-1);
+        await this.driver.sleep(2000);
+        this.listOfOrgs = await this.driver.findElement(By.id('demo-customized-menu')).findElement(By.css('ul'));
+    }
+
+    async getOrgTitleInputField(){
+        await this.getListOfOrgs();
+        const [createNewOrgButton] = (await this.listOfOrgs.findElements(By.css('li'))).slice(-1);
+        await this.driver.actions().move({origin : createNewOrgButton}).perform();
         await createNewOrgButton.click();
         await super.waitForContentToLoad(By.id('orgtitle') , 10000);
         const orgInput = await this.driver.findElement(By.id('orgtitle'));
@@ -88,25 +96,25 @@ class Projects extends Login{
     }
 
     async errorBox(){
-        const error=await this.driver.findElement(By.id("alert-container-0"));
-        const text=await error.getText();
-        return text
-    }
-    
-    async arrayOfOrgs(){
-        const Parent_array=await this.driver.findElement(By.css('[class*="css-1j8ctzr"]'));
-        const array=Parent_array.findElements(By.css("li"));
-        return await array
+        const error1 = await this.driver.findElement(By.id('alert-container-0'));
+        const pageSource = await this.driver.getPageSource();
+        fs.writeFileSync('pageSource.txt' , pageSource , 'utf-8');
+        // console.log(error.length);
+        const text1 = await error1.getText();
+        // const text2 = await error2.getText();
+        // console.log(text1 , text2);
+        return text1;
     }
 
-    async switcOrg(array,index){
-        const text=await array[index].getText();
-        await array[index].click();
-        return text
-
+    async switchOrg(index){
+        const text=await this.listOfOrgs[index].getText();
+        await this.listOfOrgs[index].click();
+        return text;
     }
     
     async crossOrgTextField(){
+        const errorDiv = this.driver.findElement(By.id('alert-container-0'));
+        await this.driver.wait(until.elementTextIs(errorDiv, ''), 10000);
         const cross=await this.driver.findElement(By.xpath("//body/div[@role='presentation']/div[@role='presentation']/div[@role='dialog']/form[1]/div[1]//*[name()='svg']"))
         await cross.click();
     }
@@ -179,16 +187,23 @@ class Projects extends Login{
         const scriptListParents = await flowTextSpanElement.findElement(By.xpath('.//..'));
         await super.waitForContentToLoad(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`) , 10000);
         this.listOfScripts = await scriptListParents.findElements(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`));
-        return this.listOfScripts;
+        let nameOfScripts = [];
+        for(let i=0 ; i<this.listOfScripts.length ; ++i){
+            const text = await this.listOfScripts[i].getText();
+            nameOfScripts.push(text);
+        }
+        return nameOfScripts;
     }
 
-    async clickOnActionButtonMenuScript(){
+    async clickOnActionButtonMenuOfScript(){
         await this.getListOfScripts();
+        const nameOfScript = await this.listOfScripts[0].getText();
         const actionButtonContainer = await this.listOfScripts[0].findElement(By.css('[class*="actionBtnContainer"]'));
         await actionButtonContainer.click();
         await super.waitForContentToLoad(By.id(process.env.ACTION_BUTTONS_DIV_ID) , 10000);
         this.actionButtonDiv = await this.driver.findElement(By.id(process.env.ACTION_BUTTONS_DIV_ID));
         this.actionButtons = await this.actionButtonDiv.findElements(By.css('li'));
+        return nameOfScript;
     }
     
 
@@ -267,7 +282,12 @@ class Projects extends Login{
 
     async getListOfProjects(){
         const projectListDiv = await this.driver.findElements(By.css('[class*="project_list__projects"]'));
-        return projectListDiv;
+        const projectList = [];
+        for(let i=0 ; i<projectListDiv.length ; ++i){
+            const text = await projectListDiv[i].getText();
+            projectList.push(text);
+        }
+        return projectList;
     }
 
     async getListOfDeletedProjects(){
@@ -301,8 +321,25 @@ class Projects extends Login{
         const pausedScriptParentDiv = await pausedScriptSpanElement.findElement(By.xpath('.//..'));
         const listOfPausedScripts = await pausedScriptParentDiv.findElements(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`));
         if(!listOfPausedScripts.length) return null;
-        const text = await listOfPausedScripts[0].getText();
-        return text;
+        const pausedScriptName = [];
+        for(let i=0 ; i<listOfPausedScripts.length ; ++i){
+            const textOfPausedScript = await listOfPausedScripts[i].getText();
+            pausedScriptName.push(textOfPausedScript);
+        }
+        return pausedScriptName;
+    }
+
+    async getListOfDeletedProjects(){
+        const deletedScriptSpanElement = await this.driver.findElement(By.xpath('//span[text() = "DELETED FLOWS"]'));
+        const pausedScriptParentDiv = await deletedScriptSpanElement.findElement(By.xpath('.//..'));
+        const listOfDeletedScripts = await pausedScriptParentDiv.findElements(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`));
+        if(!listOfDeletedScripts.length) return null;
+        const deletedScriptName = [];
+        for(let i=0 ; i<listOfDeletedScripts.length ; ++i){
+            const textOfDeletedScript = await listOfDeletedScripts[i].getText();
+            deletedScriptName.push(textOfDeletedScript);
+        }
+        return deletedScriptName;
     }
 
     async checkIfClassPresent(className){

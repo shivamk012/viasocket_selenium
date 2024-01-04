@@ -6,7 +6,8 @@ const {expect} = require('chai');
 async function testPauseScript(){
     describe('test pause script' , async() => {
         
-    let projectPage;
+        let projectPage;
+        let nameOfPausedScript = '';
         before(async() => {
             projectPage = new ProjectPage();
         })
@@ -17,16 +18,15 @@ async function testPauseScript(){
             await projectPage.waitForEndpoint(endpoints.PROJECT , 60000);
             await projectPage.clickOnProjectName();
             await projectPage.waitForScriptSlider();
-            await projectPage.clickOnActionButtonMenuScript();
+            nameOfPausedScript = await projectPage.clickOnActionButtonMenuOfScript();
             await projectPage.pauseScript();
-            const scriptListDiv = await projectPage.getListOfScripts();
-            expect(scriptListDiv).to.be.empty;
+            const nameOfScripts = await projectPage.getListOfScripts();
+            expect(nameOfScripts).to.not.include(nameOfPausedScript);
         })
         
         it('should send script in paused script section in script slider' , async() => {
-            const nameOfDeletedScript = await projectPage.getListOfPausedScripts();
-            console.log(nameOfDeletedScript);
-            expect(nameOfDeletedScript).to.equal('Dummy Script');
+            const nameOfPausedScripts = await projectPage.getListOfPausedScripts();
+            expect(nameOfPausedScripts).to.include(nameOfPausedScript);
         })
         
         after(async() => {

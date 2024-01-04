@@ -14,6 +14,7 @@ async function compareSS(projectPage , imagePath){
 async function testDeleteScript(){
     describe('test delete script' , async() => {
         let projectPage;
+        let nameOfDeletedScript;
         before(async() => {
             projectPage = new ProjectPage();
         })
@@ -31,7 +32,7 @@ async function testDeleteScript(){
         })
         
         it('should open menu on mouse click' , async() => {
-            await projectPage.clickOnActionButtonMenuScript();
+            nameOfDeletedScript = await projectPage.clickOnActionButtonMenuOfScript();
             await projectPage.takeScreenShotActionButtons('actionButtonsScript.png');
             const misMatch = await compareSS(projectPage , 'actionButtonsScript.png');
             if(!misMatch) return;
@@ -41,7 +42,12 @@ async function testDeleteScript(){
         it('should delete script on delete button click' , async()=>{
             await projectPage.deleteScript();
             const scriptListDiv = await projectPage.getListOfScripts();
-            expect(scriptListDiv).to.be.empty;
+            expect(scriptListDiv).to.not.include(nameOfDeletedScript);
+        })
+
+        it('List of deleted script should contain name of latest deleted script' , async() => {
+            const listOfNamesOfDeletedScrip = await projectPage.getListOfDeletedProjects();
+            expect(listOfNamesOfDeletedScrip).to.include(nameOfDeletedScript);
         })
         
         after(async() => {

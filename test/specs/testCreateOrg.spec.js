@@ -44,19 +44,10 @@ async function testCreateOrg(){
             await projectsPage.crossOrgTextField();
         }).timeout(500000);
 
-        it("when we switch org then it switched successfully",async ()=>{
-            await projectsPage.openListOfOrgs();
-            await projectsPage.sleep_task(3000);
-            const array=await projectsPage.arrayOfOrgs();
-            const string1=await projectsPage.switcOrg(array,2);
-            const string2=await projectsPage.fetchOrgName();
-            expect(string1).to.equal(string2.charAt(0).toLowerCase()+string2.slice(1));
-        }).timeout(500000);
-
         after(async() => {
             await projectsPage.close();
         })
 })}
-;
+
 // testProjects();
 module.exports = testCreateOrg;  

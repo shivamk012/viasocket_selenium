@@ -11,10 +11,10 @@ async function compareSS(imagePath){
 }
 
 async function testVariableStep(){
-    let flowPage;
     describe('test variable slider' , () => {
+        let flowPage;
         before(() => {
-            flowPage = new FlowPage()
+            flowPage = new FlowPage();
         })
 
         it('should render variable slider' , async() => {

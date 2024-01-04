@@ -10,11 +10,11 @@ module.exports = class Page {
             // let service = new chrome.ServiceBuilder('C:\\Users\\91702\\Downloads\\chromedriver-win64').build();
             // chrome.setDefaultService(service);
             let options = new chrome.Options();
-            console.log(process.argv);
+            // console.log(process.argv);
             
             this.driver = new Builder().setChromeOptions(options).forBrowser('chrome').build();
             // this.driver = new Builder().forBrowser('chrome').build();
-            console.log('Driver created successfully');
+            // console.log('Driver created successfully');
             this.isDev = process.argv[2] === "test" || process.argv[3] === "test";
             this.app_link = (this.isDev ? process.env.TEST_LINK : process.env.PROD_LINK);
             this.mode = process.argv[3] === "capture" || process.argv[4] === "capture";

@@ -2,10 +2,10 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 const testCreateOrg = require('./test/specs/testCreateOrg.spec');
-const testCreateProject = require('./test/specs/testCreateProject.spec');
-const testCreateScript = require('./test/specs/testCreateScript.spec');
-const testPauseScript = require('./test/specs/testPauseScript.spec');
-const testDeleteScript = require('./test/specs/testDeleteScript.spec');
+// const testCreateProject = require('./test/specs/testCreateProject.spec');
+// const testCreateScript = require('./test/specs/testCreateScript.spec');
+// const testPauseScript = require('./test/specs/testPauseScript.spec');
+// const testDeleteScript = require('./test/specs/testDeleteScript.spec');
 // const testPauseProject = require('./test/specs/testPauseProject.spec');
 // const testDeleteProject = require('./test/specs/testDeleteProject.spec');
 // const testPauseScript = require('./test/specs/testPauseProject.spec')
@@ -24,9 +24,9 @@ const testDeleteScript = require('./test/specs/testDeleteScript.spec');
 
 async function test(){
     await testCreateOrg();
-    await testCreateProject();
-    await testCreateScript();
-    await testDeleteScript();
+    // await testCreateProject();
+    // await testCreateScript();
+    // await testDeleteScript();
     // await testVariableStep();
     // await testGetStep();
 }

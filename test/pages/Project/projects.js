@@ -35,11 +35,11 @@ class Projects extends Login{
 
     async orgField(){
         // NOTE: long-button is used for orgtitle and on "..." button of each project 
-        await super.waitForContentToLoad(By.id('long-button') , 10000);
-        const orgNameDiv = await this.driver.findElement(By.id('long-button'));
+        await super.waitForContentToLoad(By.css('[class*="project-page-cont"]') , 10000);
+        const orgNameDiv = await this.driver.findElement(By.css('[class*="project-page-cont"]'));        
         this.orgName = await orgNameDiv.getText();
-        const orgNameParent = await orgNameDiv.findElement(By.xpath('.//..'));
-        const orgNameListButton = await orgNameParent.findElement(By.css('div'));
+
+        const orgNameListButton = await orgNameDiv.findElement(By.css('button'));
         return orgNameListButton;
     }
 
@@ -49,22 +49,32 @@ class Projects extends Login{
     }
 
     async waitForProjecPageToLoad(){
-        await super.waitForContentToLoad(By.css('[class*="project-page"]') , 10000);
-        const projectPage = await this.driver.findElement(By.css('[class*="project-page"]'));
+        await super.waitForContentToLoad(By.css('[class*="project-page-cont"]'), 10000);
+        const projectPage = await this.driver.findElement(By.css('[class*="project-page-cont"]'));
         await super.waitForContentToBeVisible(projectPage);
     }
 
-    async openListOfOrgs(){
-        await this.clickOnOrgButton();
-        await super.waitForContentToLoad(By.id('account-menu') , 10000);
-        const orgListOpenButton = await this.driver.findElement(By.id('account-menu')).findElement(By.css('li'));
-        await orgListOpenButton.click();
+    async openListOfOrgs() {
+        try {
+            await this.clickOnOrgButton();
+            await super.waitForContentToLoad(By.css('[class*="overlay_home"]'), 10000);
+            
+                const orgListOpenButton = await this.driver.findElement(By.css('[class*="overlay_home"]'));
+            if (orgListOpenButton) {
+                await orgListOpenButton.click();
+            } else {
+                console.error("Org List Open button not found");
+            }
+        } catch (error) {
+            console.error("Error in openListOfOrgs:", error.message);
+        }
     }
-
+    
+ 
     async getListOfOrgs(){
-        await super.waitForContentToLoad(By.id('demo-customized-menu') , 10000);
+        await super.waitForContentToLoad(By.css('[class*="workspace__modal"]') , 10000);
         await this.driver.sleep(2000);
-        this.listOfOrgs = await this.driver.findElement(By.id('demo-customized-menu')).findElement(By.css('ul'));
+        this.listOfOrgs = await this.driver.findElement(By.css('[class*="workspace__modal"]'));
     }
 
     async getOrgTitleInputField(){

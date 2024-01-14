@@ -28,11 +28,10 @@ async function testCreateOrg(){
 
         it("if orgname is less than 4 character then it show error message",async ()=>{
             await projectsPage.openListOfOrgs();
-            await projectsPage.sleep_task(3000);
             await projectsPage.createNewOrg('abc');
             const alertBox=projectsPage.errorBox();
             expect(alertBox).to.not.equal('none', 'Element is not visible');
-            await projectsPage.crossOrgTextField();
+            await projectsPage.closeListOfOrgs();
         }).timeout(50000);
 
         it("if orgname is equal to 4 then it show error",async ()=>{
@@ -41,11 +40,11 @@ async function testCreateOrg(){
             await projectsPage.createNewOrg('abcd');
             const alertBox=projectsPage.errorBox();
             expect(alertBox).to.not.equal('none', 'Element is not visible');
-            await projectsPage.crossOrgTextField();
+            await projectsPage.closeListOfOrgs();
         }).timeout(500000);
 
         after(async() => {
-            // await projectsPage.close();
+            await projectsPage.close();
         })
 })}
 

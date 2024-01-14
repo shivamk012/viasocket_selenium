@@ -59,33 +59,51 @@ class Projects extends Login{
             await this.clickOnOrgButton();
             await super.waitForContentToLoad(By.css('[class*="overlay_home"]'), 10000);
             
-                const orgListOpenButton = await this.driver.findElement(By.css('[class*="overlay_home"]'));
-            if (orgListOpenButton) {
-                await orgListOpenButton.click();
-            } else {
-                console.error("Org List Open button not found");
-            }
+            //     const orgListOpenButton = await this.driver.findElement(By.css('[class*="overlay_home"]'));
+            // if (orgListOpenButton) {
+            //     await orgListOpenButton.click();
+            // } else {
+            //     console.error("Org List Open button not found");
+            // }
         } catch (error) {
             console.error("Error in openListOfOrgs:", error.message);
         }
     }
-    
+
  
     async getListOfOrgs(){
         await super.waitForContentToLoad(By.css('[class*="workspace__modal"]') , 10000);
         await this.driver.sleep(2000);
-        this.listOfOrgs = await this.driver.findElement(By.css('[class*="workspace__modal"]'));
+        this.listOfOrgs = await this.driver.findElement(By.css('[class*="workspace__modal"]')).findElements(By.css('[class*="workspace__modal__element"]'));
     }
 
-    async getOrgTitleInputField(){
-        await this.getListOfOrgs();
-        const [createNewOrgButton] = (await this.listOfOrgs.findElements(By.css('li'))).slice(-1);
-        await this.driver.actions().move({origin : createNewOrgButton}).perform();
-        await createNewOrgButton.click();
-        await super.waitForContentToLoad(By.id('orgtitle') , 10000);
-        const orgInput = await this.driver.findElement(By.id('orgtitle'));
-        return orgInput;
+    async getOrgTitleInputField() {
+        try {
+            await this.getListOfOrgs();
+    
+            const [createNewOrgButton] = this.listOfOrgs.slice(-1);
+            if (createNewOrgButton) {
+                await this.driver.actions().move({ origin: createNewOrgButton }).perform();
+                await this.driver.sleep(2000);
+                await createNewOrgButton.click();
+            } else {
+                console.error("Create New Org button not found");
+                return null; // Or handle the absence of the button in a way that makes sense for your application
+            }
+            await super.waitForContentToLoad(By.xpath('//input[@placeholder="Workspace title"]'), 10000);
+            const orgInput = await this.driver.findElement(By.xpath('//input[@placeholder="Workspace title"]'));
+            if (orgInput) {
+                return orgInput;
+            } else {
+                console.error("Org Title Input field not found");
+                return null; // Or handle the absence of the input field
+            }
+        } catch (error) {
+            console.error("Error in getOrgTitleInputField:", error.message);
+            return null; // Or handle the error in a way that makes sense for your application
+        }
     }
+
 
     async createNewOrg(title){
         const orgInput = await this.getOrgTitleInputField();
@@ -93,9 +111,16 @@ class Projects extends Login{
         await orgInput.sendKeys(title || this.currentOrgName , Key.RETURN); 
     }
 
+    async closeListOfOrgs(){
+        const orgListParent = await this.driver.findElement(By.css('[class*="workspace__modal"]'));
+        await this.driver.actions({move : orgListParent}).perform();
+        const buttonToCloseList = await orgListParent.findElement(By.css('button'));
+        await buttonToCloseList.click();
+    }
+
     async fetchOrgName(){
         await this.driver.sleep(3000);
-        const name_field=await this.driver.findElement(By.id('long-button'));
+        const name_field=await this.driver.findElement(By.css('[class*="workspace__element__text "]'));
         await this.driver.wait(until.elementIsVisible(name_field),3000);
         const name_string=await name_field.getText();
         return name_string;
@@ -111,7 +136,7 @@ class Projects extends Login{
         fs.writeFileSync('pageSource.txt' , pageSource , 'utf-8');
         // console.log(error.length);
         const text1 = await error1.getText();
-        // const text2 = await error2.getText();
+        // const text2 = await error2.getText();`
         // console.log(text1 , text2);
         return text1;
     }

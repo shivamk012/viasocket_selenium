@@ -2,17 +2,18 @@ const FlowPage = require('../pages/Flow/flow');
 const {endpoints , stepIndex} = require('../enums');
 const {expect} = require('chai');
 
-async function compareSS(imagePath){
-    const comparisonResult = await flowPage.compareScreenShot(imagePath);
-    const isCaptureMode = await flowPage.isCaptureMode;
-    if(isCaptureMode) return;
-    const misMatch = Math.floor(comparisonResult.rawMisMatchPercentage);
-    return misMatch;
-}
-
 async function testVariableStep(){
     describe('test variable slider' , () => {
         let flowPage;
+        
+        async function compareSS(imagePath){
+            const comparisonResult = await flowPage.compareScreenShot(imagePath);
+            const isCaptureMode = await flowPage.isCaptureMode;
+            if(isCaptureMode) return;
+            const misMatch = Math.floor(comparisonResult.rawMisMatchPercentage);
+            return misMatch;
+        }
+
         before(() => {
             flowPage = new FlowPage();
         })
@@ -40,7 +41,7 @@ async function testVariableStep(){
         it('variable step name input should be editable' , async() => {
             await flowPage.fillVariableName('random_variable');
             const var_name = await flowPage.getVariableName();
-            expect(var_name).to.be.equal('random variable');
+            expect(var_name).to.be.equal('random_variable');
         })
         
         it('variable value field should be editable' , async() => {

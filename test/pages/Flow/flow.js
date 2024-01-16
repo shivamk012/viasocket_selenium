@@ -265,7 +265,7 @@ class FlowPage extends Projects{
         await super.waitForContentToLoad(By.id(process.env.VARIABLE_NAME_FIELD_ID) , 10000);
         const var_name=await this.driver.findElement(By.id(process.env.VARIABLE_NAME_FIELD_ID));
         await var_name.click();
-        await var_name.sendKeys(name);
+        var_name.sendKeys(Key.HOME, Key.chord(Key.SHIFT, Key.END), name);
     }
 
     async getVariableName(){
@@ -283,18 +283,19 @@ class FlowPage extends Projects{
     }
 
     async takeScreenShotVariableSlider(imagePath){
-        await super.waitForContentToLoad(By.css('[class*="variableinput"]') , 10000);
-        const slider = await this.driver.findElement(By.css('[class*="functionsliderbody"]'));
-        const sliderparent = await slider.findElement(By.xpath('.//..'));
-        await super.takeScreenShotAndCrop(sliderparent , imagePath);
+        await super.waitForContentToLoad(By.css('[class*="custom_slider__halfscreen"]') , 10000);
+        const stepNameInput = await this.driver.findElement(By.css('[class*="custom_slider__halfscreen"]'));
+        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , stepNameInput);
+        await super.takeScreenShotAndCrop(stepNameInput , imagePath);
+    }
+    async getVariableInputDiv(){
+        const variableSliderInputAccordion = await this.driver.findElement(By.css('[class*="variableslider__accordion "]'));
+        this.variableValueInput = await variableSliderInputAccordion.findElement(By.css('textarea'));
     }
 
     async fillVariableValue(value){
-        const variableSlideCustomSuggestDiv = await this.driver.findElement(By.css('[class*="variableinput"]'));
-        await variableSlideCustomSuggestDiv.click();
-        const variableCustomSuggestInputs = await variableSlideCustomSuggestDiv.findElements(By.css('div'));
-        const [variableValueDiv] = variableCustomSuggestInputs.slice(-1);
-        await variableValueDiv.sendKeys(value);
+        await this.getVariableInputDiv();
+        await this.variableValueInput.sendKeys(value);
     }
 
     async selectPlugin(searchTerm){
@@ -307,12 +308,8 @@ class FlowPage extends Projects{
     }
 
     async getVariableValue(){
-        const variableSlideCustomSuggestDiv = await this.driver.findElement(By.css('[class*="variableinput"]'));
-        await variableSlideCustomSuggestDiv.click();
-        const variableCustomSuggestInputs = await variableSlideCustomSuggestDiv.findElements(By.css('div'));
-        const [variableValueDiv] = variableCustomSuggestInputs.slice(-1);
-        const varValue = await variableValueDiv.getText();
-        return varValue;
+        await this.getVariableInputDiv();
+        return (await this.variableValueInput.getText());
     }
 
     async createVariable(){

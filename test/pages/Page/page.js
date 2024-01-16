@@ -1,13 +1,14 @@
 const {Builder, until} = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+const fs = require('fs');
 
 module.exports = class Page {
     constructor(){
         try{
             let options = new chrome.Options();
             let userDataDir = process.env.USER_PROFILE_DIR;
-            options.addArguments(`user-data-dir=${userDataDir}`);
-
+            console.log(process.argv);
+            if(process.argv[3] == "chromeProfile") options.addArguments(`user-data-dir=${userDataDir}`); 
             this.driver = new Builder().setChromeOptions(options).forBrowser('chrome').build();
             console.log('Driver created successfully');
             this.app_link = (process.argv[2] === "test" ? process.env.TEST_LINK : process.env.PROD_LINK);
@@ -44,6 +45,28 @@ module.exports = class Page {
 
     async waitForContentToBeVisible(locator , timer){
         await this.driver.wait(until.elementIsVisible(locator) , timer);
+    }
+
+    async waitForContentToBeNotVisible(locator , timer){
+        await this.driver.wait(until.elementIsNotVisible(locator) , timer);
+    }
+
+    async getLocalStorage(){
+        const localStorage = await this.driver.executeScript('return JSON.stringify(window.localStorage)');
+        fs.writeFileSync('./localStorage.json' , localStorage , 'utf-8');
+    }
+    
+    async setLocalStorage(){
+        const localStorage = fs.readFileSync('./localStorage.json' , 'utf-8');
+        const parsedLocalStorage = JSON.parse(localStorage);
+        const arrayOfJson = [parsedLocalStorage];
+        await fs.writeFileSync('./arrayofjson.json' , new Buffer(arrayOfJson , 'utf-8'));
+        const keys = Object.keys(parsedLocalStorage);
+        for(const key of keys){
+            if(key == "persist:root") continue;
+            console.log(`window.localStorage.setItem( '${key}' , '${parsedLocalStorage[key]}' )`);
+            await this.driver.executeScript(`window.localStorage.setItem( '${key}' , '${parsedLocalStorage[key]}' )`);
+        }
     }
 
     //to go to a URL 

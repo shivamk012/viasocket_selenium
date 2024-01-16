@@ -1,8 +1,7 @@
 const dotenv = require('dotenv');
 
 dotenv.config();
-// const testCreateOrg = require('./testCreateOrg');
-// const testSign = require('./test/specs/testSignUp.spec');
+// const testCreateOrg = require('./test/specs/testCreateOrg.spec');
 // const testInvocation = require('./test/specs/testInvocation.spec');
 // const testDragAndDrop = require('./test/specs/testDragAndDrop.spec');
 // const testCreateScript = require('./test/specs/testCreateScript.spec');
@@ -11,3 +10,10 @@ const testAskAI = require('./test/specs/testAskAI.spec');
 
 
 testAskAI();
+// const testLogin = require('./test/specs/testLogin.spec');
+const {testPostStep} = require('./test/specs/testApiStep.spec');
+
+
+// testInvocation();
+testPostStep();
+

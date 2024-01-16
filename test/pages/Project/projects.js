@@ -1,6 +1,7 @@
-const endpoints = require('../enums');
-const Login = require('./login'); 
-const {By , until , Key} = require('selenium-webdriver');// login class extends page class
+
+const {endpoints} = require('../../enums');
+const Login = require('../Login/login'); 
+const {By , until , Key, Actions} = require('selenium-webdriver');// login class extends page class
 
 class Projects extends Login{
     constructor(){
@@ -62,7 +63,7 @@ class Projects extends Login{
         const projectTitleInput = await projectTitleInputDiv.findElement(By.css('input'));
         await projectTitleInput.sendKeys(projectName , Key.RETURN);
     }
-
+    
     async clickOnProjectName(){
         await this.driver.wait(until.elementLocated(By.xpath('//div[contains(@class, "project_name__title")]')) , 10000);
         const allProjects = await this.driver.findElements(By.xpath('//div[contains(@class, "project_name__title")]'));
@@ -96,7 +97,6 @@ class Projects extends Login{
 
     async createNewOrg(title){
         const orgInput = await this.getOrgTitleInputField();
-
         await orgInput.sendKeys(title , Key.RETURN);
     }
 }   

@@ -4,25 +4,30 @@
   "description": "automation scripts for viasocket",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev chromeProfile" : "node index test chromeProfile",
-    "start chromeProfile" : "node index prod chromeProfile",
+    "start:dev chromeProfile capture": "node index test chromeProfile capture",
+    "start chromeProfile capture": "node index prod chromeProfile capture",
+    "start:dev capture": "node index test capture",
+    "start capture": "node index prod capture",
     "start:dev" : "node index test",
-    "start" : "node index prod"
+    "start" : "node index prod",
+    "mocha:dev capture" : "npx mocha index test capture",
+    "mocha captue" : "npx mocha index prod capture",
+    "mocha:dev" : "npx mocha index test",
+    "mocha" : "npx mocha index prod"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.6.0",
-<<<<<<< HEAD
-=======
+    "axios": "^1.6.2",
     "axois": "^0.0.1-security",
->>>>>>> 3e4dec16957be2e64f0adc801e5dfb7d62aa7dd9
+    "chromedriver": "^119.0.1",
     "dotenv": "^16.3.1",
+    "jimp": "^0.22.10",
     "jquery": "^3.7.1",
     "node-resemble-js": "^0.2.0",
     "resemblejs": "^5.0.0",
-    "selenium-webdriver": "^4.13.0"
+    "selenium-webdriver": "^4.15.0",
+    "sharp": "^0.32.6"
   },
   "devDependencies": {
     "chai": "^4.3.10",

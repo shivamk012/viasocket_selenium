@@ -34,7 +34,7 @@ class FlowPage extends Projects{
 
     async clickOnEditButton(){
         await this.getNavBarButton();
-        const editButton = await getButtonHavingText(this.navbarButtons , 'EDIT');
+        const editButton = await getButtonHavingText(this.navbarButtons , 'EDIT');``
         await editButton.click();
         await super.waitForEndpoint(endpoints.EDIT , 10000);
     }
@@ -70,18 +70,22 @@ class FlowPage extends Projects{
         await searchStepsInput.sendKeys(stepName);
     }
 
-    async clickOnAddSteps(){
-        const workflow = await this.driver.findElement(By.css('[class*="workflow__flow"]'));
+    async clickOnAddStepsNewFlow(){
         // NOTE:  Iske alava koi option nai mila content load ke wait karne ka. input elements 5 hai page pe to input ke liye wait ni kar sakte
         await super.waitForContentToLoad(By.xpath('//*[text() = "Do"]') , 10000); 
+        const flowSteps = await this.driver.findElement(By.xpath('//*[text() = "Do"]'));
+        const flowStepsParentDiv = await flowSteps.findElement(By.xpath('.//..'));
+        const stepsButton = await flowStepsParentDiv.findElement(By.css('button'));
         const addStepsButton = await workflow.findElements(By.css('input'));
         await this.driver.executeScript('arguments[0].scrollIntoView(true)' , addStepsButton[1]);
         await addStepsButton[1].click();
     }
 
     async getAllStepsNewFlow(){
-        const stepsParentDiv = await this.driver.findElement(By.css('[class*="createfunction"]'));
-        this.listOfStepsNewFlow = await stepsParentDiv.findElement(By.css('button'));
+        await super.waitForContentToLoad(By.xpath('//*[text() = "Do"]') , 10000); 
+        const flowSteps = await this.driver.findElement(By.xpath('//*[text() = "Do"]'));
+        const flowStepsParentDiv = await flowSteps.findElement(By.xpath('.//..'));
+        this.steps = await flowStepsParentDiv.findElements(By.css('button'));
     }
 
     async getAllStepsUsedFlow(){

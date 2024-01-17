@@ -9,7 +9,7 @@ dotenv.config();
 // const testPauseProject = require('./test/specs/testPauseProject.spec');
 // const testDeleteProject = require('./test/specs/testDeleteProject.spec');
 // const testPauseScript = require('./test/specs/testPauseProject.spec')
-const testInvocation = require('./test/specs/testInvocation_prod.spec');
+const testInvocation_prod = require('./test/specs/testInvocation_prod.spec');
 // const testDragAndDrop = require('./test/specs/testDragAndDrop.spec');
 // const testAddSteps = require('./test/specs/testAddSteps.spec');
 // const testLogin = require('./test/specs/testLogin.spec');
@@ -20,6 +20,8 @@ const testInvocation = require('./test/specs/testInvocation_prod.spec');
 // const {testGetStep} = require('./test/specs/testApiStep.spec');
 // const testFunction = require('./test/specs/testFunctionStep.spec');
 // const testIf = require('./test/specs/testIfBlockStep.spec')
+// const testInvocation_dev = require('./test/specs/testInvocation_dev.spec');
+
 
 
 async function test(){
@@ -31,7 +33,8 @@ async function test(){
     // await testGetStep();
     // await testFunction();
     // await testDragAndDrop();
-    await testInvocation();
+    // await testInvocation_dev();
+    await testInvocation_prod();
 }
 
 test();

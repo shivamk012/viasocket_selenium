@@ -15,10 +15,10 @@ dotenv.config();
 // const testLogin = require('./test/specs/testLogin.spec');
 // const testRenameProject= require('./test/specs/testIfBlockStep.spec');
 // const testIfBlockStep = require('./test/specs/testIfBlockStep.spec');
-const testVariableStep = require('./test/specs/testCreateVariable.spec');
+// const testVariableStep = require('./test/specs/testCreateVariable.spec');
 // const testPlugin = require('./test/specs/testPluginOAuthAuth.spec');
 // const {testGetStep} = require('./test/specs/testApiStep.spec');
-// const testFunction = require('./test/specs/testFunonStep.spec');
+const testFunction = require('./test/specs/testFunctionStep.spec');
 // const testIf = require('./test/specs/testIfBlockStep.spec')
 
 
@@ -27,9 +27,9 @@ async function test(){
     // await testCreateProject();
     // await testCreateScript();
     // await testDeleteScript();
-    await testVariableStep();
+    // await testVariableStep();
     // await testGetStep();
-    // await testFunction();
+    await testFunction();
 }
 
 test();

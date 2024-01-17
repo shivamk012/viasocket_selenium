@@ -113,7 +113,7 @@ class FlowPage extends Projects{
 
     async fillStepName(stepName){
         const stepNameInput = await this.driver.findElement(By.id(process.env.STEP_NAME_ID));
-        await stepNameInput.sendKeys(stepName);
+        await stepNameInput.sendKeys(Key.HOME, Key.chord(Key.SHIFT, Key.END), stepName);
         await this.driver.sleep(2000);
     }
     
@@ -131,7 +131,7 @@ class FlowPage extends Projects{
             this.apiContent = await this.driver.findElement(By.id(process.env.STEP_PANEL_CONTENT_ID));
             const buttons = await this.apiContent.findElements(By.css('button'));
             await super.waitForContentToBeVisible(buttons[0] , 10000);
-            this.dryRunButton = await getButtonHavingText(buttons , process.env.DRY_RUN_BUTTON_TEXT);
+            this.dryRunButton = (await this.driver.findElements(By.xpath('//button[text() = "Test"]')))[1];
         }catch(err){
             console.log(err);
         }
@@ -139,17 +139,14 @@ class FlowPage extends Projects{
 
 
     async fillUrl(url){
-        let apiUrlInputField = await this.apiContent.findElement(By.id(process.env.API_URL_INPUTDIV_ID));
+        let apiUrlInputField = await this.apiContent.findElement(By.css('textarea'));
         await apiUrlInputField.click();
-        apiUrlInputField = await this.apiContent.findElement(By.id(process.env.API_URL_INPUTDIV_ID));
         await apiUrlInputField.sendKeys(url , Key.ENTER);
-        
-        // NOTE: need to click outside otherwise dry will consider url.
         await this.apiContent.click();
     }
 
     async getUrl(){
-        let apiUrlInputField = await this.apiContent.findElement(By.id(process.env.API_URL_INPUTDIV_ID));
+        let apiUrlInputField = await this.apiContent.findElement(By.css('textarea'));
         const url = await apiUrlInputField.getText();
         return url;
     }
@@ -197,7 +194,7 @@ class FlowPage extends Projects{
     }
 
     async waitForStepToCreate(){
-        await super.waitForContentToLoad(By.css('[class*="actionButton"]') , 100000);
+        await super.waitForContentToLoad(By.css('[class*="actionButton"]') , 10000);
     }
 
     async clickOnMenuButtonOfStep(){

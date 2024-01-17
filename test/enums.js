@@ -18,8 +18,7 @@ const stepIndex = {
     IF : 1,
     VARIABLE : 2,
     COMMENT : 3,
-    RESPONSE : 4,
-    FUNCTION : 5
+    FUNCTION : 4
 }
 
 const apiIndex = {

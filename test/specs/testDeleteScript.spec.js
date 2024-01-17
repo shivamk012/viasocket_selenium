@@ -46,8 +46,8 @@ async function testDeleteScript(){
         })
 
         it('List of deleted script should contain name of latest deleted script' , async() => {
-            const listOfNamesOfDeletedScrip = await projectPage.getListOfDeletedProjects();
-            expect(listOfNamesOfDeletedScrip).to.include(nameOfDeletedScript);
+            const listOfNamesOfDeletedScript = await projectPage.getListOfDeletedScripts();
+            expect(listOfNamesOfDeletedScript).to.include(nameOfDeletedScript);
         })
         
         after(async() => {

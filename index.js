@@ -7,19 +7,19 @@ dotenv.config();
 // const testPauseScript = require('./test/specs/testPauseScript.spec');
 // const testDeleteScript = require('./test/specs/testDeleteScript.spec');
 // const testPauseProject = require('./test/specs/testPauseProject.spec');
-// const testDeleteProject = require('./test/specs/testDeleteProject.spec');
-// const testPauseScript = require('./test/specs/testPauseProject.spec')
+const testDeleteProject = require('./test/specs/testDeleteProject.spec');
+// const testPauseProject = require('./test/specs/testPauseProject.spec')
 // const testInvocation = require('./test/specs/testInvocation_prod.spec');
 // const testDragAndDrop = require('./test/specs/testDragAndDrop.spec');
 // const testAddSteps = require('./test/specs/testAddSteps.spec');
-const testAskAI = require('./test/specs/testAskAI.spec');
+// const testAskAI = require('./test/specs/testAskAI.spec');
 
 
-testAskAI();
+// testAskAI();
 // const testLogin = require('./test/specs/testLogin.spec');
 // const testRenameProject= require('./test/specs/testIfBlockStep.spec');
 // const testIfBlockStep = require('./test/specs/testIfBlockStep.spec');
-const testVariableStep = require('./test/specs/testCreateVariable.spec');
+// const testVariableStep = require('./test/specs/testCreateVariable.spec');
 // const testPlugin = require('./test/specs/testPluginOAuthAuth.spec');
 // const {testGetStep} = require('./test/specs/testApiStep.spec');
 // const testFunction = require('./test/specs/testFunonStep.spec');
@@ -31,8 +31,11 @@ async function test(){
     // await testCreateProject();
     // await testCreateScript();
     // await testDeleteScript();
-    await testVariableStep();
+    // await testVariableStep();
+    // await testPauseScript();
     // await testGetStep();
+    await testDeleteProject();
+    // await testPauseProject();
     // await testFunction();
 }
 

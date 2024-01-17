@@ -209,9 +209,9 @@ class Projects extends Login{
     }
     
     async clickOnScript(){
-        await super.waitForContentToLoad(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`) , 10000);
-        await this.driver.sleep(2000);
-        this.listOfScripts = await this.scriptSlider.findElements(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`));
+        await super.waitForContentToLoad(By.xpath('//span[text() = "FLOWS"]') , 10000);
+        const flowTextSpanElement = await this.driver.findElement(By.xpath('//span[text() = "FLOWS"]'));
+        this.listOfScripts = await flowTextSpanElement.findElements(By.xpath('following-sibling::div'));
         await this.listOfScripts[0].click();
         await super.waitForEndpoint(endpoints.EDIT , 10000);
     }
@@ -219,9 +219,7 @@ class Projects extends Login{
     async getListOfScripts(){
         await super.waitForContentToLoad(By.xpath('//span[text() = "FLOWS"]') , 10000);
         const flowTextSpanElement = await this.driver.findElement(By.xpath('//span[text() = "FLOWS"]'));
-        const scriptListParents = await flowTextSpanElement.findElement(By.xpath('.//..'));
-        await super.waitForContentToLoad(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`) , 10000);
-        this.listOfScripts = await scriptListParents.findElements(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`));
+        this.listOfScripts = await flowTextSpanElement.findElements(By.xpath('following-sibling::div'));
         let nameOfScripts = [];
         for(let i=0 ; i<this.listOfScripts.length ; ++i){
             const text = await this.listOfScripts[i].getText();

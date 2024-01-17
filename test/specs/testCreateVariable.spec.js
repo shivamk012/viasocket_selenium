@@ -80,7 +80,7 @@ async function testVariableStep(){
 
 
         after(async() => {
-            // await flowPage.close();
+            await flowPage.close();
         })
     })
 }

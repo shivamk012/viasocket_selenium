@@ -22,7 +22,7 @@ const testDeleteProject = require('./test/specs/testDeleteProject.spec');
 // const testVariableStep = require('./test/specs/testCreateVariable.spec');
 // const testPlugin = require('./test/specs/testPluginOAuthAuth.spec');
 // const {testGetStep} = require('./test/specs/testApiStep.spec');
-// const testFunction = require('./test/specs/testFunonStep.spec');
+const testFunction = require('./test/specs/testFunctionStep.spec');
 // const testIf = require('./test/specs/testIfBlockStep.spec')
 
 
@@ -37,6 +37,8 @@ async function test(){
     await testDeleteProject();
     // await testPauseProject();
     // await testFunction();
+    // await testGetStep();
+    await testFunction();
 }
 
 test();

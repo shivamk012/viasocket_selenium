@@ -17,8 +17,8 @@ async function testFunction(){
                     await fun.waitForScriptSlider();
                     await fun.clickOnScript();
                     //await fun.clickOnEditButton();
-                    await fun.clickOnAddSteps();
-                    await fun.getAllStepsUsedFlow();
+                    // await fun.clickOnAddSteps();
+                    await fun.getAllStepsNewFlow();
                     
                     //case:01 Click create function
                     await fun.clickOnStep(stepIndex.FUNCTION);

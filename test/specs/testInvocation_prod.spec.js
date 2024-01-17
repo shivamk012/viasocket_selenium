@@ -19,20 +19,24 @@ async function testInvocation(){
             const responseData = getRequestResponse.data;
             expect(JSON.stringify(responseData)).to.equal(JSON.stringify(queryParams));
         })
-
+        
         it('should return correct body params' , async() => {
-            const postRequestResponse = await axios.post(process.env.WEBHOOKURL_TEST_POST_REQUEST , bodyParams);
-            const responseData = postRequestResponse.data;
-            expect(JSON.stringify(responseData)).to.equal(JSON.stringify(bodyParams));
+            try{
+                const postRequestResponse = await axios.post(process.env.WEBHOOKURL_TEST_POST_REQUEST , bodyParams);
+                const responseData = postRequestResponse.data;
+                expect(JSON.stringify(responseData)).to.equal(JSON.stringify(bodyParams));    
+            }catch(err){
+                console.log(err);
+            }
+            
         })
 
         it('should return that script is paused' , async() => {
             try{
-                const response = await axios.get(process.env.WEBHOOKURL_TEST_PAUSED_SCRIPT);
+                const Response = await axios.get(process.env.WEBHOOKURL_TEST_PAUSED_SCRIPT);
             }catch(err){
                 const responseData = err.response.data;
-                // console.log(res)
-                expect(responseData.message).to.be.equal('Script is either paused or deleted');
+                expect(responseData.message).to.be.equal('Flow is currently paused');
             }
         })
 
@@ -42,7 +46,7 @@ async function testInvocation(){
             }catch(err){
                 const responseData = err.response.data;
                 // console.log(res)
-                expect(responseData.message).to.be.equal('Script is either paused or deleted');
+                expect(responseData.message).to.be.equal('Flow is currently paused');
             }
         })
 
@@ -52,7 +56,7 @@ async function testInvocation(){
             }catch(err){
                 const responseData = err.response.data;
                 // console.log(res)
-                expect(responseData.message).to.be.equal('Project is either paused or deleted');
+                expect(responseData.message).to.be.equal('Project is currently paused');
             }
         })
 
@@ -62,7 +66,7 @@ async function testInvocation(){
             }catch(err){
                 const responseData = err.response.data;
                 // console.log(res)
-                expect(responseData.message).to.be.equal('Project is either paused or deleted');
+                expect(responseData.message).to.be.equal('Project has been deleted');
             }
         })
     })

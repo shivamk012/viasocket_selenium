@@ -83,6 +83,10 @@ async function testApiStep(methodType){
             await flowPage.waitForStepToCreate();
         })
 
+        it('should close api slider on close button click' , async() => {
+            
+        })
+
         after(async()=>{
             // await flowPage.close();
         })

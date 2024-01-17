@@ -306,11 +306,11 @@ class Projects extends Login{
 
     async takeScreenShotOfMenuButton(imagePath){
         const actionBtnContainer = await this.hoverOnMenuButton();
-        await super.takeScreenShotAndCrop(actionBtnContainer , imagePath);
+        await super.takeScreenShotAndSave(actionBtnContainer , imagePath);
     }
 
     async takeScreenShotActionButtons(imagePath){
-        await super.takeScreenShotAndCrop(this.actionButtonDiv , imagePath);
+        await super.takeScreenShotAndSave(this.actionButtonDiv , imagePath);
     }
 
     async getListOfProjects(){

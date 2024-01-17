@@ -34,27 +34,32 @@ class FlowPage extends Projects{
 
     async clickOnEditButton(){
         await this.getNavBarButton();
-        const editButton = await getButtonHavingText(this.navbarButtons , 'EDIT');``
+        const editButton = await this.driver.findElement(By.id("long-button"),10000);
         await editButton.click();
         await super.waitForEndpoint(endpoints.EDIT , 10000);
     }
 
-    async DragAndDrop(){
-        try{
-            await super.waitForContentToLoad(By.id("#addStepsMainContainer") , 10000);
+    async DragAndDrop() {
+        try {
+            await super.waitForContentToLoad(By.id("#addStepsMainContainer"), 10000);
             const divContainer = await this.driver.findElement(By.id("#addStepsMainContainer"));
-            console.log("Element found")
+            console.log("Element found");
             const dragElement = await divContainer.findElements(By.id("hoverIconContainer"));
-            if (dragElement.length>1) {
-                console.log("Drag element")
-            }else{
+            if (dragElement.length > 1) {
+                console.log("Drag elements");
+                const initialOrder = await this.getElementsOrder(dragElement);
+                const firstElement = dragElement[0];
+                const secondElement = dragElement[1];
+                    await this.driver.actions().move({ origin: firstElement }).press().dragAndDrop(firstElement, secondElement).perform();
+                    await super.waitForContentToLoad(By.id("#addStepsMainContainer"), 10000);
+                    const updatedOrder = await this.getElementsOrder(dragElement);
+                    expect(updatedOrder).to.not.deep.equal(initialOrder);
+            } else {
                 console.log("No element to drag");
             }
-            const firstElement = dragElement[0];
-            const secondElement = dragElement[1];
-            await this.driver.actions().move({origin : firstElement}).press().dragAndDrop(firstElement , secondElement).perform();
-        }catch(error){
-            console.error('Error',error);
+            
+        } catch (error) {
+            console.error('Error', error);
         }
     } 
 

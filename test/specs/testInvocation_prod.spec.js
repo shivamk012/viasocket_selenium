@@ -28,10 +28,9 @@ async function testInvocation(){
 
         it('should return that script is paused' , async() => {
             try{
-                const response = await axios.get(process.env.WEBHOOKURL_TEST_PAUSED_SCRIPT);
+                const Response = await axios.get(process.env.WEBHOOKURL_TEST_PAUSED_SCRIPT);
             }catch(err){
                 const responseData = err.response.data;
-                // console.log(res)
                 expect(responseData.message).to.be.equal('Script is either paused or deleted');
             }
         })

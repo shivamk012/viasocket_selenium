@@ -15,7 +15,7 @@ dotenv.config();
 // const testLogin = require('./test/specs/testLogin.spec');
 // const testRenameProject= require('./test/specs/testIfBlockStep.spec');
 // const testIfBlockStep = require('./test/specs/testIfBlockStep.spec');
-const testVariableStep = require('./test/specs/testCreateVariable.spec');
+// const testVariableStep = require('./test/specs/testCreateVariable.spec');
 // const testPlugin = require('./test/specs/testPluginOAuthAuth.spec');
 // const {testGetStep} = require('./test/specs/testApiStep.spec');
 // const testFunction = require('./test/specs/testFunctionStep.spec');

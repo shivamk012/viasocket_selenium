@@ -22,7 +22,7 @@ async function testWebhookResponse(){
                     await responseAndWebhook.createNewScript(getUniqueName('WR'));
                     await responseAndWebhook.clickOnScript();
                     await responseAndWebhook.waitForFlowPageToOpen();
-                    await responseAndWebhook.getAllSteps();
+                    await responseAndWebhook.getAllStepsForIf();
                     await responseAndWebhook.fullWebhookfunction();
                         }).timeout(30000); 
 

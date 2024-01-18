@@ -47,7 +47,7 @@ class Projects extends Login{
         const orgNameListButton = await this.orgField();
         await orgNameListButton.click();
     }
-
+    
     async fullWebhookfunction(){
         await super.waitForContentToLoad(By.className('workflow__flow MuiBox-root css-0'), 10000);
         const doBlock=await this.driver.findElement(By.className('w-100 flex-col pl-28 box-sizing-border-box  gap-1  MuiBox-root css-0'));
@@ -86,13 +86,6 @@ class Projects extends Login{
         const responseElement=await this.driver.findElement(By.className('MuiTypography-root MuiTypography-h6 response__container__title  css-pbqldk'));
         const text=responseElement.getText();
         return text
-    }
-    
-
-    async waitForProjecPageToLoad(){
-        await super.waitForContentToLoad(By.css('[class*="project-page-cont"]'), 10000);
-        const projectPage = await this.driver.findElement(By.css('[class*="project-page-cont"]'));
-        await super.waitForContentToBeVisible(projectPage);
     }
 
     async openListOfOrgs() {
@@ -347,11 +340,11 @@ class Projects extends Login{
 
     async takeScreenShotOfMenuButton(imagePath){
         const actionBtnContainer = await this.hoverOnMenuButton();
-        await super.takeScreenShotAndCrop(actionBtnContainer , imagePath);
+        await super.takeScreenShotAndSave(actionBtnContainer , imagePath);
     }
 
     async takeScreenShotActionButtons(imagePath){
-        await super.takeScreenShotAndCrop(this.actionButtonDiv , imagePath);
+        await super.takeScreenShotAndSave(this.actionButtonDiv , imagePath);
     }
 
     async getListOfProjects(){

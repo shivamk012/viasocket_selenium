@@ -27,10 +27,10 @@ async function testIfBlockStep(){
             await ifStep.clickOnScript();
             await ifStep.waitForFlowPageToOpen();
             // await ifStep.clickOnAddSteps();
-            await ifStep.getAllSteps();
+            await ifStep.getAllStepsForIf();
             await ifStep.clickOnStep(stepIndex.IF);
-            await ifStep.createCondition("true");
-            const text_name=await ifStep.responseOfIfBlock();
+            await ifStep.createConditionIf("true");
+            const text_name=await ifStep.responseOfIfBlockIf();
             expect(text_name).to.include("true");
             // await ifStep.crossIfBlock();
             await ifStep.deleteIfBlock();
@@ -38,10 +38,10 @@ async function testIfBlockStep(){
        
         it("if block created successfully with false condition",async function(){
             await ifStep.waitFor5Min();
-            await ifStep.getAllSteps();
+            await ifStep.getAllStepsForIf();
             await ifStep.clickOnStep(stepIndex.IF);
-            await ifStep.createCondition("false");
-            const text_name=await ifStep.responseOfIfBlock();
+            await ifStep.createConditionIf("false");
+            const text_name=await ifStep.responseOfIfBlockIf();
             expect(text_name).to.include("false");
             // await ifStep.crossIfBlock();
             await ifStep.deleteIfBlock();

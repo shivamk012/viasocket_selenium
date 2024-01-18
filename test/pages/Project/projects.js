@@ -74,12 +74,19 @@ class Projects extends Login{
     }
 
     async customResponseEnter(content){
-        await super.waitForContentToLoad(By.className('mt-1 pos-rel MuiBox-root css-0'),10000);
-        const resSlider= await this.driver.findElement(By.className('mt-1 pos-rel MuiBox-root css-0')) ;
-        const contentBtn= await resSlider.findElement(By.xpath("//*[text()='//Write return statement here...']"));
-        await contentBtn.sendKeys(content); 
+        await super.waitForContentToLoad(By.className('responseslider__container w-100 column   MuiBox-root css-0'),10000);
+        const resSlider= await this.driver.findElement(By.className('responseslider__container w-100 column   MuiBox-root css-0')) ;
+        const contentBtn=await resSlider.findElement(By.className("ace_editor ace-monokai ace_dark"));
+        contentBtn.click();
+        contentBtn.sendKeys(content);
         const saveBtn=await resSlider.findElement(By.xpath("//*[text()='Save']"));
         saveBtn.click();
+    }
+
+    async responseOfWebhook(){
+        const responseElement=await this.driver.findElement(By.className('MuiTypography-root MuiTypography-h6 response__container__title  css-pbqldk'));
+        const text=responseElement.getText();
+        return text
     }
 
     async waitForProjecPageToLoad(){

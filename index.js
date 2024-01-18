@@ -7,7 +7,7 @@ dotenv.config();
 // const testPauseScript = require('./test/specs/testPauseScript.spec');
 // const testDeleteScript = require('./test/specs/testDeleteScript.spec');
 // const testPauseProject = require('./test/specs/testPauseProject.spec');
-// const testDeleteProject = require('./test/specs/testDeleteProject.spec');
+const testDeleteProject = require('./test/specs/testDeleteProject.spec');
 // const testPauseScript = require('./test/specs/testPauseProject.spec')
 // const testInvocation = require('./test/specs/testInvocation_prod.spec');
 // const testDragAndDrop = require('./test/specs/testDragAndDrop.spec');
@@ -19,7 +19,7 @@ dotenv.config();
 // const {testGetStep} = require('./test/specs/testApiStep.spec');
 // const testFunction = require('./test/specs/testFunctionStep.spec');
 // const testIf = require('./test/specs/testIfBlockStep.spec');
- const webhookResponse = require('./test/specs/testWebhookResponse.spec');
+//  const webhookResponse = require('./test/specs/testWebhookResponse.spec');
 
 
 
@@ -32,7 +32,8 @@ async function test(){
     // await testGetStep();
     // await testFunction();
     // await testIf();
-    await webhookResponse();
+    // await webhookResponse();
+    await testDeleteProject();
 }
 
 test();

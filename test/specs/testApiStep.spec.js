@@ -1,6 +1,7 @@
 const FlowPage = require('../pages/Flow/flow');
 const {endpoints , stepIndex , apiIndex} = require('../enums');
 const {expect} = require('chai');
+const {expect} = require('chai');
 
 
 async function testApiStep(methodType){
@@ -81,6 +82,10 @@ async function testApiStep(methodType){
         it('should create a api step in flow' , async() => {
             await flowPage.clickOnCreateButton();
             await flowPage.waitForStepToCreate();
+        })
+
+        it('should close api slider on close button click' , async() => {
+            
         })
 
         after(async()=>{

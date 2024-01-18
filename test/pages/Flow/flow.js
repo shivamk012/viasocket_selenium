@@ -20,6 +20,9 @@ class FlowPage extends Projects{
         this.addStepsMainContainer = '';
         this.listOfStepsNewFlow = [];
         this.menuButtonStep = '';
+        this.addStepsMainContainer = '';
+        this.listOfStepsNewFlow = [];
+        this.menuButtonStep = '';
     }
 
     async waitForFlowPageToOpen(){
@@ -34,27 +37,32 @@ class FlowPage extends Projects{
 
     async clickOnEditButton(){
         await this.getNavBarButton();
-        const editButton = await getButtonHavingText(this.navbarButtons , 'EDIT');``
+        const editButton = await this.driver.findElement(By.id("long-button"),10000);
         await editButton.click();
         await super.waitForEndpoint(endpoints.EDIT , 10000);
     }
 
-    async DragAndDrop(){
-        try{
-            await super.waitForContentToLoad(By.id("#addStepsMainContainer") , 10000);
+    async DragAndDrop() {
+        try {
+            await super.waitForContentToLoad(By.id("#addStepsMainContainer"), 10000);
             const divContainer = await this.driver.findElement(By.id("#addStepsMainContainer"));
-            console.log("Element found")
+            console.log("Element found");
             const dragElement = await divContainer.findElements(By.id("hoverIconContainer"));
-            if (dragElement.length>1) {
-                console.log("Drag element")
-            }else{
+            if (dragElement.length > 1) {
+                console.log("Drag elements");
+                const initialOrder = await this.getElementsOrder(dragElement);
+                const firstElement = dragElement[0];
+                const secondElement = dragElement[1];
+                    await this.driver.actions().move({ origin: firstElement }).press().dragAndDrop(firstElement, secondElement).perform();
+                    await super.waitForContentToLoad(By.id("#addStepsMainContainer"), 10000);
+                    const updatedOrder = await this.getElementsOrder(dragElement);
+                    expect(updatedOrder).to.not.deep.equal(initialOrder);
+            } else {
                 console.log("No element to drag");
             }
-            const firstElement = dragElement[0];
-            const secondElement = dragElement[1];
-            await this.driver.actions().move({origin : firstElement}).press().dragAndDrop(firstElement , secondElement).perform();
-        }catch(error){
-            console.error('Error',error);
+            
+        } catch (error) {
+            console.error('Error', error);
         }
     } 
 
@@ -104,9 +112,10 @@ class FlowPage extends Projects{
         deleteBtn.click();
     }
 
+    // NOTE: deprecated function
     async getAllSteps(){
-        await super.waitForContentToLoad(By.css('[class*="w-100 workflow__flow flex-col gap-2 MuiBox-root css-0"]') , 10000);
-        const stepsParentDiv = await this.driver.findElement(By.css('[class*="w-100 workflow__flow flex-col gap-2 MuiBox-root css-0"]'));
+        await super.waitForContentToLoad(By.css('[class*="createfunction"]') , 10000);
+        const stepsParentDiv = await this.driver.findElement(By.css('[class*="createfunction"]'));
         this.steps = await stepsParentDiv.findElements(By.css('button'));
     }
 
@@ -182,17 +191,20 @@ class FlowPage extends Projects{
     async takeVariableResponseScreenShot(imagePath){
         await super.waitForContentToLoad(By.id('json-pretty') , 10000);
         const responseContent = await this.driver.findElement(By.id(process.env.RESPOSNE_CONTENT_PANEL_ID));
-        await super.takeScreenShotAndCrop(responseContent , imagePath);
+        const screenShot = await responseContent.takeScreenshot();
+        await super.takeScreenShotAndSave(screenShot , imagePath);
     }
 
     async takeResponseScreenShot(imagePath){
         const responseContent = await this.driver.findElement(By.id(process.env.RESPOSNE_CONTENT_PANEL_ID));
-        await super.takeScreenShotAndCrop(responseContent , imagePath);
+        const screenShot = await responseContent.takeScreenshot();
+        await super.takeScreenShotAndSave(screenShot , imagePath);
     }
 
     async takeScreenShotWorkFlow(imagePath){
         const flow = await this.driver.findElements(By.css('[class*="workflow__flow"]'));
-        await super.takeScreenShotAndCrop(flow[1] , imagePath);
+        const screenShot = await flow[1].takeScreenshot();
+        await super.takeScreenShotAndSave(screenShot , imagePath);          
     }
 
     async clickOnCreateButton(isVar){
@@ -200,21 +212,6 @@ class FlowPage extends Projects{
         this.createButton = await this.driver.findElement(By.xpath(`//button[text() = "${saveButton}"]`));
         this.driver.executeScript("arguments[0].scrollIntoView(true);", this.createButton);
         await this.createButton.click();
-    }
-
-    async waitForStepToCreate(){
-        await super.waitForContentToLoad(By.css('[class*="actionButton"]') , 10000);
-    }
-
-    async clickOnMenuButtonOfStep(){
-        this.menuButtonStep = await this.driver.findElement(By.css('class*="actionButton"'));
-        await  this.menuButtonStep.click();
-    }
-
-    async clickOnVariableSliderAccordion(){
-        const accordions = await this.driver.findElements(By.css('[class*="variableslider__accordion"]'));
-        await accordions[0].click();
-        await super.waitForContentToLoad(By.xpath('//button[text() = "Update"]') , 10000);
     }
 
     async selectApiMethod(methodTypeIndex){
@@ -284,16 +281,19 @@ class FlowPage extends Projects{
 
     async takeScreenShotFunctionSlider(imagePath){
         const stepNameInput = await this.driver.findElement(By.css('[class*="custom_slider__halfscreen"]'));
-        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , stepNameInput);
-        await super.takeScreenShotAndCrop(stepNameInput , imagePath);
+        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , this.apiEditPanel);
+        const screenShot = await stepNameInput.takeScreenshot();
+        await super.takeScreenShotAndSave(screenShot , imagePath);
     }
 
     async takeScreenShotVariableSlider(imagePath){
         await super.waitForContentToLoad(By.css('[class*="custom_slider__halfscreen"]') , 10000);
         const stepNameInput = await this.driver.findElement(By.css('[class*="custom_slider__halfscreen"]'));
         await this.driver.executeScript('arguments[0].scrollIntoView(true)' , stepNameInput);
-        await super.takeScreenShotAndCrop(stepNameInput , imagePath);
+        const screenShot = await stepNameInput.takeScreenshot();
+        await super.takeScreenShotAndSave(screenShot , imagePath);
     }
+
     async getVariableInputDiv(){
         const variableSliderInputAccordion = await this.driver.findElement(By.css('[class*="variableslider__accordion "]'));
         this.variableValueInput = await variableSliderInputAccordion.findElement(By.css('textarea'));

@@ -48,6 +48,47 @@ class Projects extends Login{
         await orgNameListButton.click();
     }
 
+    async fullWebhookfunction(){
+        await super.waitForContentToLoad(By.className('workflow__flow MuiBox-root css-0'), 10000);
+        const doBlock=await this.driver.findElement(By.className('w-100 flex-col pl-28 box-sizing-border-box  gap-1  MuiBox-root css-0'));
+        const webhookpick= await doBlock.findElement(By.id('0option'));
+        webhookpick.click();
+        await super.waitForContentToLoad(By.className('masterslider_cont transition custom_slider custom_slider__halfscreen masterslider_cont__in MuiBox-root css-0'),10000);
+        const webhookDiv=await this.driver.findElement(By.className('flex-spaceBetween-center w-100 gap-1 MuiBox-root css-0'));
+        const saveBtn=await webhookDiv.findElement(By.xpath("//button[contains(text(),'save')]"));
+        saveBtn.click();
+
+    }
+    
+    async responseFunction(){
+
+        const responseBlockFull=await this.driver.findElement(By.className('workflow  flex-col gap-3 mb-4  MuiBox-root css-0'));
+        const resBlock=await responseBlockFull.findElement(By.className('pl-28  w-100  MuiBox-root css-0'));
+        await  super.waitForContentToLoad(By.xpath('//*[@id="response"]'), 10000);
+        const resBtn=await resBlock.findElement(By.xpath('//*[@id="response"]'));
+        resBtn.click();
+        await super.waitForContentToLoad(By.className('responseslider column w-100 MuiBox-root css-0'),10000);
+        const resSlider= this.driver.findElement(By.className('responseslider column w-100 MuiBox-root css-0')) ;
+        const cusBtn= await resSlider.findElement(By.xpath("//*[text()='Custom']"));
+        cusBtn.click();
+    }
+
+    async customResponseEnter(content){
+        await super.waitForContentToLoad(By.className('responseslider__container w-100 column   MuiBox-root css-0'),10000);
+        const resSlider= await this.driver.findElement(By.className('mt-1 pos-rel MuiBox-root css-0')) ;
+        const contentBtn= await resSlider.findElement(By.xpath("//*[text()='//Write return statement here...']"));
+        contentBtn.click();
+        contentBtn.sendKeys(content); 
+        const saveBtn=await resSlider.findElement(By.xpath("//*[text()='Save']"));
+        saveBtn.click();
+    }
+    async responseOfWebhook(){
+        const responseElement=await this.driver.findElement(By.className('MuiTypography-root MuiTypography-h6 response__container__title  css-pbqldk'));
+        const text=responseElement.getText();
+        return text
+    }
+    
+
     async waitForProjecPageToLoad(){
         await super.waitForContentToLoad(By.css('[class*="project-page-cont"]'), 10000);
         const projectPage = await this.driver.findElement(By.css('[class*="project-page-cont"]'));
@@ -306,11 +347,11 @@ class Projects extends Login{
 
     async takeScreenShotOfMenuButton(imagePath){
         const actionBtnContainer = await this.hoverOnMenuButton();
-        await super.takeScreenShotAndSave(actionBtnContainer , imagePath);
+        await super.takeScreenShotAndCrop(actionBtnContainer , imagePath);
     }
 
     async takeScreenShotActionButtons(imagePath){
-        await super.takeScreenShotAndSave(this.actionButtonDiv , imagePath);
+        await super.takeScreenShotAndCrop(this.actionButtonDiv , imagePath);
     }
 
     async getListOfProjects(){

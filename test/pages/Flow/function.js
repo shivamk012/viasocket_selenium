@@ -64,16 +64,6 @@ class Function extends FlowPage{
         await closeButton.click();
         await this.driver.sleep(5000);
     }
-
-    async getSuccessMessage() {
-        const successMessageElement = await this.driver.findElement(By.css(''));
-        await fun.waitForUIChange(); // Update the selector based on your actual success message element
-        return await successMessageElement.getText();
-    }
-    async DragAndDropNoElements() {
-        console.log("Simulating no elements to drag");
-        // Add logic to handle the case where there are no elements to drag
-    }
 }
 
 module.exports = Function;

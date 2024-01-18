@@ -11,14 +11,16 @@ class IfBlock extends FlowPage{
     }
 
     async createCondition(confititon_name){
-        const text_field=await this.driver.findElement(By.id("editableDividForIfBlock"));
+        await super.waitForContentToLoad(By.className("ifblockslider__editbox m-1 MuiBox-root css-0") , 10000);    
+        const parentclass=await this.driver.findElement(By.className("ifblockslider__editbox m-1 MuiBox-root css-0"));
+        const text_field= await parentclass.findElement(By.className("p-1"));
         await text_field.sendKeys(confititon_name);
-        const create=await this.driver.findElement(By.xpath('//button[normalize-space()="Create"]'));
+        const create=await parentclass.findElement(By.xpath("//*[text()='Create']"));
         await create.click();
     }
-
+ 
     async responseOfIfBlock(){
-        const responseElement=await this.driver.findElement(By.className('MuiTypography-root MuiTypography-base word_break-all css-oy4d7z'));
+        const responseElement=await this.driver.findElement(By.className('ifblockslider__responsebox__responsecontent border-1 mt-1 pl-1 flex-start-center MuiBox-root css-0'));
         const text=responseElement.getText();
         return text
     }

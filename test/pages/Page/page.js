@@ -117,10 +117,36 @@ module.exports = class Page {
         await this.driver.executeScript("arguments[0].style.filter = 'blur(10px)';" , webelement);
     }
 
-    async takeScreenShotAndSave(screenShot , imagePath){
+    async takeScreenShotAndCrop(element , imagePath){
+        // const screenShot = await this.driver.takeScreenshot();
+        // const rect = await element.getRect();
+
+        // // Calculate the region to crop
+        // const left = rect.x;
+        // const top = rect.y;
+        // const width = rect.width;
+        // const height = rect.height;
+        // sharp(screenShot)
+        // .extract({ left: left, top: top, width: width, height: height })
+        // .toFile('./functionflow.png', function (err) {
+        //     if (err) console.log(err);
+        // })
+        
+        const location = await element.getRect();
+
+        // Take a screenshot of the entire page
+        const screenshot = await this.driver.takeScreenshot();
+
+        // Use Jimp to process the image
+        const image = await Jimp.read(Buffer.from(screenshot, 'base64'));
+        
+        // Crop the image to the region of the element
+        // console.log(location);
+        image.crop(location.x, location.y, location.width, location.height);
+        
         // Save the cropped image
-        if(process.argv[4] === "capture") fs.writeFileSync(`./test/ReferenceImages/${imagePath}` , new Buffer(screenShot , 'base64'));
-        else fs.writeFileSync(`./test/SpecImages/${imagePath}` , new Buffer(screenShot , 'base64'));
+        if(process.argv[4] === "capture") await image.writeAsync(`./test/ReferenceImages/${imagePath}`);
+        else await image.writeAsync(`./test/SpecImages/${imagePath}`);
     }
     
     async compareScreenShot(imagePath){

@@ -1,11 +1,12 @@
 const FlowPage = require('../pages/Flow/flow');
 const {endpoints , stepIndex} = require('../enums');
+const expect=require('chai')
 
 const flowPage = new FlowPage();
 
 async function testAddSteps(){
     await flowPage.open(endpoints.HOME);
-    await flowPage.clickOnLoginWithGoogle();
+    await flowPage.loginUser();
     await flowPage.waitForEndpoint(endpoints.PROJECT , 60000);
     await flowPage.clickOnProjectName();
     await flowPage.waitForScriptSlider();

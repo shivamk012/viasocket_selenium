@@ -17,6 +17,9 @@ class FlowPage extends Projects{
         this.apiContent = '';
         this.dryRunButton = '';
         this.createButton = '';
+        this.addStepsMainContainer = '';
+        this.listOfStepsNewFlow = [];
+        this.menuButtonStep = '';
     }
 
     async waitForFlowPageToOpen(){
@@ -31,15 +34,15 @@ class FlowPage extends Projects{
 
     async clickOnEditButton(){
         await this.getNavBarButton();
-        const editButton = await getButtonHavingText(this.navbarButtons , 'EDIT');
+        const editButton = await getButtonHavingText(this.navbarButtons , 'EDIT');``
         await editButton.click();
         await super.waitForEndpoint(endpoints.EDIT , 10000);
     }
 
     async DragAndDrop(){
         try{
-            await super.waitForContentToLoad(By.id("#mainContainer") , 10000);
-            const divContainer = await this.driver.findElement(By.id("#mainContainer"));
+            await super.waitForContentToLoad(By.id("#addStepsMainContainer") , 10000);
+            const divContainer = await this.driver.findElement(By.id("#addStepsMainContainer"));
             console.log("Element found")
             const dragElement = await divContainer.findElements(By.id("hoverIconContainer"));
             if (dragElement.length>1) {
@@ -55,30 +58,78 @@ class FlowPage extends Projects{
         }
     } 
 
-    async clickOnAddSteps(){
-        const workflow = await this.driver.findElement(By.css('[class*="workflow__flow"]'));
+    async updateAddStepsMainContainer(){
+        this.addStepsMainContainer = await this.driver.findElement(By.css('[class*="addStepsMainContainer"]'));
+    }
 
+    async searchForStep(stepName){
+        await this.updateAddStepsMainContainer();
+        const searchStepsDiv = await this.addStepsMainContainer.findElement(By.css('[class*="createFunction"]'));
+        const searchStepsInput = await searchStepsDiv.findElement(By.css('input'));
+        await searchStepsInput.click();
+        await searchStepsInput.sendKeys(stepName);
+    }
+
+    async clickOnAddStepsNewFlow(){
         // NOTE:  Iske alava koi option nai mila content load ke wait karne ka. input elements 5 hai page pe to input ke liye wait ni kar sakte
-        await super.waitForContentToLoad(By.xpath('//button[text() = "Dry Run"]') , 10000); 
-        
+        await super.waitForContentToLoad(By.xpath('//*[text() = "Do"]') , 10000); 
+        const flowSteps = await this.driver.findElement(By.xpath('//*[text() = "Do"]'));
+        const flowStepsParentDiv = await flowSteps.findElement(By.xpath('.//..'));
+        const stepsButton = await flowStepsParentDiv.findElement(By.css('button'));
         const addStepsButton = await workflow.findElements(By.css('input'));
+        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , addStepsButton[1]);
         await addStepsButton[1].click();
     }
 
-    async getAllSteps(){
+    async getAllStepsNewFlow(){
+        await super.waitForContentToLoad(By.xpath('//*[text() = "Do"]') , 10000); 
+        const flowSteps = await this.driver.findElement(By.xpath('//*[text() = "Do"]'));
+        const flowStepsParentDiv = await flowSteps.findElement(By.xpath('.//..'));
+        this.steps = await flowStepsParentDiv.findElements(By.css('button'));
+    }
+
+    async getAllStepsUsedFlow(){
+        await super.waitForContentToLoad(By.xpath('//span[text() = "MSG91"]') , 100000);
         const divElementsInBody = await this.driver.findElements(By.xpath('//body/div'));
         const [listComponent] = divElementsInBody.slice(-1);
         this.steps = await listComponent.findElements(By.css('li'));
     }
+    async waitFor5Min(){
+        await super.waitForContentToLoad(By.className('flex-col w-100 add-trigger-container box-sizing-border-box MuiBox-root css-0') , 10000);    }
+   
+    async deleteIfBlock(){
+        await this.driver.findElement(By.className('flex MuiBox-root css-0 opacity-0')).click();
+        await super.waitForContentToLoad(By.className('MuiList-root MuiList-padding MuiMenu-list css-6qpmy0'),100000);
+        const deleteBtn= await this.driver.findElement(By.className('MuiList-root MuiList-padding MuiMenu-list css-6qpmy0'));
+        deleteBtn.click();
+    }
+
+    async getAllSteps(){
+        await super.waitForContentToLoad(By.css('[class*="w-100 workflow__flow flex-col gap-2 MuiBox-root css-0"]') , 10000);
+        const stepsParentDiv = await this.driver.findElement(By.css('[class*="w-100 workflow__flow flex-col gap-2 MuiBox-root css-0"]'));
+        this.steps = await stepsParentDiv.findElements(By.css('button'));
+    }
 
     async clickOnStep(index){
         await this.steps[index].click();
-        await super.waitForContentToLoad(By.id(`${process.env.STEP_NAME_ID}`) , 10000);
+        await super.waitForContentToLoad(By.css(`[class*=${process.env.CUSTOM_SLIDER_CLASS}]`) , 10000);
+        await this.driver.sleep(1000);
+    }
+
+    async clickOnComment(index){
+        await this.steps[index].click();
     }
 
     async fillStepName(stepName){
         const stepNameInput = await this.driver.findElement(By.id(process.env.STEP_NAME_ID));
-        await stepNameInput.sendKeys(stepName);
+        await stepNameInput.sendKeys(Key.HOME, Key.chord(Key.SHIFT, Key.END), stepName);
+        await this.driver.sleep(2000);
+    }
+    
+    async getStepName(){
+        const stepNameInput = await this.driver.findElement(By.id(process.env.STEP_NAME_ID));
+        const stepname = await stepNameInput.getAttribute('value');
+        return stepname;
     }
 
     async initialiseApiSlider(){
@@ -89,30 +140,81 @@ class FlowPage extends Projects{
             this.apiContent = await this.driver.findElement(By.id(process.env.STEP_PANEL_CONTENT_ID));
             const buttons = await this.apiContent.findElements(By.css('button'));
             await super.waitForContentToBeVisible(buttons[0] , 10000);
-            this.dryRunButton = await getButtonHavingText(buttons , process.env.DRY_RUN_BUTTON_TEXT);
-            this.createButton = await getButtonHavingText(buttons , process.env.SAVE_BUTTON_TEXT);
+            this.dryRunButton = (await this.driver.findElements(By.xpath('//button[text() = "Test"]')))[1];
         }catch(err){
             console.log(err);
         }
     }
 
+
     async fillUrl(url){
-        let apiUrlInputField = await this.apiContent.findElement(By.id(process.env.API_URL_INPUTDIV_ID));
+        let apiUrlInputField = await this.apiContent.findElement(By.css('textarea'));
         await apiUrlInputField.click();
-        apiUrlInputField = await this.apiContent.findElement(By.id(process.env.API_URL_INPUTDIV_ID));
         await apiUrlInputField.sendKeys(url , Key.ENTER);
-        
-        // NOTE: need to click outside otherwise dry will consider url.
         await this.apiContent.click();
+    }
+
+    async getUrl(){
+        let apiUrlInputField = await this.apiContent.findElement(By.css('textarea'));
+        const url = await apiUrlInputField.getText();
+        return url;
     }
 
     async clickOnDryRunButton(){
         await this.dryRunButton.click();
         await super.waitForContentToLoad(By.css('.object-key-val') , 30000);
+        const responseContent = await this.driver.findElement(By.id(process.env.RESPOSNE_CONTENT_PANEL_ID));
+        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , responseContent);
     }
 
-    async clickOnCreateButton(){
+    async getResponseData(){
+        const responseContent = await this.driver.findElement(By.id(process.env.RESPOSNE_CONTENT_PANEL_ID));
+        const response = await responseContent.getText();
+        return response;
+    }
+
+    async getResponsDataVariableStep(){
+        await super.waitForContentToLoad(By.id('json-pretty') , 10000);
+        const text = await this.getResponseData();
+        return text;
+    }
+
+    async takeVariableResponseScreenShot(imagePath){
+        await super.waitForContentToLoad(By.id('json-pretty') , 10000);
+        const responseContent = await this.driver.findElement(By.id(process.env.RESPOSNE_CONTENT_PANEL_ID));
+        await super.takeScreenShotAndCrop(responseContent , imagePath);
+    }
+
+    async takeResponseScreenShot(imagePath){
+        const responseContent = await this.driver.findElement(By.id(process.env.RESPOSNE_CONTENT_PANEL_ID));
+        await super.takeScreenShotAndCrop(responseContent , imagePath);
+    }
+
+    async takeScreenShotWorkFlow(imagePath){
+        const flow = await this.driver.findElements(By.css('[class*="workflow__flow"]'));
+        await super.takeScreenShotAndCrop(flow[1] , imagePath);
+    }
+
+    async clickOnCreateButton(isVar){
+        const saveButton = isVar ? process.env.VARIABLE_SAVE_BUTTON : process.env.SAVE_BUTTON_TEXT;
+        this.createButton = await this.driver.findElement(By.xpath(`//button[text() = "${saveButton}"]`));
+        this.driver.executeScript("arguments[0].scrollIntoView(true);", this.createButton);
         await this.createButton.click();
+    }
+
+    async waitForStepToCreate(){
+        await super.waitForContentToLoad(By.css('[class*="actionButton"]') , 10000);
+    }
+
+    async clickOnMenuButtonOfStep(){
+        this.menuButtonStep = await this.driver.findElement(By.css('class*="actionButton"'));
+        await  this.menuButtonStep.click();
+    }
+
+    async clickOnVariableSliderAccordion(){
+        const accordions = await this.driver.findElements(By.css('[class*="variableslider__accordion"]'));
+        await accordions[0].click();
+        await super.waitForContentToLoad(By.xpath('//button[text() = "Update"]') , 10000);
     }
 
     async selectApiMethod(methodTypeIndex){
@@ -128,6 +230,12 @@ class FlowPage extends Projects{
         await super.waitForContentToBeNotVisible(requestMethodListDiv , 10000);
     }
 
+    async getSelectedApiMethod(){
+        const apiMethodDropDown = await this.apiContent.findElement(By.css('input'));
+        const text = await apiMethodDropDown.getAttribute('value');
+        return text.toUpperCase();
+    }
+
     async sendBodyData(requestMethodIndex){
         if(requestMethodIndex === 1 || requestMethodIndex === 2 || requestMethodIndex === 4){
             const textEditorDiv = await this.apiContent.findElement(By.id('jsonEditor'));
@@ -139,8 +247,7 @@ class FlowPage extends Projects{
     }
 
     async createAPI1(){
-        const apistep=await this.listOfSteps();
-        await apistep[0].click();
+        await this.clickOnStep()
         await this.driver.sleep(4000);
         const apiname=await this.driver.findElement(By.id("function-title-textfield"));
         await this.driver.wait(until.elementIsVisible(apiname),4000);
@@ -158,6 +265,57 @@ class FlowPage extends Projects{
         await this.driver.sleep(3000);
         await buttonArray[1].click();  //this is for SAVE of API
         await this.driver.findElement(By.xpath("//div[@class='flex-end-center MuiBox-root css-0']//div[2]")).click() //press cross button
+    }
+
+    async fillVariableName(name){
+        await super.waitForContentToLoad(By.id(process.env.VARIABLE_NAME_FIELD_ID) , 10000);
+        const var_name=await this.driver.findElement(By.id(process.env.VARIABLE_NAME_FIELD_ID));
+        await var_name.click();
+        var_name.sendKeys(Key.HOME, Key.chord(Key.SHIFT, Key.END), name);
+    }
+
+    async getVariableName(){
+        const varName=await this.driver.findElement(By.id(process.env.VARIABLE_NAME_FIELD_ID));
+        // const varNameParent = await varName.findElement(By.xpath('.//..'));
+        // const varNameHolder = await varNameParent.findElement(By.css('span'));
+        const text = await varName.getAttribute('value');
+        return text;
+    }
+
+    async takeScreenShotFunctionSlider(imagePath){
+        const stepNameInput = await this.driver.findElement(By.css('[class*="custom_slider__halfscreen"]'));
+        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , stepNameInput);
+        await super.takeScreenShotAndCrop(stepNameInput , imagePath);
+    }
+
+    async takeScreenShotVariableSlider(imagePath){
+        await super.waitForContentToLoad(By.css('[class*="custom_slider__halfscreen"]') , 10000);
+        const stepNameInput = await this.driver.findElement(By.css('[class*="custom_slider__halfscreen"]'));
+        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , stepNameInput);
+        await super.takeScreenShotAndCrop(stepNameInput , imagePath);
+    }
+    async getVariableInputDiv(){
+        const variableSliderInputAccordion = await this.driver.findElement(By.css('[class*="variableslider__accordion "]'));
+        this.variableValueInput = await variableSliderInputAccordion.findElement(By.css('textarea'));
+    }
+
+    async fillVariableValue(value){
+        await this.getVariableInputDiv();
+        await this.variableValueInput.sendKeys(value);
+    }
+
+    async selectPlugin(searchTerm){
+        let plug = '';
+        for(let i=0 ; i<this.steps.length ; ++i){
+            const text = await this.steps[i].getText();
+            if(text === searchTerm) plug = this.steps[i]; 
+        }
+        if(!plug) await plug.click();
+    }
+
+    async getVariableValue(){
+        await this.getVariableInputDiv();
+        return (await this.variableValueInput.getText());
     }
 
     async createVariable(){
@@ -201,7 +359,7 @@ class FlowPage extends Projects{
         await this.driver.findElement(By.xpath("//div[@class='MuiBox-root css-0']//button[@type='button'][normalize-space()='Dry Run']")).click();
         await this.driver.findElement(By.xpath("//div[@class='MuiBox-root css-0']//button[@type='button'][normalize-space()='Save']")).click();
         await this.driver.findElement(By.xpath("//div[@class='flex-end-center MuiBox-root css-0']//div[2]")).click();
-}
+    }
 
     async createAPI2(){
         await this.clickOnAddStepsButton();

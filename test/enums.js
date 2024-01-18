@@ -9,7 +9,8 @@ const endpoints = {
     PLUGIN : '/plugin',
     PLUGINAUTH : '/auth',
     ACTION : '/action',
-    EMBED : '/embedProjects'
+    EMBED : '/embedProjects',
+    DEV_SLACK_PLUG : '/projects/orgSZWRqfwCw/projxY8B4axH/workflows/scriEz6Mbp1J/draft' 
 }
 
 const stepIndex = {
@@ -17,7 +18,6 @@ const stepIndex = {
     IF : 1,
     VARIABLE : 2,
     COMMENT : 3,
-    RESPONSE : 4,
     FUNCTION : 4
 }
 
@@ -29,4 +29,10 @@ const apiIndex = {
     PATCH : 4
 }
 
-module.exports = {endpoints , stepIndex , apiIndex};
+const actions = {
+    PAUSE : 0,
+    RENAME : 1,
+    DELETE  : 2
+}
+
+module.exports = {endpoints , stepIndex , apiIndex , actions};

@@ -389,7 +389,7 @@ class Projects extends Login{
     async getListOfPausedScripts(){
         const pausedScriptSpanElement = await this.driver.findElement(By.xpath('//span[text() = "PAUSED FLOWS"]'));
         const pausedScriptParentDiv = await pausedScriptSpanElement.findElement(By.xpath('.//..'));
-        const listOfPausedScripts = await pausedScriptParentDiv.findElements(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`));
+        const listOfPausedScripts = await pausedScriptParentDiv.findElements(By.xpath('.//following-sibling::*'));
         if(!listOfPausedScripts.length) return null;
         const pausedScriptName = [];
         for(let i=0 ; i<listOfPausedScripts.length ; ++i){
@@ -399,10 +399,10 @@ class Projects extends Login{
         return pausedScriptName;
     }
 
-    async getListOfDeletedProjects(){
+    async getListOfDeletedScripts(){
         const deletedScriptSpanElement = await this.driver.findElement(By.xpath('//span[text() = "DELETED FLOWS"]'));
         const pausedScriptParentDiv = await deletedScriptSpanElement.findElement(By.xpath('.//..'));
-        const listOfDeletedScripts = await pausedScriptParentDiv.findElements(By.css(`[class*=${process.env.SCRIPT_NAME_CLASS}]`));
+        const listOfDeletedScripts = await pausedScriptParentDiv.findElements(By.xpath('.//following-sibling::*'));
         if(!listOfDeletedScripts.length) return null;
         const deletedScriptName = [];
         for(let i=0 ; i<listOfDeletedScripts.length ; ++i){

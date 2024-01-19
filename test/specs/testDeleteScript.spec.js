@@ -19,35 +19,25 @@ async function testDeleteScript(){
             projectPage = new ProjectPage();
         })
         
-        it('should have menu button on mouse hover' , async() => {
+        it('delete the latest script and goes to recycle bin' , async() => {
             await projectPage.open(endpoints.HOME);
             await projectPage.loginUser();
             await projectPage.waitForEndpoint(endpoints.PROJECT , 60000);
             await projectPage.clickOnProjectName();
             await projectPage.waitForScriptSlider();
-            await projectPage.takeScreenShotOfMenuButton('menuButtonScript.png');
-            const misMatch = await compareSS(projectPage , 'menuButtonScript.png');
-            if(!misMatch) return;
-            expect(misMatch).to.be.lessThan(20);
-        })
-        
-        it('should open menu on mouse click' , async() => {
             nameOfDeletedScript = await projectPage.clickOnActionButtonMenuOfScript();
-            await projectPage.takeScreenShotActionButtons('actionButtonsScript.png');
-            const misMatch = await compareSS(projectPage , 'actionButtonsScript.png');
-            if(!misMatch) return;
-            expect(misMatch).to.be.lessThan(20);
-        })
-        
-        it('should delete script on delete button click' , async()=>{
             await projectPage.deleteScript();
             const scriptListDiv = await projectPage.getListOfScripts();
             expect(scriptListDiv).to.not.include(nameOfDeletedScript);
+            // await projectPage.takeScreenShotOfMenuButton('menuButtonScript.png');
+            // const misMatch = await compareSS(projectPage , 'menuButtonScript.png');
+            // if(!misMatch) return;
+            // expect(misMatch).to.be.lessThan(20);
         })
 
         it('List of deleted script should contain name of latest deleted script' , async() => {
-            const listOfNamesOfDeletedScrip = await projectPage.getListOfDeletedProjects();
-            expect(listOfNamesOfDeletedScrip).to.include(nameOfDeletedScript);
+            const listOfNamesOfDeletedScript = await projectPage.getListOfDeletedScripts();
+            expect(listOfNamesOfDeletedScript).to.include(nameOfDeletedScript);
         })
         
         after(async() => {

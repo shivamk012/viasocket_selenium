@@ -1,5 +1,6 @@
 node_modules
 .env
-test/ComparisonImages
-test/ReferenceImages
-test/SpecImages
+comparisonImage
+referenceImage
+testImage
+reactjs-practice

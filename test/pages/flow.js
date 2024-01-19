@@ -2,7 +2,7 @@ const Projects = require('./projects');
 const endpoints = require('../enums');
 const {By,until,Key} = require('selenium-webdriver');
 const getButtonHavingText = require('../../utilities/getButtonHavingText');
-const axios = require('axios');
+const axios = require('axios')
 
 class FlowPage extends Projects{
     constructor(){

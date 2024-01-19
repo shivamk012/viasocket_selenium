@@ -62,6 +62,13 @@ class FlowPage extends Projects{
             console.error('Error', error);
         }
     } 
+    // async createSteps(){
+    //     await super.driver.findElement(By.className("pl-28 MuiBox-root css-0"),10000);
+    //     const stepsCreate = await this.driver.findElement(By.id('3action'));
+    //     stepsCreate.click();
+    //     const anotherStep= await 
+        
+    //    }
 
     async updateAddStepsMainContainer(){
         this.addStepsMainContainer = await this.driver.findElement(By.css('[class*="addStepsMainContainer"]'));
@@ -108,6 +115,11 @@ class FlowPage extends Projects{
         const deleteBtn= await this.driver.findElement(By.className('MuiList-root MuiList-padding MuiMenu-list css-6qpmy0'));
         deleteBtn.click();
     }
+
+    // async clickingOnStepBtn(){
+    //     const clickBtn = await this.driver.findElement(By.id(':r1b:'));
+    //     clickBtn.click();
+    // }
 
     async getAllStepsForIf(){
         await super.waitForContentToLoad(By.css('[class*="w-100 workflow__flow flex-col gap-2 MuiBox-root css-0"]') , 10000);

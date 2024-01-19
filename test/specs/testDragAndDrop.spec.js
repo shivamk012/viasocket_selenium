@@ -13,6 +13,7 @@ async function testFunction() {
             await fun.clickOnProjectName();
             await fun.waitForScriptSlider();
             await fun.clickOnScript();
+            await fun.createSteps();
             await fun.DragAndDrop();
             expect(successMessage).to.equal('Drag and drop successful');
 

@@ -27,7 +27,8 @@ async function testVariableStep(){
                 await flowPage.waitForScriptSlider();
                 await flowPage.clickOnScript();
                 await flowPage.waitForFlowPageToOpen();
-                await flowPage.getAllStepsNewFlow();
+                await flowPage.clickOnAddSteps();
+                await flowPage.getAllStepsUsedFlow();
                 await flowPage.clickOnStep(stepIndex.VARIABLE);
                 await flowPage.takeScreenShotVariableSlider('variableSliderEmpty.png');
                 const misMatch = await compareSS('variableSliderEmpty.png');

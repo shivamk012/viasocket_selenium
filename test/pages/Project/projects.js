@@ -49,14 +49,15 @@ class Projects extends Login{
     }
     
     async fullWebhookfunction(){
-        await super.waitForContentToLoad(By.className('workflow__flow MuiBox-root css-0'), 10000);
-        const doBlock=await this.driver.findElement(By.className('w-100 flex-col pl-28 box-sizing-border-box  gap-1  MuiBox-root css-0'));
-        const webhookpick= await doBlock.findElement(By.id('0option'));
+        await super.waitForContentToLoad(By.className('masterslider_cont '), 10000);
+        const doBlock=await this.driver.findElement(By.className('masterslider_cont'));
+        const webClick =await doBlock.findElement(By.className('flex-wrap flex-start-center gap-2 p-2 options-box MuiBox-root css-0'));
+        const webhookpick= await webClick.findElement(By.id('0option'));
         webhookpick.click();
-        await super.waitForContentToLoad(By.className('masterslider_cont transition custom_slider custom_slider__halfscreen masterslider_cont__in MuiBox-root css-0'),10000);
-        const webhookDiv=await this.driver.findElement(By.className('flex-spaceBetween-center w-100 gap-1 MuiBox-root css-0'));
-        const saveBtn=await webhookDiv.findElement(By.xpath("//button[contains(text(),'save')]"));
-        saveBtn.click();
+        // await super.waitForContentToLoad(By.className('masterslider_cont transition custom_slider custom_slider__halfscreen masterslider_cont__in MuiBox-root css-0'),10000);
+        // const webhookDiv=await this.driver.findElement(By.className('flex-spaceBetween-center w-100 gap-1 MuiBox-root css-0'));
+        // const saveBtn=await webhookDiv.findElement(By.xpath("//button[contains(text(),'save')]"));
+        // saveBtn.click();
 
     }
     
@@ -317,12 +318,14 @@ class Projects extends Login{
         await this.driver.sleep(2000);
     }
 
+    // this will create a new script.
     async clickOnNewFlow(){
         await this.driver.wait(until.elementLocated(By.xpath('//button[text() = "Create new flow"]')) , 10000);
         const newScriptButton = await this.driver.findElement(By.xpath('//button[text() = "Create new flow"]'));
         await newScriptButton.click();
     }
 
+    //deprecated function
     async createNewScript(scriptName){
         await super.waitForContentToLoad(By.css('[class*="custom-modal"]') , 10000);
         const scriptModal = await this.driver.findElement(By.css('[class*="custom-modal"]'));

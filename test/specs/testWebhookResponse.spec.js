@@ -19,11 +19,10 @@ async function testWebhookResponse(){
                     await responseAndWebhook.clickOnProjectName();
                     await responseAndWebhook.waitForScriptSlider();
                     await responseAndWebhook.clickOnNewFlow();
-                    await responseAndWebhook.createNewScript(getUniqueName('WR'));
                     await responseAndWebhook.clickOnScript();
                     await responseAndWebhook.waitForFlowPageToOpen();
-                    await responseAndWebhook.getAllStepsForIf();
                     await responseAndWebhook.fullWebhookfunction();
+                    await responseAndWebhook.closeSlider(); 
                         }).timeout(30000); 
 
                 it('Response Block open', async function () {

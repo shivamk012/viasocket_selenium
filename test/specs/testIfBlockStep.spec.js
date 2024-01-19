@@ -22,24 +22,24 @@ async function testIfBlockStep(){
             await ifStep.waitForEndpoint(endpoints.PROJECT , 60000);
             await ifStep.clickOnProjectName();
             await ifStep.waitForScriptSlider();
-            await ifStep.clickOnNewFlow();
-            // await ifStep.createNewScript(getUniqueName('if'));
             await ifStep.clickOnScript();
             await ifStep.waitForFlowPageToOpen();
             await ifStep.clickOnAddSteps();
-            // await ifStep.clickingOnStepBtn();
+            await ifStep.getAllStepsUsedFlow();
             // await ifStep.getAllStepsForIf();
             await ifStep.clickOnStep(stepIndex.IF);
             await ifStep.createConditionIf("true");
             const text_name=await ifStep.responseOfIfBlockIf();
             expect(text_name).to.include("true");
             // await ifStep.crossIfBlock();
-            await ifStep.deleteIfBlock();
+            // await ifStep.deleteIfBlock();
         }).timeout(700000);
        
         it("if block created successfully with false condition",async function(){
-            await ifStep.waitFor5Min();
+            // await ifStep.waitFor5Min();
             await ifStep.getAllStepsForIf();
+            // await ifStep.clickOnAddSteps();
+
             await ifStep.clickOnStep(stepIndex.IF);
             await ifStep.createConditionIf("false");
             const text_name=await ifStep.responseOfIfBlockIf();

@@ -82,15 +82,20 @@ class FlowPage extends Projects{
         await searchStepsInput.sendKeys(stepName);
     }
 
-    async clickOnAddStepsNewFlow(){
+    async clickOnAddSteps(){
         // NOTE:  Iske alava koi option nai mila content load ke wait karne ka. input elements 5 hai page pe to input ke liye wait ni kar sakte
-        await super.waitForContentToLoad(By.xpath('//*[text() = "Do"]') , 10000); 
-        const flowSteps = await this.driver.findElement(By.xpath('//*[text() = "Do"]'));
-        const flowStepsParentDiv = await flowSteps.findElement(By.xpath('.//..'));
-        const stepsButton = await flowStepsParentDiv.findElement(By.css('button'));
-        const addStepsButton = await workflow.findElements(By.css('input'));
-        await this.driver.executeScript('arguments[0].scrollIntoView(true)' , addStepsButton[1]);
-        await addStepsButton[1].click();
+        // await super.waitForContentToLoad(By.xpath('//*[text() = "Do"]') , 10000); 
+        // const flowSteps = await this.driver.findElement(By.xpath('//*[text() = "Do"]'));
+        // const flowStepsParentDiv = await flowSteps.findElement(By.xpath('.//..'));
+        // const stepsButton = await flowStepsParentDiv.findElement(By.css('button'));
+        // const addStepsButton = await workflow.findElements(By.css('input'));
+        // await this.driver.executeScript('arguments[0].scrollIntoView(true)' , addStepsButton[1]);
+        // await addStepsButton[1].click();
+        const navBar = await this.driver.findElement(By.css('[class*="workflownavbar"]'));
+        await navBar.click();
+        await super.waitForContentToLoad(By.css('[class*="createfunction__addstep__inputfield"]') , 10000);
+        const addStepInputField = await this.driver.findElement(By.css('[class*="createfunction__addstep__inputfield"]'));
+        await addStepInputField.click();
     }
 
     async getAllStepsNewFlow(){
@@ -101,7 +106,6 @@ class FlowPage extends Projects{
     }
 
     async getAllStepsUsedFlow(){
-        await super.waitForContentToLoad(By.xpath('//span[text() = "MSG91"]') , 100000);
         const divElementsInBody = await this.driver.findElements(By.xpath('//body/div'));
         const [listComponent] = divElementsInBody.slice(-1);
         this.steps = await listComponent.findElements(By.css('li'));

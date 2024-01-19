@@ -19,7 +19,8 @@ async function testApiStep(methodType){
                 await flowPage.waitForScriptSlider();
                 await flowPage.clickOnScript();
                 await flowPage.waitForFlowPageToOpen();
-                await flowPage.getAllStepsNewFlow();
+                await flowPage.clickOnAddSteps();
+                await flowPage.getAllStepsUsedFlow();
                 await flowPage.clickOnStep(stepIndex.API);
                 await flowPage.takeScreenShotFunctionSlider('apiSlider.png');
                 const isCaptureMode = await flowPage.isCaptureMode;

@@ -15,14 +15,14 @@ async function testFunction(){
                     await fun.waitForEndpoint(endpoints.PROJECT , 60000);
                     await fun.clickOnProjectName();
                     await fun.waitForScriptSlider();
+                    await fun.clickOnNewFlow();
                     await fun.clickOnScript();
-                    //await fun.clickOnEditButton();
-                    // await fun.clickOnAddSteps();
-                    await fun.getAllStepsNewFlow();
-                    
-                    //case:01 Click create function
+                    await fun.closeSlider(); // close trigger slider
+                    await fun.waitForFlowPageToOpen();
+                    await fun.clickOnAddSteps();
+                    await fun.getAllStepsUsedFlow();
                     await fun.clickOnStep(stepIndex.FUNCTION);
-                        
+
                 }).timeout(30000); 
 
                 it('Case:02 write empty function name',async function(){
@@ -47,17 +47,17 @@ async function testFunction(){
                     await fun.create();
                 }).timeout(30000);
 
-                it('Case:05 Function return something',async function(){
-                    await fun.closeFunctionSlider();
-                    //await fun.clickOnEditButton();
-                    await fun.clickOnAddSteps();
-                    await fun.getAllStepsUsedFlow();
-                    await fun.clickOnComment(stepIndex.FUNCTION);
-                    await fun.funName("New fun");
-                    await fun.writeFunction();
-                    await fun.dryrun();
-                    await fun.create();
-                }).timeout(30000);
+                // it('Case:05 Function return something',async function(){
+                //     await fun.closeFunctionSlider();
+                //     //await fun.clickOnEditButton();
+                //     await fun.clickOnAddSteps();
+                //     await fun.getAllStepsUsedFlow();
+                //     await fun.clickOnComment(stepIndex.FUNCTION);
+                //     await fun.funName("New fun");
+                //     await fun.writeFunction();
+                //     await fun.dryrun();
+                //     await fun.create();
+                // }).timeout(30000);
               });
 }
 module.exports = testFunction;

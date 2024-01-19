@@ -87,8 +87,11 @@ class FlowPage extends Projects{
         const navBar = await this.driver.findElement(By.css('[class*="workflownavbar"]'));
         await navBar.click();
         await super.waitForContentToLoad(By.css('[class*="createfunction__addstep__inputfield"]') , 10000);
-        const addStepInputField = await this.driver.findElement(By.css('[class*="createfunction__addstep__inputfield"]'));
-        await addStepInputField.click();
+        const addStepInputField = await this.driver.findElement(By.css('[class*="createfunction__addstep"]'));
+        this.driver.executeScript('arguments[0].scrollIntoView()' , addStepInputField);
+        await this.driver.sleep(2000);
+        // await this.driver.actions().click(addStepInputField).perform();
+        await this.driver.executeScript('arguments[0].click();' , addStepInputField);
     }
 
     async getAllStepsNewFlow(){

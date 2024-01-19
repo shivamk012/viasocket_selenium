@@ -17,7 +17,7 @@ async function testCreateOrg(){
             await projectsPage.open(endpoints.HOME);
             await projectsPage.loginUser();
             await projectsPage.waitForEndpoint(endpoints.PROJECT , 60000);
-            await projectsPage.waitForProjecPageToLoad();
+            // await projectsPage.waitForProjecPageToLoad();
             await projectsPage.openListOfOrgs();
             await projectsPage.createNewOrg();
             const orgNameInUI=await projectsPage.fetchOrgName();

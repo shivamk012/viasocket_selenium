@@ -56,6 +56,8 @@ module.exports = class Page {
             return readyState === 'complete';
           });
         });
+        
+        await this.driver.manage().window().maximize();
     }
 
     async waitForEndpoint(endpoint , timer){

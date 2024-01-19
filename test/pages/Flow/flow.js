@@ -84,13 +84,11 @@ class FlowPage extends Projects{
         // const addStepsButton = await workflow.findElements(By.css('input'));
         // await this.driver.executeScript('arguments[0].scrollIntoView(true)' , addStepsButton[1]);
         // await addStepsButton[1].click();
-        const navBar = await this.driver.findElement(By.css('[class*="workflownavbar"]'));
-        await navBar.click();
+        const whenText = await this.driver.findElement(By.xpath('//*[text() = "When"]'));
+        await whenText.click();
         await super.waitForContentToLoad(By.css('[class*="createfunction__addstep__inputfield"]') , 10000);
-        const addStepInputField = await this.driver.findElement(By.css('[class*="createfunction__addstep"]'));
+        const [addStepInputField] = (await this.driver.findElements(By.css('[class*="createfunction__addstep"]'))).slice(-1);
         this.driver.executeScript('arguments[0].scrollIntoView()' , addStepInputField);
-        await this.driver.sleep(2000);
-        // await this.driver.actions().click(addStepInputField).perform();
         await this.driver.executeScript('arguments[0].click();' , addStepInputField);
     }
 
@@ -106,8 +104,11 @@ class FlowPage extends Projects{
         const [listComponent] = divElementsInBody.slice(-1);
         this.steps = await listComponent.findElements(By.css('li'));
     }
+
+    //deprecated function
     async waitFor5Min(){
-        await super.waitForContentToLoad(By.className('flex-col w-100 add-trigger-container box-sizing-border-box MuiBox-root css-0') , 10000);    }
+        await super.waitForContentToLoad(By.className('flex-col w-100 add-trigger-container box-sizing-border-box MuiBox-root css-0') , 10000);    
+    }
    
     async deleteIfBlock(){
         await this.driver.findElement(By.className('flex MuiBox-root css-0 opacity-0')).click();
@@ -233,6 +234,14 @@ class FlowPage extends Projects{
     async clickOnMenuButtonOfStep(){
         this.menuButtonStep = await this.driver.findElement(By.css('class*="actionButton"'));
         await  this.menuButtonStep.click();
+    }
+
+    async closeSlider(){
+        await super.waitForContentToLoad(By.css('[class*="custom_slider__halfscreen"]') , 10000);
+        const masterSlider = await this.driver.findElement(By.css('[class*="custom_slider__halfscreen"]'));
+        const buttonsInSlider = await masterSlider.findElements(By.css('button'));
+        await super.waitForContentToBeVisible(buttonsInSlider[1] , 10000);
+        await buttonsInSlider[1].click();
     }
 
     async clickOnVariableSliderAccordion(){

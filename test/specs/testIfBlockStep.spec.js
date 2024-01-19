@@ -23,11 +23,11 @@ async function testIfBlockStep(){
             await ifStep.clickOnProjectName();
             await ifStep.waitForScriptSlider();
             await ifStep.clickOnNewFlow();
-            await ifStep.createNewScript(getUniqueName('if'));
             await ifStep.clickOnScript();
+            await ifStep.closeSlider(); // close trigger slider
             await ifStep.waitForFlowPageToOpen();
-            // await ifStep.clickOnAddSteps();
-            await ifStep.getAllStepsForIf();
+            await ifStep.clickOnAddSteps();
+            await ifStep.getAllStepsUsedFlow();
             await ifStep.clickOnStep(stepIndex.IF);
             await ifStep.createConditionIf("true");
             const text_name=await ifStep.responseOfIfBlockIf();
@@ -37,8 +37,9 @@ async function testIfBlockStep(){
         }).timeout(700000);
        
         it("if block created successfully with false condition",async function(){
-            await ifStep.waitFor5Min();
-            await ifStep.getAllStepsForIf();
+            // await ifStep.waitFor5Min();
+            await ifStep.clickOnAddSteps();
+            await ifStep.getAllStepsUsedFlow();
             await ifStep.clickOnStep(stepIndex.IF);
             await ifStep.createConditionIf("false");
             const text_name=await ifStep.responseOfIfBlockIf();

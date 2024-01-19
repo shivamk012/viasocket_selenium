@@ -317,12 +317,14 @@ class Projects extends Login{
         await this.driver.sleep(2000);
     }
 
+    // this will create a new script.
     async clickOnNewFlow(){
         await this.driver.wait(until.elementLocated(By.xpath('//button[text() = "Create new flow"]')) , 10000);
         const newScriptButton = await this.driver.findElement(By.xpath('//button[text() = "Create new flow"]'));
         await newScriptButton.click();
     }
 
+    //deprecated function
     async createNewScript(scriptName){
         await super.waitForContentToLoad(By.css('[class*="custom-modal"]') , 10000);
         const scriptModal = await this.driver.findElement(By.css('[class*="custom-modal"]'));
